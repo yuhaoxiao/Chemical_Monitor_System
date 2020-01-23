@@ -2,8 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="78dca6cd-d589-4046-9790-5f1186d1b9ea" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/cn/nju/edu/chemical_monitor_system/entity/BatchEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cn/nju/edu/chemical_monitor_system/entity/BatchEntity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/cn/nju/edu/chemical_monitor_system/entity/UserEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cn/nju/edu/chemical_monitor_system/entity/UserEntity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/cn/nju/edu/chemical_monitor_system/service/impl/UserServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cn/nju/edu/chemical_monitor_system/service/impl/UserServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/cn/nju/edu/chemical_monitor_system/service/impl/UserServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/cn/nju/edu/chemical_monitor_system/service/impl/UserServiceImpl.class" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -28,6 +31,9 @@
   <component name="ErrorTreeViewConfiguration">
     <option name="autoscrollToSource" value="true" />
     <option name="IS_AUTOSCROLL_TO_SOURCE" value="true" />
+  </component>
+  <component name="FavoritesManager">
+    <favorites_list name="Chemical_Monitor_System" />
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -99,8 +105,16 @@
       <option name="presentableId" value="Default" />
       <updated>1579773726840</updated>
       <workItem from="1579773729170" duration="14761000" />
-      <workItem from="1579794764275" duration="1004000" />
+      <workItem from="1579794764275" duration="3887000" />
     </task>
+    <task id="LOCAL-00001" summary="xiaoyuhao">
+      <created>1579795942758</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1579795942758</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -116,5 +130,9 @@
         </entry>
       </map>
     </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="xiaoyuhao" />
+    <option name="LAST_COMMIT_MESSAGE" value="xiaoyuhao" />
   </component>
 </project>

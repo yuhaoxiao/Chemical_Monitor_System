@@ -1,12 +1,16 @@
 package cn.nju.edu.chemical_monitor_system.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.Objects;
 
 @Entity
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "Batch", schema = "mydb")
 public class BatchEntity {
     private int batchId;

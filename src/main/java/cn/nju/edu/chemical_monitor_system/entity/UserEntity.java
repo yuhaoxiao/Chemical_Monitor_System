@@ -1,11 +1,16 @@
 package cn.nju.edu.chemical_monitor_system.entity;
 
 
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
 import java.util.List;
 import java.util.Objects;
 
 @Entity
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "User", schema = "mydb")
 public class UserEntity {
     private int userId;
