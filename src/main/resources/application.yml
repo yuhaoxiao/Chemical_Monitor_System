@@ -1,0 +1,17 @@
+spring:
+  datasource:
+      username: root
+      password: 123456
+      url: jdbc:mysql://localhost:3306/mydb
+      driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+     hibernate:
+        ddl-auto: none
+     show-sql: false
+     database-platform: org.hibernate.dialect.MySQL5Dialect
+  thymeleaf:
+     mode: LEGACYHTML5
+     cache: false
+
+server:
+  port: 8088

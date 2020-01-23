@@ -1,0 +1,22 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-configuration PUBLIC
+        "-//Hibernate/Hibernate Configuration DTD//EN"
+        "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+    <session-factory>
+        <!--数据库连接url配置-->
+        <property name="connection.url">jdbc:mysql://localhost:3306/mydb</property>
+        <!--数据库驱动配置-->
+        <property name="connection.driver_class">com.mysql.jdbc.Driver</property>
+        <mapping class="cn.nju.edu.chemical_monitor_system.entity.UserEntity"/>
+        <mapping class="cn.nju.edu.chemical_monitor_system.entity.BatchEntity"/>
+        <mapping class="cn.nju.edu.chemical_monitor_system.entity.CasEntity"/>
+        <mapping class="cn.nju.edu.chemical_monitor_system.entity.EnterpriseEntity"/>
+        <mapping class="cn.nju.edu.chemical_monitor_system.entity.ExpressEntity"/>
+        <mapping class="cn.nju.edu.chemical_monitor_system.entity.ExpressProductEntity"/>
+        <mapping class="cn.nju.edu.chemical_monitor_system.entity.ProductEntity"/>
+        <mapping class="cn.nju.edu.chemical_monitor_system.entity.ProductionLineEntity"/>
+        <mapping class="cn.nju.edu.chemical_monitor_system.entity.StoreEntity"/>
+        <mapping class="cn.nju.edu.chemical_monitor_system.entity.InOutBatchEntity"/>
+    </session-factory>
+</hibernate-configuration>
