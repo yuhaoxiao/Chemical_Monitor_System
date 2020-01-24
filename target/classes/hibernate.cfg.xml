@@ -8,25 +8,15 @@
         <property name="connection.url">jdbc:mysql://localhost:3306/mydb</property>
         <!--数据库驱动配置-->
         <property name="connection.driver_class">com.mysql.jdbc.Driver</property>
-        <mapping resource="cn/nju/edu/chemical_monitor_system/entity/UserEntity.hbm.xml"/>
         <mapping class="cn.nju.edu.chemical_monitor_system.entity.UserEntity"/>
         <mapping class="cn.nju.edu.chemical_monitor_system.entity.BatchEntity"/>
-        <mapping resource="cn/nju/edu/chemical_monitor_system/entity/BatchEntity.hbm.xml"/>
-        <mapping resource="cn/nju/edu/chemical_monitor_system/entity/CasEntity.hbm.xml"/>
         <mapping class="cn.nju.edu.chemical_monitor_system.entity.CasEntity"/>
-        <mapping resource="cn/nju/edu/chemical_monitor_system/entity/EnterpriseEntity.hbm.xml"/>
         <mapping class="cn.nju.edu.chemical_monitor_system.entity.EnterpriseEntity"/>
         <mapping class="cn.nju.edu.chemical_monitor_system.entity.ExpressEntity"/>
-        <mapping resource="cn/nju/edu/chemical_monitor_system/entity/ExpressEntity.hbm.xml"/>
         <mapping class="cn.nju.edu.chemical_monitor_system.entity.ExpressProductEntity"/>
-        <mapping resource="cn/nju/edu/chemical_monitor_system/entity/ExpressProductEntity.hbm.xml"/>
-        <mapping resource="cn/nju/edu/chemical_monitor_system/entity/ProductEntity.hbm.xml"/>
         <mapping class="cn.nju.edu.chemical_monitor_system.entity.ProductEntity"/>
-        <mapping resource="cn/nju/edu/chemical_monitor_system/entity/ProductionLineEntity.hbm.xml"/>
         <mapping class="cn.nju.edu.chemical_monitor_system.entity.ProductionLineEntity"/>
-        <mapping resource="cn/nju/edu/chemical_monitor_system/entity/StoreEntity.hbm.xml"/>
         <mapping class="cn.nju.edu.chemical_monitor_system.entity.StoreEntity"/>
-        <mapping resource="cn/nju/edu/chemical_monitor_system/entity/InOutBatchEntity.hbm.xml"/>
         <mapping class="cn.nju.edu.chemical_monitor_system.entity.InOutBatchEntity"/>
     </session-factory>
 </hibernate-configuration>
