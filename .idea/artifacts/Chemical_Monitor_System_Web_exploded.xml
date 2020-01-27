@@ -1,0 +1,13 @@
+<component name="ArtifactManager">
+  <artifact type="exploded-war" name="Chemical_Monitor_System:Web exploded">
+    <output-path>$PROJECT_DIR$/out/artifacts/Chemical_Monitor_System_Web_exploded</output-path>
+    <root id="root">
+      <element id="javaee-facet-resources" facet="Chemical_Monitor_System/web/Web" />
+      <element id="directory" name="WEB-INF">
+        <element id="directory" name="classes">
+          <element id="module-output" name="Chemical_Monitor_System" />
+        </element>
+      </element>
+    </root>
+  </artifact>
+</component>

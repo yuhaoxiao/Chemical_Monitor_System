@@ -1,12 +1,14 @@
 package cn.nju.edu.chemical_monitor_system.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import javax.persistence.*;
 
 @Entity
 @Table(name = "ProductionLine", schema = "mydb")
 public class ProductionLineEntity {
     private int productionLineId;
-    private int enterpriseId;
+    private EnterpriseEntity enterpriseEntity;
 
     @Id
     @Column(name = "ProductionLine_id")
@@ -18,14 +20,15 @@ public class ProductionLineEntity {
         this.productionLineId = productionLineId;
     }
 
-    @Basic
-    @Column(name = "Enterprise_id")
-    public int getEnterpriseId() {
-        return enterpriseId;
+    @ManyToOne
+    @JoinColumn(name = "enterprise_id")
+    @JsonBackReference
+    public EnterpriseEntity getEnterpriseEntity() {
+        return enterpriseEntity;
     }
 
-    public void setEnterpriseId(int enterpriseId) {
-        this.enterpriseId = enterpriseId;
+    public void setEnterpriseEntity(EnterpriseEntity enterpriseEntity) {
+        this.enterpriseEntity = enterpriseEntity;
     }
 
     @Override
@@ -36,7 +39,7 @@ public class ProductionLineEntity {
         ProductionLineEntity that = (ProductionLineEntity) o;
 
         if (productionLineId != that.productionLineId) return false;
-        if (enterpriseId != that.enterpriseId) return false;
+        if (enterpriseEntity.getEnterpriseId() != that.getEnterpriseEntity().getEnterpriseId()) return false;
 
         return true;
     }
@@ -44,7 +47,7 @@ public class ProductionLineEntity {
     @Override
     public int hashCode() {
         int result = productionLineId;
-        result = 31 * result + enterpriseId;
+        result = 31 * result + enterpriseEntity.getEnterpriseId();
         return result;
     }
 }

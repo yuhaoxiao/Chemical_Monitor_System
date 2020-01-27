@@ -1,6 +1,7 @@
 package cn.nju.edu.chemical_monitor_system.entity;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
 @Table(name = "Enterprise", schema = "mydb")
@@ -36,7 +37,7 @@ public class EnterpriseEntity {
         EnterpriseEntity that = (EnterpriseEntity) o;
 
         if (enterpriseId != that.enterpriseId) return false;
-        if (name != null ? !name.equals(that.name) : that.name != null) return false;
+        if (!Objects.equals(name, that.name)) return false;
 
         return true;
     }

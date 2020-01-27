@@ -7,9 +7,12 @@ import lombok.Data;
 public class ProductVO {
 
     private int productId;
-    private int casId;
+    private CasVO casVO;
     private int batchId;
     private Double number;
+
+
+
     private int code;
 
     public ProductVO(ProductEntity p) {
@@ -18,10 +21,10 @@ public class ProductVO {
             return;
         }
         this.productId = p.getProductId();
-        this.casId = p.getCasId();
         this.batchId = p.getBatchId();
         this.number = p.getNumber();
         this.code = 1;
+        this.casVO=new CasVO(p.getCasEntity());
     }
 
     public ProductVO() {

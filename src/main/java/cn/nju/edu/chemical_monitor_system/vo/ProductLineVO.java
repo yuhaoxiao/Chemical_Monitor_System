@@ -17,7 +17,7 @@ public class ProductLineVO {
         }
 
         this.productionLineId = pl.getProductionLineId();
-        this.enterpriseId = pl.getEnterpriseId();
+        this.enterpriseId = pl.getEnterpriseEntity().getEnterpriseId();
         this.code = 1;
     }
 

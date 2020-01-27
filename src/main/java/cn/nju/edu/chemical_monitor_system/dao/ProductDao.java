@@ -6,5 +6,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.io.Serializable;
 
 public interface ProductDao extends JpaRepository<ProductEntity, Serializable> {
-    
+    ProductEntity findFirstByProductId(int productId);
 }

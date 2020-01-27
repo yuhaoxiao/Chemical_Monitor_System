@@ -1,12 +1,17 @@
 package cn.nju.edu.chemical_monitor_system.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import javax.persistence.*;
+import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "CAS", schema = "mydb")
 public class CasEntity {
     private int casId;
     private String name;
+    private List<ProductEntity> productEntities;
 
     @Id
     @Column(name = "CAS_id")
@@ -28,6 +33,17 @@ public class CasEntity {
         this.name = name;
     }
 
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "casEntity", fetch = FetchType.LAZY)
+    @JsonBackReference
+    public List<ProductEntity> getProductEntities() {
+        return productEntities;
+    }
+
+    public void setProductEntities(List<ProductEntity> productEntities) {
+        this.productEntities = productEntities;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -36,7 +52,7 @@ public class CasEntity {
         CasEntity casEntity = (CasEntity) o;
 
         if (casId != casEntity.casId) return false;
-        if (name != null ? !name.equals(casEntity.name) : casEntity.name != null) return false;
+        if (!Objects.equals(name, casEntity.name)) return false;
 
         return true;
     }

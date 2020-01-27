@@ -1,6 +1,7 @@
 package cn.nju.edu.chemical_monitor_system.entity;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
 @Table(name = "InOutBatch", schema = "mydb")
@@ -94,9 +95,9 @@ public class InOutBatchEntity {
         if (productId != that.productId) return false;
         if (storeId != that.storeId) return false;
         if (batchId != that.batchId) return false;
-        if (inOrOut != null ? !inOrOut.equals(that.inOrOut) : that.inOrOut != null) return false;
-        if (number != null ? !number.equals(that.number) : that.number != null) return false;
-        if (status != null ? !status.equals(that.status) : that.status != null) return false;
+        if (!Objects.equals(inOrOut, that.inOrOut)) return false;
+        if (!Objects.equals(number, that.number)) return false;
+        if (!Objects.equals(status, that.status)) return false;
 
         return true;
     }

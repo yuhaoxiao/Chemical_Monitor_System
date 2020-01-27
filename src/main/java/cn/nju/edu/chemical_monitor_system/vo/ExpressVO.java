@@ -4,6 +4,8 @@ import cn.nju.edu.chemical_monitor_system.entity.ExpressEntity;
 import lombok.Data;
 
 import java.sql.Timestamp;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Data
 public class ExpressVO {
@@ -17,6 +19,7 @@ public class ExpressVO {
     private int inputStoreId;
     private int outputStoreId;
     private int code;
+    private List<ExpressProductVO> expressProductVOS;
 
     public ExpressVO(ExpressEntity e) {
         if (e == null) {
@@ -28,11 +31,14 @@ public class ExpressVO {
         this.outputTime = e.getOutputTime();
         this.inputTime = e.getInputTime();
         this.status = e.getStatus();
-        this.inputStoreId = e.getInputStoreId();
-        this.outputStoreId = e.getOutputStoreId();
-        this.inputUserId = e.getInputUserId();
-        this.outputUserId = e.getOutputUserId();
+        this.inputStoreId = e.getInputStore().getStoreId();
+        this.outputStoreId = e.getOutputStore().getStoreId();
+        this.inputUserId = e.getInputUser().getUserId();
+        this.outputUserId = e.getOutputUser().getUserId();
         this.code = 1;
+        this.expressProductVOS=e.getExpressProductEntities().stream()
+                .map(ExpressProductVO::new)
+                .collect(Collectors.toList());
     }
 
     public ExpressVO() {

@@ -8,7 +8,7 @@ public class ExpressProductVO {
 
     private int expressProductId;
     private int expressId;
-    private int productId;
+    private ProductVO productVO;
     private Double number;
     private int code;
 
@@ -19,8 +19,8 @@ public class ExpressProductVO {
         }
 
         this.expressProductId = ep.getExpressProductId();
-        this.expressId = ep.getExpressId();
-        this.productId = ep.getProductId();
+        this.expressId = ep.getExpressEntity().getExpressId();
+        this.productVO = new ProductVO(ep.getProductEntity());
         this.number = ep.getNumber();
         this.code = 1;
     }

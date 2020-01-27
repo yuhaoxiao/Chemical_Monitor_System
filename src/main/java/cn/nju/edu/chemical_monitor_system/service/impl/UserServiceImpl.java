@@ -21,7 +21,6 @@ public class UserServiceImpl implements UserService {
 
     public UserVO login(int id, String password) {
         UserEntity user = userDao.findFirstByUserId(id);
-
         if (user == null || !user.getPassword().equals(password)) {
             return new UserVO();
         }

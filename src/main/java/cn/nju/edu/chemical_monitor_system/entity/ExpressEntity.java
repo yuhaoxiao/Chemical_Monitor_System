@@ -1,7 +1,11 @@
 package cn.nju.edu.chemical_monitor_system.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "Express", schema = "mydb")
@@ -9,14 +13,16 @@ public class ExpressEntity {
     private int expressId;
     private Timestamp outputTime;
     private Timestamp inputTime;
-    private Byte status;
-    private int inputUserId;
-    private int outputUserId;
-    private int inputStoreId;
-    private int outputStoreId;
+    private int status;
+    private UserEntity inputUser;
+    private UserEntity outputUser;
+    private StoreEntity inputStore;
+    private StoreEntity outputStore;
+    private List<ExpressProductEntity> expressProductEntities;
 
     @Id
     @Column(name = "Express_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public int getExpressId() {
         return expressId;
     }
@@ -45,54 +51,71 @@ public class ExpressEntity {
         this.inputTime = inputTime;
     }
 
+
     @Basic
     @Column(name = "Status")
-    public Byte getStatus() {
+    public int getStatus() {
         return status;
     }
 
-    public void setStatus(Byte status) {
+    public void setStatus(int status) {
         this.status = status;
     }
 
-    @Basic
-    @Column(name = "Input_User_id")
-    public int getInputUserId() {
-        return inputUserId;
+    @ManyToOne
+    @JoinColumn(name = "Output_User_id")
+    @JsonBackReference
+    public UserEntity getOutputUser() {
+        return outputUser;
     }
 
-    public void setInputUserId(int inputUserId) {
-        this.inputUserId = inputUserId;
+    public void setOutputUser(UserEntity outputUser) {
+        this.outputUser = outputUser;
     }
 
-    @Basic
-    @Column(name = "Output_User_id")
-    public int getOutputUserId() {
-        return outputUserId;
+    @ManyToOne
+    @JoinColumn(name = "Input_User_id")
+    @JsonBackReference
+    public UserEntity getInputUser() {
+        return inputUser;
     }
 
-    public void setOutputUserId(int outputUserId) {
-        this.outputUserId = outputUserId;
+    public void setInputUser(UserEntity inputUser) {
+        this.inputUser = inputUser;
     }
 
-    @Basic
-    @Column(name = "Input_Store_id")
-    public int getInputStoreId() {
-        return inputStoreId;
+    @ManyToOne
+    @JoinColumn(name = "Input_Store_id")
+    @JsonBackReference
+    public StoreEntity getInputStore() {
+        return inputStore;
     }
 
-    public void setInputStoreId(int inputStoreId) {
-        this.inputStoreId = inputStoreId;
+    public void setInputStore(StoreEntity inputStore) {
+        this.inputStore = inputStore;
     }
 
-    @Basic
-    @Column(name = "Output_Store_id")
-    public int getOutputStoreId() {
-        return outputStoreId;
+
+    @ManyToOne
+    @JoinColumn(name = "Output_Store_id")
+    @JsonBackReference
+    public StoreEntity getOutputStore() {
+        return outputStore;
     }
 
-    public void setOutputStoreId(int outputStoreId) {
-        this.outputStoreId = outputStoreId;
+    public void setOutputStore(StoreEntity outputStore) {
+        this.outputStore = outputStore;
+    }
+
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "expressEntity", fetch = FetchType.LAZY)
+    @JsonBackReference
+    public List<ExpressProductEntity> getExpressProductEntities() {
+        return expressProductEntities;
+    }
+
+    public void setExpressProductEntities(List<ExpressProductEntity> expressProductEntities) {
+        this.expressProductEntities = expressProductEntities;
     }
 
     @Override
@@ -103,15 +126,13 @@ public class ExpressEntity {
         ExpressEntity that = (ExpressEntity) o;
 
         if (expressId != that.expressId) return false;
-        if (inputUserId != that.inputUserId) return false;
-        if (outputUserId != that.outputUserId) return false;
-        if (inputStoreId != that.inputStoreId) return false;
-        if (outputStoreId != that.outputStoreId) return false;
-        if (outputTime != null ? !outputTime.equals(that.outputTime) : that.outputTime != null) return false;
-        if (inputTime != null ? !inputTime.equals(that.inputTime) : that.inputTime != null) return false;
-        if (status != null ? !status.equals(that.status) : that.status != null) return false;
-
-        return true;
+        if (inputUser.getUserId() != that.getInputUser().getUserId()) return false;
+        if (outputUser.getUserId() != that.getOutputUser().getUserId()) return false;
+        if (inputStore.getStoreId() != that.getInputStore().getStoreId()) return false;
+        if (outputStore.getStoreId() != that.getOutputStore().getStoreId()) return false;
+        if (!Objects.equals(outputTime, that.outputTime)) return false;
+        if (!Objects.equals(inputTime, that.inputTime)) return false;
+        return Objects.equals(status, that.status);
     }
 
     @Override
@@ -119,11 +140,11 @@ public class ExpressEntity {
         int result = expressId;
         result = 31 * result + (outputTime != null ? outputTime.hashCode() : 0);
         result = 31 * result + (inputTime != null ? inputTime.hashCode() : 0);
-        result = 31 * result + (status != null ? status.hashCode() : 0);
-        result = 31 * result + inputUserId;
-        result = 31 * result + outputUserId;
-        result = 31 * result + inputStoreId;
-        result = 31 * result + outputStoreId;
+        result = 31 * result + (status ==0 ? Integer.valueOf(status).hashCode() : 0);
+        result = 31 * result + inputUser.getUserId();
+        result = 31 * result + outputUser.getUserId();
+        result = 31 * result + inputStore.getStoreId();
+        result = 31 * result + outputStore.getStoreId();
         return result;
     }
 }

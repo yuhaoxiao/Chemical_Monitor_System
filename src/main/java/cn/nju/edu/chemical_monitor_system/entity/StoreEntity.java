@@ -1,6 +1,10 @@
 package cn.nju.edu.chemical_monitor_system.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import javax.persistence.*;
+import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "Store", schema = "mydb")
@@ -8,6 +12,8 @@ public class StoreEntity {
     private int storeId;
     private int enterpriseId;
     private String name;
+    private List<ExpressEntity> inExpressEntities;//该仓库作为入库所绑定的清单
+    private List<ExpressEntity> outExpressEntities;//该仓库作为出库所绑定的清单
 
     @Id
     @Column(name = "Store_id")
@@ -39,6 +45,26 @@ public class StoreEntity {
         this.name = name;
     }
 
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "inputStore", fetch = FetchType.LAZY)
+    @JsonBackReference
+    public List<ExpressEntity> getInExpressEntities() {
+        return inExpressEntities;
+    }
+
+    public void setInExpressEntities(List<ExpressEntity> inExpressEntities) {
+        this.inExpressEntities = inExpressEntities;
+    }
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "outputStore", fetch = FetchType.LAZY)
+    @JsonBackReference
+    public List<ExpressEntity> getOutExpressEntities() {
+        return outExpressEntities;
+    }
+
+    public void setOutExpressEntities(List<ExpressEntity> outExpressEntities) {
+        this.outExpressEntities = outExpressEntities;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -48,7 +74,7 @@ public class StoreEntity {
 
         if (storeId != that.storeId) return false;
         if (enterpriseId != that.enterpriseId) return false;
-        if (name != null ? !name.equals(that.name) : that.name != null) return false;
+        if (!Objects.equals(name, that.name)) return false;
 
         return true;
     }

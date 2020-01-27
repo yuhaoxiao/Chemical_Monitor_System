@@ -1,14 +1,19 @@
 package cn.nju.edu.chemical_monitor_system.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import javax.persistence.*;
+import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "Product", schema = "mydb")
 public class ProductEntity {
     private int productId;
     private int batchId;
-    private int casId;
+    private CasEntity casEntity;
     private Double number;
+    private List<ExpressProductEntity> expressProductEntities;
 
     @Id
     @Column(name = "Product_id")
@@ -30,14 +35,15 @@ public class ProductEntity {
         this.batchId = batchId;
     }
 
-    @Basic
-    @Column(name = "CAS_id")
-    public int getCasId() {
-        return casId;
+    @ManyToOne
+    @JoinColumn(name = "cas_id")
+    @JsonBackReference
+    public CasEntity getCasEntity() {
+        return casEntity;
     }
 
-    public void setCasId(int casId) {
-        this.casId = casId;
+    public void setCasEntity(CasEntity casEntity) {
+        this.casEntity = casEntity;
     }
 
     @Basic
@@ -50,6 +56,16 @@ public class ProductEntity {
         this.number = number;
     }
 
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "productEntity",fetch = FetchType.LAZY)
+    @JsonBackReference
+    public List<ExpressProductEntity> getExpressProductEntities() {
+        return expressProductEntities;
+    }
+
+    public void setExpressProductEntities(List<ExpressProductEntity> expressProductEntities) {
+        this.expressProductEntities = expressProductEntities;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -59,8 +75,8 @@ public class ProductEntity {
 
         if (productId != that.productId) return false;
         if (batchId != that.batchId) return false;
-        if (casId != that.casId) return false;
-        if (number != null ? !number.equals(that.number) : that.number != null) return false;
+        if (casEntity.getCasId() != that.getCasEntity().getCasId()) return false;
+        if (!Objects.equals(number, that.number)) return false;
 
         return true;
     }
@@ -69,7 +85,7 @@ public class ProductEntity {
     public int hashCode() {
         int result = productId;
         result = 31 * result + batchId;
-        result = 31 * result + casId;
+        result = 31 * result + casEntity.getCasId();
         result = 31 * result + (number != null ? number.hashCode() : 0);
         return result;
     }

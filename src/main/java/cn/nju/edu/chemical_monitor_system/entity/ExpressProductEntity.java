@@ -1,17 +1,21 @@
 package cn.nju.edu.chemical_monitor_system.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
-@Table(name = "ExpressProduct", schema = "mydb")
+@Table(name = "expressproduct", schema = "mydb")
 public class ExpressProductEntity {
     private int expressProductId;
-    private int expressId;
-    private int productId;
+    private ProductEntity productEntity;
     private Double number;
+    private ExpressEntity expressEntity;
 
     @Id
-    @Column(name = "ExpressProduct_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "Expressproduct_id")
     public int getExpressProductId() {
         return expressProductId;
     }
@@ -20,24 +24,15 @@ public class ExpressProductEntity {
         this.expressProductId = expressProductId;
     }
 
-    @Basic
-    @Column(name = "Express_id")
-    public int getExpressId() {
-        return expressId;
+    @ManyToOne
+    @JoinColumn(name = "Product_id")
+    @JsonBackReference
+    public ProductEntity getProductEntity() {
+        return productEntity;
     }
 
-    public void setExpressId(int expressId) {
-        this.expressId = expressId;
-    }
-
-    @Basic
-    @Column(name = "Product_id")
-    public int getProductId() {
-        return productId;
-    }
-
-    public void setProductId(int productId) {
-        this.productId = productId;
+    public void setProductEntity(ProductEntity productEntity) {
+        this.productEntity = productEntity;
     }
 
     @Basic
@@ -50,6 +45,18 @@ public class ExpressProductEntity {
         this.number = number;
     }
 
+    @ManyToOne
+    @JoinColumn(name = "Express_id")
+    @JsonBackReference
+    public ExpressEntity getExpressEntity() {
+        return expressEntity;
+    }
+
+    public void setExpressEntity(ExpressEntity expressEntity) {
+        this.expressEntity = expressEntity;
+    }
+
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -58,18 +65,16 @@ public class ExpressProductEntity {
         ExpressProductEntity that = (ExpressProductEntity) o;
 
         if (expressProductId != that.expressProductId) return false;
-        if (expressId != that.expressId) return false;
-        if (productId != that.productId) return false;
-        if (number != null ? !number.equals(that.number) : that.number != null) return false;
-
-        return true;
+        if (expressEntity.getExpressId() != that.getExpressEntity().getExpressId()) return false;
+        if (productEntity.getProductId() != that.getProductEntity().getProductId()) return false;
+        return Objects.equals(number, that.number);
     }
 
     @Override
     public int hashCode() {
         int result = expressProductId;
-        result = 31 * result + expressId;
-        result = 31 * result + productId;
+        result = 31 * result + expressEntity.getExpressId();
+        result = 31 * result + productEntity.getProductId();
         result = 31 * result + (number != null ? number.hashCode() : 0);
         return result;
     }

@@ -1,6 +1,7 @@
 package cn.nju.edu.chemical_monitor_system.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
@@ -17,6 +18,8 @@ public class UserEntity {
     private String password;
     private String type;
     private List<BatchEntity> batchEntities;
+    private List<ExpressEntity> inExpressEntities;//该操作员作为入库者所绑定的清单
+    private List<ExpressEntity> outExpressEntities;//该操作员作为出库者所绑定的清单
 
     @Id
     @Column(name = "User_id")
@@ -49,13 +52,34 @@ public class UserEntity {
     }
 
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "userEntity")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "userEntity", fetch = FetchType.LAZY)
+    @JsonBackReference
     public List<BatchEntity> getBatchEntities() {
         return batchEntities;
     }
 
     public void setBatchEntities(List<BatchEntity> batchEntities) {
         this.batchEntities = batchEntities;
+    }
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "inputUser", fetch = FetchType.LAZY)
+    @JsonBackReference
+    public List<ExpressEntity> getInExpressEntities() {
+        return inExpressEntities;
+    }
+
+    public void setInExpressEntities(List<ExpressEntity> inExpressEntities) {
+        this.inExpressEntities = inExpressEntities;
+    }
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "outputUser", fetch = FetchType.LAZY)
+    @JsonBackReference
+    public List<ExpressEntity> getOutExpressEntities() {
+        return outExpressEntities;
+    }
+
+    public void setOutExpressEntities(List<ExpressEntity> outExpressEntities) {
+        this.outExpressEntities = outExpressEntities;
     }
 
     @Override
