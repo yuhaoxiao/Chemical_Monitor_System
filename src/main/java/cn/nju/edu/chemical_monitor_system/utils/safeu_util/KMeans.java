@@ -1,15 +1,15 @@
 package cn.nju.edu.chemical_monitor_system.utils.safeu_util;
 
 
-public class KMeans {
+class KMeans {
     private DistanceMetric distanceMetric;
     private int iterationNum;
-    public KMeans(DistanceMetric distanceMetric, int iterationNum){
+    KMeans(DistanceMetric distanceMetric, int iterationNum){
         this.distanceMetric=distanceMetric;
         this.iterationNum=iterationNum;
     }
     //将未分配的节点加入簇（策略为选择最近的簇）
-    public void allocateProductsToCluster(ProductList products,ClusterList clusterList){
+    private void allocateProductsToCluster(ProductList products, ClusterList clusterList){
         for(Product product:products){
             if(!product.isAllocated()){
                 Cluster nearest=clusterList.findNearestCluster(distanceMetric,product);
@@ -20,7 +20,7 @@ public class KMeans {
     }
 
     //通过最远的节点创建新的簇
-    public Cluster createFurthestCluster(ProductList products,ClusterList clusterList){
+    private Cluster createFurthestCluster(ProductList products, ClusterList clusterList){
         Product furthestProduct=clusterList.findFurthestProduct(distanceMetric,products);
         return new Cluster(furthestProduct);
     }
@@ -30,7 +30,7 @@ public class KMeans {
         return new Cluster(products.get(index));
     }
 
-    public ClusterList runKMeans(ProductList products,int k){
+    ClusterList runKMeans(ProductList products, int k){
         ClusterList clusters=new ClusterList();
         products.clearAllocated();
 

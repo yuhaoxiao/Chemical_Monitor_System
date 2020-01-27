@@ -8,7 +8,7 @@ public class ClusterList implements Iterable<Cluster>{
     private List<Cluster> clusters=new ArrayList<>();
 
     //寻找距离某个节点最近的簇
-    public Cluster findNearestCluster(DistanceMetric distanceMetric, Product product){
+    Cluster findNearestCluster(DistanceMetric distanceMetric, Product product){
         Cluster nearest=null;
         double nearestDistance=Double.MIN_VALUE;
         for(Cluster cluster:clusters){
@@ -22,7 +22,7 @@ public class ClusterList implements Iterable<Cluster>{
     }
 
     //返回距离所有簇中最远的一个节点
-    public Product findFurthestProduct(DistanceMetric distanceMetric,ProductList products){
+    Product findFurthestProduct(DistanceMetric distanceMetric, ProductList products){
         Product furthest=null;
         double furthestDistance=Double.MAX_VALUE;
         for(Product product:products){
@@ -35,23 +35,23 @@ public class ClusterList implements Iterable<Cluster>{
         return furthest;
     }
 
-    public void add(Cluster cluster){
+    void add(Cluster cluster){
         clusters.add(cluster);
     }
-    public int size(){
+    int size(){
         return clusters.size();
     }
-    public void updateCenter(){
+    void updateCenter(){
         for(Cluster cluster:clusters){
             cluster.updateCenter();
         }
     }
-    public void clear() {
+    void clear() {
         for (Cluster cluster : clusters) {
             cluster.clear();
         }
     }
-    public Cluster get(int i){
+    Cluster get(int i){
         return clusters.get(i);
     }
     @Override

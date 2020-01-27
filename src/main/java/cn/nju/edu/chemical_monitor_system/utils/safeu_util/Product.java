@@ -9,19 +9,22 @@ public class Product {
     private int productId;
     private int featureNums;
 
-    public Product(int featureNums,int productId){
+    Product(){
+
+    }
+    Product(int featureNums, int productId){
         this.featureNums=featureNums;
         this.nums=new Double[featureNums];
         this.productId=productId;
         this.isAllocated=false;
     }
-    public void add(Product product){
+    void add(Product product){
         for(int i=0;i<featureNums;i++){
             Double[] temp=product.getNums();
             nums[i]+=temp[i];
         }
     }
-    public void divide(int divisor) {
+    void divide(int divisor) {
         for (int i = 0; i < featureNums; i++) {
             nums[i] /= divisor;
         }
@@ -30,12 +33,9 @@ public class Product {
     @Override
     public boolean equals(Object o) {
         Product p=(Product)o;
-        if(this.getProductId()==p.getProductId()){
-            return true;
-        }
-        return false;
+        return this.getProductId() == p.getProductId();
     }
-    public double awayFrom(Product p){
+    double awayFrom(Product p){
         double distance=0;
         for(int i=0;i<featureNums;i++){
             distance+=Math.pow(nums[i]-p.getNums()[i],2);
