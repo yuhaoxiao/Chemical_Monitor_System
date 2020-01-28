@@ -7,6 +7,8 @@ import cn.nju.edu.chemical_monitor_system.dao.StoreDao;
 import cn.nju.edu.chemical_monitor_system.dao.UserDao;
 import cn.nju.edu.chemical_monitor_system.entity.*;
 import cn.nju.edu.chemical_monitor_system.service.ExpressService;
+import cn.nju.edu.chemical_monitor_system.utils.safeu_util.Product;
+import cn.nju.edu.chemical_monitor_system.utils.safeu_util.SafeUtil;
 import cn.nju.edu.chemical_monitor_system.vo.ExpressProductVO;
 import cn.nju.edu.chemical_monitor_system.vo.ExpressVO;
 import cn.nju.edu.chemical_monitor_system.vo.ProductVO;
@@ -27,6 +29,8 @@ public class ExpressServiceImpl implements ExpressService {
     private ProductDao productDao;
     @Autowired
     private UserDao userDao;
+    @Autowired
+    private SafeUtil safeUtil;
 
     @Override
     public ExpressVO createExpress(int inputStoreId, int outputStoreId, List<ProductVO> productVOS) {
@@ -83,6 +87,8 @@ public class ExpressServiceImpl implements ExpressService {
 
     @Override
     public ExpressVO findExpress(int expressId) {
+        List<Product> products=safeUtil.getSafeProducts(productDao.findFirstByProductId(1),productDao.findAll(),3);
+        System.out.println(products.size());
         ExpressEntity expressEntity = expressDao.findFirstByExpressId(expressId);
         return new ExpressVO(expressEntity);
     }
