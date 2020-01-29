@@ -16,11 +16,10 @@ public class CasEntity {
     private double boilingPoint;//沸点
     private int existType;//存在形式 0固体1液体2气体
     private int isOrganic;//0有机物1无机物
-    private boolean oxidation;//氧化性
-    private boolean reducibility;//还原性
-    private boolean inflammability;//易燃性
-    private boolean explosion;//易爆性
-
+    private int oxidation;//氧化性
+    private int reducibility;//还原性
+    private int inflammability;//易燃性
+    private int explosion;//易爆性
 
     @Id
     @Column(name = "CAS_id")
@@ -42,7 +41,6 @@ public class CasEntity {
         this.name = name;
     }
 
-
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "casEntity", fetch = FetchType.LAZY)
     @JsonBackReference
     public List<ProductEntity> getProductEntities() {
@@ -51,6 +49,86 @@ public class CasEntity {
 
     public void setProductEntities(List<ProductEntity> productEntities) {
         this.productEntities = productEntities;
+    }
+
+    @Basic
+    @Column(name = "FusionPoint")
+    public double getFusionPoint() {
+        return fusionPoint;
+    }
+
+    public void setFusionPoint(double fusionPoint) {
+        this.fusionPoint = fusionPoint;
+    }
+
+    @Basic
+    @Column(name = "BoilingPoint")
+    public double getBoilingPoint() {
+        return boilingPoint;
+    }
+
+    public void setBoilingPoint(double boilingPoint) {
+        this.boilingPoint = boilingPoint;
+    }
+
+    @Basic
+    @Column(name = "ExistType")
+    public int getExistType() {
+        return existType;
+    }
+
+    public void setExistType(int existType) {
+        this.existType = existType;
+    }
+
+    @Basic
+    @Column(name = "IsOrganic")
+    public int getIsOrganic() {
+        return isOrganic;
+    }
+
+    public void setIsOrganic(int isOrganic) {
+        this.isOrganic = isOrganic;
+    }
+
+    @Basic
+    @Column(name = "Oxidation")
+    public int getOxidation() {
+        return oxidation;
+    }
+
+    public void setOxidation(int oxidation) {
+        this.oxidation = oxidation;
+    }
+
+    @Basic
+    @Column(name = "Reducibility")
+    public int getReducibility() {
+        return reducibility;
+    }
+
+    public void setReducibility(int reducibility) {
+        this.reducibility = reducibility;
+    }
+
+    @Basic
+    @Column(name = "Inflammability")
+    public int getInflammability() {
+        return inflammability;
+    }
+
+    public void setInflammability(int inflammability) {
+        this.inflammability = inflammability;
+    }
+
+    @Basic
+    @Column(name = "Explosion")
+    public int getExplosion() {
+        return explosion;
+    }
+
+    public void setExplosion(int explosion) {
+        this.explosion = explosion;
     }
 
     @Override
