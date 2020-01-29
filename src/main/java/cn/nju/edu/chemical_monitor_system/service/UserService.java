@@ -6,9 +6,9 @@ import java.util.List;
 
 public interface UserService {
 
-    UserVO login(int id, String password);
+    UserVO login(String name, String password);
 
-    String register(String username, String password);
+    UserVO register(String name, String password);
 
     UserVO getUser(int uid);
 }

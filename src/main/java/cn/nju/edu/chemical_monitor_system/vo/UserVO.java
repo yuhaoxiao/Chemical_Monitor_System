@@ -1,10 +1,7 @@
 package cn.nju.edu.chemical_monitor_system.vo;
 
-import cn.nju.edu.chemical_monitor_system.entity.BatchEntity;
 import cn.nju.edu.chemical_monitor_system.entity.UserEntity;
 import lombok.Data;
-
-import java.util.List;
 
 @Data
 public class UserVO {
@@ -13,7 +10,7 @@ public class UserVO {
     private String password;
     private String type;
     private int code;
-    private List<BatchEntity> batchEntities;
+    private String message;
 
     public UserVO(UserEntity u) {
         if (u == null) {
@@ -25,10 +22,10 @@ public class UserVO {
         this.password = u.getPassword();
         this.type = u.getType();
         this.code = 1;
-        this.batchEntities = u.getBatchEntities();
     }
 
-    public UserVO() {
+    public UserVO(String message) {
         this.code = 0;
+        this.message = message;
     }
 }

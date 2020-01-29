@@ -22,8 +22,8 @@ public class UserController {
     }
 
     @PostMapping(value = "/user/login")
-    public UserVO login(int id, String password, HttpServletRequest request) {
-        UserVO user = userService.login(id, password);
+    public UserVO login(String name, String password, HttpServletRequest request) {
+        UserVO user = userService.login(name, password);
         if (user.getCode() == UserStatusEnum.LOGIN.getCode()) {
             if (request.getSession(false) != null)
                 request.getSession(false).invalidate();
@@ -35,7 +35,7 @@ public class UserController {
     }
 
     @PostMapping(value = "/user/register")
-    public String register(String userId, String password) {
+    public UserVO register(String userId, String password) {
         return userService.register(userId, password);
     }
 

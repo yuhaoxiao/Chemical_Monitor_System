@@ -15,6 +15,7 @@ import java.util.Objects;
 @Table(name = "User", schema = "mydb")
 public class UserEntity {
     private int userId;
+    private String name;
     private String password;
     private String type;
     private List<BatchEntity> batchEntities;
@@ -39,6 +40,16 @@ public class UserEntity {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    @Basic
+    @Column(name = "Name")
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     @Basic
