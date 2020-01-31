@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.io.Serializable;
 
 public interface UserDao extends JpaRepository<UserEntity, Serializable> {
+
     UserEntity findFirstByName(String name);
 
-    UserEntity findFirstByUserId(int uid);
 }

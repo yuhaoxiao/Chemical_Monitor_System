@@ -7,6 +7,8 @@ import cn.nju.edu.chemical_monitor_system.vo.CasVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class CasServiceImpl implements CasService {
 
@@ -15,13 +17,13 @@ public class CasServiceImpl implements CasService {
 
     @Override
     public CasVO getCas(int cid) {
-        CasEntity cas = casDao.findFirstByCasId(cid);
+        Optional<CasEntity> cas = casDao.findById(cid);
 
-        if (cas == null) {
+        if (!cas.isPresent()) {
             return new CasVO("CAS ID不存在");
         }
 
-        return new CasVO(cas);
+        return new CasVO(cas.get());
     }
 
 }

@@ -1,10 +1,12 @@
 package cn.nju.edu.chemical_monitor_system.dao;
 
+import cn.nju.edu.chemical_monitor_system.entity.CasEntity;
 import cn.nju.edu.chemical_monitor_system.entity.ProductEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.io.Serializable;
+import java.util.List;
 
 public interface ProductDao extends JpaRepository<ProductEntity, Serializable> {
-    ProductEntity findFirstByProductId(int productId);
+    List<ProductEntity> findByBatchIdAndCasEntity(int batchId, CasEntity cas);
 }

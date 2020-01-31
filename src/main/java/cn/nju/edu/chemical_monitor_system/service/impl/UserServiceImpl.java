@@ -7,6 +7,8 @@ import cn.nju.edu.chemical_monitor_system.vo.UserVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class UserServiceImpl implements UserService {
 
@@ -43,12 +45,12 @@ public class UserServiceImpl implements UserService {
     }
 
     public UserVO getUser(int uid) {
-        UserEntity user = userDao.findFirstByUserId(uid);
+        Optional<UserEntity> user = userDao.findById(uid);
 
-        if (user == null) {
+        if (!user.isPresent()) {
             return new UserVO("用户id不存在");
         }
 
-        return new UserVO(user);
+        return new UserVO(user.get());
     }
 }

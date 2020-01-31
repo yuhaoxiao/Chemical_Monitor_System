@@ -7,6 +7,4 @@ import java.io.Serializable;
 
 public interface CasDao extends JpaRepository<CasEntity, Serializable> {
 
-    CasEntity findFirstByCasId(int cid);
-    
 }

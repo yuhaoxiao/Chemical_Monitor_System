@@ -56,7 +56,7 @@ public class ProductEntity {
         this.number = number;
     }
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "productEntity",fetch = FetchType.LAZY)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "productEntity", fetch = FetchType.LAZY)
     @JsonBackReference
     public List<ExpressProductEntity> getExpressProductEntities() {
         return expressProductEntities;

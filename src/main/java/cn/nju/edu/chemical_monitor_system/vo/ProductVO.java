@@ -1,5 +1,6 @@
 package cn.nju.edu.chemical_monitor_system.vo;
 
+import cn.nju.edu.chemical_monitor_system.entity.CasEntity;
 import cn.nju.edu.chemical_monitor_system.entity.ProductEntity;
 import lombok.Data;
 
@@ -7,11 +8,10 @@ import lombok.Data;
 public class ProductVO {
 
     private int productId;
-    private CasVO casVO;
+    private CasEntity cas;
     private int batchId;
     private Double number;
-
-
+    private String message;
 
     private int code;
 
@@ -24,10 +24,11 @@ public class ProductVO {
         this.batchId = p.getBatchId();
         this.number = p.getNumber();
         this.code = 1;
-        this.casVO=new CasVO(p.getCasEntity());
+        this.cas = p.getCasEntity();
     }
 
-    public ProductVO() {
+    public ProductVO(String message) {
         this.code = 0;
+        this.message = message;
     }
 }
