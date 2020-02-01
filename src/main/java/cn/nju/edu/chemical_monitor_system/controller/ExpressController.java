@@ -1,18 +1,17 @@
 package cn.nju.edu.chemical_monitor_system.controller;
 
-import cn.nju.edu.chemical_monitor_system.request.CreateExpressRequest;
 import cn.nju.edu.chemical_monitor_system.service.ExpressService;
 import cn.nju.edu.chemical_monitor_system.vo.ExpressProductVO;
 import cn.nju.edu.chemical_monitor_system.vo.ExpressVO;
-import cn.nju.edu.chemical_monitor_system.vo.ProductVO;
 import cn.nju.edu.chemical_monitor_system.vo.UserVO;
-import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 public class ExpressController {
@@ -25,24 +24,20 @@ public class ExpressController {
     }
 
     @PostMapping(value = "express/create_express")
-    public ExpressVO createExpress(@RequestBody CreateExpressRequest createExpressRequest) {
-        return expressService.createExpress(
-                createExpressRequest.getInputStoreId(),
-                createExpressRequest.getOutputStoreId(),
-                createExpressRequest.getProductVOS()
-        );
+    public ExpressVO createExpress(int inputStoreId, int outputStoreId, Map<Integer,Double> productNumberMap) {
+        return expressService.createExpress(inputStoreId, outputStoreId, productNumberMap);
     }
 
     @PostMapping(value = "express/input_express")
     public ExpressVO inputExpress(int expressId, HttpServletRequest httpServletRequest) {
-        UserVO userVO=(UserVO)httpServletRequest.getSession().getAttribute("User");
-        return expressService.inputExpress(expressId,userVO.getUserId());
+        UserVO userVO = (UserVO) httpServletRequest.getSession().getAttribute("User");
+        return expressService.inputExpress(expressId, userVO.getUserId());
     }
 
     @PostMapping(value = "express/output_express")
     public ExpressVO outputExpress(int expressId, HttpServletRequest httpServletRequest) {
-        UserVO userVO=(UserVO)httpServletRequest.getSession().getAttribute("User");
-        return expressService.outputExpress(expressId,userVO.getUserId());
+        UserVO userVO = (UserVO) httpServletRequest.getSession().getAttribute("User");
+        return expressService.outputExpress(expressId, userVO.getUserId());
     }
 
     @GetMapping(value = "express/get_product_express")
@@ -52,7 +47,7 @@ public class ExpressController {
 
     @GetMapping(value = "express/get_express")
     public ExpressVO getExpress(int expressId) {
-        return expressService.findExpress(expressId);
+        return expressService.getExpress(expressId);
     }
 
 }

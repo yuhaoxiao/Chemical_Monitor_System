@@ -20,6 +20,7 @@ public class ExpressVO {
     private int outputStoreId;
     private int code;
     private List<ExpressProductVO> expressProductVOS;
+    private String message;
 
     public ExpressVO(ExpressEntity e) {
         if (e == null) {
@@ -36,13 +37,14 @@ public class ExpressVO {
         this.inputUserId = e.getInputUser().getUserId();
         this.outputUserId = e.getOutputUser().getUserId();
         this.code = 1;
-        this.expressProductVOS=e.getExpressProductEntities().stream()
+        this.expressProductVOS = e.getExpressProductEntities().stream()
                 .map(ExpressProductVO::new)
                 .collect(Collectors.toList());
     }
 
-    public ExpressVO() {
+    public ExpressVO(String message) {
         this.code = 0;
+        this.message = message;
     }
 
 }

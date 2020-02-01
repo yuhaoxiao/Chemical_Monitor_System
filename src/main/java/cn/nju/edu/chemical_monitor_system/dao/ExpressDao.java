@@ -6,5 +6,4 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.io.Serializable;
 
 public interface ExpressDao extends JpaRepository<ExpressEntity, Serializable> {
-    ExpressEntity findFirstByExpressId(int expressId);
 }

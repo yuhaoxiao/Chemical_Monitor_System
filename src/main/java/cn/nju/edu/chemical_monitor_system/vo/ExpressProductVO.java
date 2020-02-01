@@ -11,6 +11,7 @@ public class ExpressProductVO {
     private ProductVO productVO;
     private Double number;
     private int code;
+    private String message;
 
     public ExpressProductVO(ExpressProductEntity ep) {
         if (ep == null) {
@@ -25,7 +26,8 @@ public class ExpressProductVO {
         this.code = 1;
     }
 
-    public ExpressProductVO() {
+    public ExpressProductVO(String message) {
         this.code = 0;
+        this.message = message;
     }
 }

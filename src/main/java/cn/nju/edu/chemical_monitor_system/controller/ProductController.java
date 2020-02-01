@@ -20,7 +20,7 @@ public class ProductController {
 
     @GetMapping(value = "product/get_product")
     public ProductVO getProduct(int productId) {
-        return null;
+        return productService.getProduct(productId);
     }
 
 }

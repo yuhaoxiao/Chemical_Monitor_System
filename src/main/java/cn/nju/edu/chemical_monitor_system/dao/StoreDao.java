@@ -7,5 +7,4 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.io.Serializable;
 
 public interface StoreDao extends JpaRepository<StoreEntity, Serializable> {
-    StoreEntity findFirstByStoreId(int storeId);
 }
