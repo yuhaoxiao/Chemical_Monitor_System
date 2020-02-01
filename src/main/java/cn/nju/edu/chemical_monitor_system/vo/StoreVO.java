@@ -10,6 +10,7 @@ public class StoreVO {
     private int enterpriseId;
     private String name;
     private int code;
+    private String message;
 
     public StoreVO(StoreEntity s) {
         if (s == null) {
@@ -23,7 +24,8 @@ public class StoreVO {
         this.code = 1;
     }
 
-    public StoreVO() {
+    public StoreVO(String message) {
         this.code = 0;
+        this.message = message;
     }
 }

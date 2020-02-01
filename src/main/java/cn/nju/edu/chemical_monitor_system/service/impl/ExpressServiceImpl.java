@@ -127,7 +127,7 @@ public class ExpressServiceImpl implements ExpressService {
         Optional<ProductEntity> productOpt = productDao.findById(productId);
 
         if (!productOpt.isPresent()) {
-            return null;
+            return new ArrayList<>();
         }
 
         return productOpt.get().getExpressProductEntities().stream()
