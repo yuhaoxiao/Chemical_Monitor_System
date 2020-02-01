@@ -52,7 +52,8 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ProductVO getProduct(int pid) {
         Optional<ProductEntity> productOpt = productDao.findById(pid);
-        if(!productOpt.isPresent()){
+
+        if (!productOpt.isPresent()) {
             return new ProductVO("产品id不存在");
         }
 

@@ -2,12 +2,17 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="78dca6cd-d589-4046-9790-5f1186d1b9ea" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/src/main/java/cn/nju/edu/chemical_monitor_system/controller/StoreController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cn/nju/edu/chemical_monitor_system/controller/StoreController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/cn/nju/edu/chemical_monitor_system/dao/StoreDao.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cn/nju/edu/chemical_monitor_system/dao/StoreDao.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/cn/nju/edu/chemical_monitor_system/service/StoreService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cn/nju/edu/chemical_monitor_system/service/StoreService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/cn/nju/edu/chemical_monitor_system/service/impl/ExpressServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cn/nju/edu/chemical_monitor_system/service/impl/ExpressServiceImpl.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/cn/nju/edu/chemical_monitor_system/constant/InOutBatchStatusEnum.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/cn/nju/edu/chemical_monitor_system/dao/InoutBatchDao.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/cn/nju/edu/chemical_monitor_system/service/InoutBatchService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/cn/nju/edu/chemical_monitor_system/service/impl/InoutBatchServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/cn/nju/edu/chemical_monitor_system/constant/BatchStatusEnum.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cn/nju/edu/chemical_monitor_system/constant/BatchStatusEnum.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/cn/nju/edu/chemical_monitor_system/constant/ExpressStatusEnum.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cn/nju/edu/chemical_monitor_system/constant/ExpressStatusEnum.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/cn/nju/edu/chemical_monitor_system/controller/InoutController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cn/nju/edu/chemical_monitor_system/controller/InoutController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/cn/nju/edu/chemical_monitor_system/service/impl/ProductServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cn/nju/edu/chemical_monitor_system/service/impl/ProductServiceImpl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/cn/nju/edu/chemical_monitor_system/service/impl/StoreServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cn/nju/edu/chemical_monitor_system/service/impl/StoreServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/cn/nju/edu/chemical_monitor_system/vo/StoreVO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cn/nju/edu/chemical_monitor_system/vo/StoreVO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/cn/nju/edu/chemical_monitor_system/vo/InOutBatchVO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cn/nju/edu/chemical_monitor_system/vo/InOutBatchVO.java" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/target/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -55,6 +60,13 @@
         <item name="mydb@localhost" type="feb32156:DbDataSourceImpl" />
         <item name="schemas" type="d4e8921:DatabaseStructure$FamilyGroup" />
         <item name="mydb: schema" type="c314c289:MysqlImplModel$Schema" />
+        <item name="InOutBatch: table" type="98d5ac3d:MysqlImplModel$Table" />
+      </path>
+      <path>
+        <item name="Database" type="3277223f:DatabaseStructure$DbRootGroup" />
+        <item name="mydb@localhost" type="feb32156:DbDataSourceImpl" />
+        <item name="schemas" type="d4e8921:DatabaseStructure$FamilyGroup" />
+        <item name="mydb: schema" type="c314c289:MysqlImplModel$Schema" />
         <item name="Product: table" type="98d5ac3d:MysqlImplModel$Table" />
       </path>
       <path>
@@ -82,7 +94,7 @@
       <usages-collector id="statistics.file.extensions.open">
         <counts>
           <entry key="class" value="3" />
-          <entry key="java" value="65" />
+          <entry key="java" value="89" />
           <entry key="product" value="1" />
           <entry key="sql" value="1" />
         </counts>
@@ -91,20 +103,21 @@
         <counts>
           <entry key="CLASS" value="3" />
           <entry key="Database Element" value="1" />
-          <entry key="JAVA" value="65" />
+          <entry key="JAVA" value="89" />
           <entry key="Scratch" value="1" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
-          <entry key="java" value="2732" />
+          <entry key="dummy" value="5" />
+          <entry key="java" value="3643" />
           <entry key="txt" value="4" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="JAVA" value="2732" />
-          <entry key="PLAIN_TEXT" value="4" />
+          <entry key="JAVA" value="3643" />
+          <entry key="PLAIN_TEXT" value="9" />
         </counts>
       </usages-collector>
     </session>
@@ -115,19 +128,23 @@
   <component name="FileEditorManager">
     <leaf>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/cn/nju/edu/chemical_monitor_system/vo/StoreVO.java">
+        <entry file="file://$PROJECT_DIR$/src/main/java/cn/nju/edu/chemical_monitor_system/controller/ProductController.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="513">
-              <caret line="28" column="31" selection-start-line="28" selection-start-column="31" selection-end-line="28" selection-end-column="31" />
+            <state relative-caret-position="285">
+              <caret line="22" column="38" selection-start-line="22" selection-start-column="38" selection-end-line="22" selection-end-column="38" />
+              <folding>
+                <element signature="e#821#822#0" expanded="true" />
+                <element signature="e#880#881#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/cn/nju/edu/chemical_monitor_system/entity/StoreEntity.java">
+        <entry file="file://$PROJECT_DIR$/src/main/java/cn/nju/edu/chemical_monitor_system/controller/InoutController.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="158">
-              <caret line="14" column="49" selection-start-line="14" selection-start-column="12" selection-end-line="14" selection-end-column="49" />
+            <state relative-caret-position="266">
+              <caret line="22" column="33" selection-start-line="22" selection-start-column="33" selection-end-line="22" selection-end-column="33" />
             </state>
           </provider>
         </entry>
@@ -135,8 +152,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/cn/nju/edu/chemical_monitor_system/service/impl/StoreServiceImpl.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="686">
-              <caret line="64" column="28" selection-start-line="64" selection-start-column="28" selection-end-line="64" selection-end-column="28" />
+            <state relative-caret-position="667">
+              <caret line="76" column="77" selection-start-line="76" selection-start-column="77" selection-end-line="76" selection-end-column="77" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -145,19 +162,28 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/cn/nju/edu/chemical_monitor_system/entity/ExpressEntity.java">
+        <entry file="file://$PROJECT_DIR$/src/main/java/cn/nju/edu/chemical_monitor_system/constant/BatchStatusEnum.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="114">
-              <caret line="11" column="13" selection-start-line="11" selection-start-column="13" selection-end-line="11" selection-end-column="13" />
+            <state relative-caret-position="361">
+              <caret line="20" column="20" selection-start-line="3" selection-start-column="4" selection-end-line="20" selection-end-column="20" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/cn/nju/edu/chemical_monitor_system/dao/StoreDao.java">
+        <entry file="file://$PROJECT_DIR$/src/main/java/cn/nju/edu/chemical_monitor_system/constant/ExpressStatusEnum.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="114">
-              <caret line="11" column="1" lean-forward="true" selection-start-line="11" selection-start-column="1" selection-end-line="11" selection-end-column="1" />
+            <state relative-caret-position="361">
+              <caret line="23" column="5" lean-forward="true" selection-start-line="3" selection-start-column="4" selection-end-line="23" selection-end-column="5" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/cn/nju/edu/chemical_monitor_system/constant/ConstantVariables.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="38">
+              <caret line="2" column="13" selection-start-line="2" selection-start-column="13" selection-end-line="2" selection-end-column="13" />
             </state>
           </provider>
         </entry>
@@ -167,9 +193,9 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Enum" />
         <option value="Interface" />
         <option value="Class" />
+        <option value="Enum" />
       </list>
     </option>
   </component>
@@ -196,7 +222,6 @@
         <option value="$PROJECT_DIR$/src/main/java/cn/nju/edu/chemical_monitor_system/entity/ProductEntity.java" />
         <option value="$PROJECT_DIR$/src/main/java/cn/nju/edu/chemical_monitor_system/vo/ProductVO.java" />
         <option value="$PROJECT_DIR$/src/main/java/cn/nju/edu/chemical_monitor_system/service/ProductService.java" />
-        <option value="$PROJECT_DIR$/src/main/java/cn/nju/edu/chemical_monitor_system/service/impl/ProductServiceImpl.java" />
         <option value="$PROJECT_DIR$/src/main/java/cn/nju/edu/chemical_monitor_system/controller/ProductController.java" />
         <option value="$PROJECT_DIR$/src/main/java/cn/nju/edu/chemical_monitor_system/vo/ExpressVO.java" />
         <option value="$PROJECT_DIR$/src/main/java/cn/nju/edu/chemical_monitor_system/service/ExpressService.java" />
@@ -208,6 +233,17 @@
         <option value="$PROJECT_DIR$/src/main/java/cn/nju/edu/chemical_monitor_system/vo/StoreVO.java" />
         <option value="$PROJECT_DIR$/src/main/java/cn/nju/edu/chemical_monitor_system/service/StoreService.java" />
         <option value="$PROJECT_DIR$/src/main/java/cn/nju/edu/chemical_monitor_system/controller/StoreController.java" />
+        <option value="$PROJECT_DIR$/src/main/java/cn/nju/edu/chemical_monitor_system/service/impl/ProductServiceImpl.java" />
+        <option value="$PROJECT_DIR$/src/main/java/cn/nju/edu/chemical_monitor_system/service/InoutService.java" />
+        <option value="$PROJECT_DIR$/src/main/java/cn/nju/edu/chemical_monitor_system/service/impl/InoutServiceImpl.java" />
+        <option value="$PROJECT_DIR$/src/main/java/cn/nju/edu/chemical_monitor_system/vo/InOutBatchVO.java" />
+        <option value="$PROJECT_DIR$/src/main/java/cn/nju/edu/chemical_monitor_system/controller/InoutController.java" />
+        <option value="$PROJECT_DIR$/src/main/java/cn/nju/edu/chemical_monitor_system/service/InoutBatchService.java" />
+        <option value="$PROJECT_DIR$/src/main/java/cn/nju/edu/chemical_monitor_system/service/impl/InoutBatchServiceImpl.java" />
+        <option value="$PROJECT_DIR$/src/main/java/cn/nju/edu/chemical_monitor_system/dao/InoutBatchDao.java" />
+        <option value="$PROJECT_DIR$/src/main/java/cn/nju/edu/chemical_monitor_system/constant/ExpressStatusEnum.java" />
+        <option value="$PROJECT_DIR$/src/main/java/cn/nju/edu/chemical_monitor_system/constant/BatchStatusEnum.java" />
+        <option value="$PROJECT_DIR$/src/main/java/cn/nju/edu/chemical_monitor_system/constant/InOutBatchStatusEnum.java" />
         <option value="$PROJECT_DIR$/src/main/java/cn/nju/edu/chemical_monitor_system/service/impl/StoreServiceImpl.java" />
       </list>
     </option>
@@ -272,6 +308,15 @@
               <item name="main" type="462c0819:PsiDirectoryNode" />
               <item name="java" type="462c0819:PsiDirectoryNode" />
               <item name="chemical_monitor_system" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="Chemical_Monitor_System" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Chemical_Monitor_System" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+              <item name="chemical_monitor_system" type="462c0819:PsiDirectoryNode" />
+              <item name="constant" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="Chemical_Monitor_System" type="b2602c69:ProjectViewProjectNode" />
@@ -362,7 +407,7 @@
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1580539316441" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1580541887148" />
     <property name="database.console.LAST_STATE" value="true" />
     <property name="last_opened_file_path" value="C:/Program Files/Git/bin/git.exe" />
     <property name="project.structure.last.edited" value="Project" />
@@ -436,7 +481,7 @@
       <workItem from="1579773729170" duration="14761000" />
       <workItem from="1579794764275" duration="35726000" />
       <workItem from="1579957634821" duration="55277000" />
-      <workItem from="1580272442465" duration="21755000" />
+      <workItem from="1580272442465" duration="24318000" />
     </task>
     <task id="LOCAL-00001" summary="xiaoyuhao">
       <created>1579795942758</created>
@@ -484,7 +529,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="21755000" />
+    <option name="totallyTimeSpent" value="24318000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1680" height="1050" extended-state="0" />
@@ -555,33 +600,6 @@
     <option name="LAST_COMMIT_MESSAGE" value="xiaoyuhao" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$APPLICATION_CONFIG_DIR$/consoles/db/beb48063-5919-4d7c-833a-00244786e514/console.sql">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/cn/nju/edu/chemical_monitor_system/utils/safeu_util/SafeUtil.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="342">
-          <caret line="18" column="14" selection-start-line="18" selection-start-column="14" selection-end-line="18" selection-end-column="14" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/cn/nju/edu/chemical_monitor_system/controller/BatchController.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="95">
-          <caret line="13" column="13" selection-start-line="13" selection-start-column="13" selection-end-line="13" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/cn/nju/edu/chemical_monitor_system/entity/UserEntity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="535">
-          <caret line="43" selection-start-line="43" selection-end-line="43" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/cn/nju/edu/chemical_monitor_system/vo/UserVO.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="513">
@@ -618,13 +636,6 @@
             <element signature="e#350#351#0" expanded="true" />
             <element signature="e#377#378#0" expanded="true" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/cn/nju/edu/chemical_monitor_system/controller/InoutController.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="95">
-          <caret line="8" column="13" selection-start-line="8" selection-start-column="13" selection-end-line="8" selection-end-column="13" />
         </state>
       </provider>
     </entry>
@@ -680,40 +691,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/cn/nju/edu/chemical_monitor_system/service/impl/ProductServiceImpl.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="801">
-          <caret line="58" column="45" selection-start-line="58" selection-start-column="45" selection-end-line="58" selection-end-column="45" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/cn/nju/edu/chemical_monitor_system/controller/ProductController.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="323">
-          <caret line="22" column="50" selection-start-line="22" selection-start-column="50" selection-end-line="22" selection-end-column="50" />
-          <folding>
-            <element signature="e#464#465#0" expanded="true" />
-            <element signature="e#491#492#0" expanded="true" />
-            <element signature="e#821#822#0" expanded="true" />
-            <element signature="e#848#849#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/cn/nju/edu/chemical_monitor_system/dao/ProductDao.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="95">
           <caret line="10" column="23" selection-start-line="10" selection-start-column="23" selection-end-line="10" selection-end-column="23" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/cn/nju/edu/chemical_monitor_system/service/ProductService.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="38">
-          <caret line="2" column="44" selection-start-line="2" selection-start-column="44" selection-end-line="2" selection-end-column="44" />
         </state>
       </provider>
     </entry>
@@ -735,24 +716,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/cn/nju/edu/chemical_monitor_system/entity/InOutBatchEntity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="114">
-          <caret line="7" column="13" selection-start-line="7" selection-start-column="13" selection-end-line="7" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/cn/nju/edu/chemical_monitor_system/service/impl/UserServiceImpl.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="874">
           <caret line="53" column="36" selection-start-line="53" selection-start-column="36" selection-end-line="53" selection-end-column="36" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/cn/nju/edu/chemical_monitor_system/controller/UserController.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="304">
-          <caret line="27" column="22" selection-start-line="27" selection-start-column="22" selection-end-line="27" selection-end-column="22" />
         </state>
       </provider>
     </entry>
@@ -830,13 +797,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/cn/nju/edu/chemical_monitor_system/dao/StoreDao.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="114">
-          <caret line="11" column="1" lean-forward="true" selection-start-line="11" selection-start-column="1" selection-end-line="11" selection-end-column="1" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/cn/nju/edu/chemical_monitor_system/service/impl/ExpressServiceImpl.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="724">
@@ -850,20 +810,6 @@
           <caret line="13" column="49" selection-start-line="13" selection-start-column="49" selection-end-line="13" selection-end-column="49" />
           <folding>
             <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/cn/nju/edu/chemical_monitor_system/controller/StoreController.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="532">
-          <caret line="28" column="59" lean-forward="true" selection-start-line="28" selection-start-column="59" selection-end-line="28" selection-end-column="59" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#591#592#0" expanded="true" />
-            <element signature="e#642#643#0" expanded="true" />
-            <element signature="e#717#718#0" expanded="true" />
-            <element signature="e#766#767#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -889,10 +835,163 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/cn/nju/edu/chemical_monitor_system/service/ProductService.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="152">
+          <caret line="8" column="14" selection-start-line="8" selection-start-column="14" selection-end-line="8" selection-end-column="14" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/cn/nju/edu/chemical_monitor_system/service/impl/ProductServiceImpl.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="725">
+          <caret line="54" column="8" selection-start-line="54" selection-start-column="8" selection-end-line="54" selection-end-column="8" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/cn/nju/edu/chemical_monitor_system/controller/UserController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="304">
+          <caret line="27" column="22" selection-start-line="27" selection-start-column="22" selection-end-line="27" selection-end-column="22" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/cn/nju/edu/chemical_monitor_system/dao/BatchDao.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="114">
+          <caret line="9" column="1" lean-forward="true" selection-start-line="7" selection-end-line="9" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/cn/nju/edu/chemical_monitor_system/vo/InOutBatchVO.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="627">
+          <caret line="34" column="31" selection-start-line="34" selection-start-column="31" selection-end-line="34" selection-end-column="31" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/cn/nju/edu/chemical_monitor_system/controller/StoreController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="532">
+          <caret line="28" column="59" lean-forward="true" selection-start-line="28" selection-start-column="59" selection-end-line="28" selection-end-column="59" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#591#592#0" expanded="true" />
+            <element signature="e#642#643#0" expanded="true" />
+            <element signature="e#717#718#0" expanded="true" />
+            <element signature="e#766#767#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/cn/nju/edu/chemical_monitor_system/entity/InOutBatchEntity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-137">
+          <caret line="7" column="13" selection-start-line="7" selection-start-column="13" selection-end-line="7" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/cn/nju/edu/chemical_monitor_system/service/impl/InoutBatchServiceImpl.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="591">
+          <caret line="69" column="48" selection-start-line="69" selection-start-column="48" selection-end-line="69" selection-end-column="48" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/cn/nju/edu/chemical_monitor_system/controller/ProductController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="285">
+          <caret line="22" column="38" selection-start-line="22" selection-start-column="38" selection-end-line="22" selection-end-column="38" />
+          <folding>
+            <element signature="e#821#822#0" expanded="true" />
+            <element signature="e#880#881#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/cn/nju/edu/chemical_monitor_system/dao/StoreDao.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="114">
+          <caret line="11" column="1" lean-forward="true" selection-start-line="11" selection-start-column="1" selection-end-line="11" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/cn/nju/edu/chemical_monitor_system/dao/InoutBatchDao.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="190">
+          <caret line="10" column="54" selection-start-line="10" selection-start-column="54" selection-end-line="10" selection-end-column="54" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/cn/nju/edu/chemical_monitor_system/service/InoutBatchService.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="152">
+          <caret line="8" column="97" selection-start-line="8" selection-start-column="83" selection-end-line="8" selection-end-column="97" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/cn/nju/edu/chemical_monitor_system/constant/UserStatusEnum.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="38">
+          <caret line="2" column="12" selection-start-line="2" selection-start-column="12" selection-end-line="2" selection-end-column="12" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/cn/nju/edu/chemical_monitor_system/constant/UserTypeEnum.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="342">
+          <caret line="20" lean-forward="true" selection-start-line="20" selection-end-line="20" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/cn/nju/edu/chemical_monitor_system/controller/InoutController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="266">
+          <caret line="22" column="33" selection-start-line="22" selection-start-column="33" selection-end-line="22" selection-end-column="33" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/cn/nju/edu/chemical_monitor_system/constant/ConstantVariables.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="38">
+          <caret line="2" column="13" selection-start-line="2" selection-start-column="13" selection-end-line="2" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/cn/nju/edu/chemical_monitor_system/constant/ExpressStatusEnum.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="361">
+          <caret line="23" column="5" lean-forward="true" selection-start-line="3" selection-start-column="4" selection-end-line="23" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/cn/nju/edu/chemical_monitor_system/constant/InOutBatchStatusEnum.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="114">
+          <caret line="6" column="19" lean-forward="true" selection-start-line="6" selection-start-column="19" selection-end-line="6" selection-end-column="19" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/cn/nju/edu/chemical_monitor_system/constant/BatchStatusEnum.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="361">
+          <caret line="20" column="20" selection-start-line="3" selection-start-column="4" selection-end-line="20" selection-end-column="20" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/cn/nju/edu/chemical_monitor_system/service/impl/StoreServiceImpl.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="686">
-          <caret line="64" column="28" selection-start-line="64" selection-start-column="28" selection-end-line="64" selection-end-column="28" />
+        <state relative-caret-position="667">
+          <caret line="76" column="77" selection-start-line="76" selection-start-column="77" selection-end-line="76" selection-end-column="77" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>

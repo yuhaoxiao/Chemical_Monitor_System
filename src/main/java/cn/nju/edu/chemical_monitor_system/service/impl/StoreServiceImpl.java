@@ -1,8 +1,11 @@
 package cn.nju.edu.chemical_monitor_system.service.impl;
 
+import cn.nju.edu.chemical_monitor_system.constant.InOutBatchStatusEnum;
+import cn.nju.edu.chemical_monitor_system.dao.InoutBatchDao;
 import cn.nju.edu.chemical_monitor_system.dao.StoreDao;
 import cn.nju.edu.chemical_monitor_system.entity.ExpressEntity;
 import cn.nju.edu.chemical_monitor_system.entity.ExpressProductEntity;
+import cn.nju.edu.chemical_monitor_system.entity.InOutBatchEntity;
 import cn.nju.edu.chemical_monitor_system.entity.StoreEntity;
 import cn.nju.edu.chemical_monitor_system.service.StoreService;
 import cn.nju.edu.chemical_monitor_system.vo.StoreVO;
@@ -20,6 +23,9 @@ public class StoreServiceImpl implements StoreService {
 
     @Autowired
     private StoreDao storeDao;
+
+    @Autowired
+    private InoutBatchDao inoutBatchDao;
 
     @Override
     public List<Integer> getAllStoreId() {
@@ -48,7 +54,7 @@ public class StoreServiceImpl implements StoreService {
                 int productId = inep.getProductEntity().getProductId();
                 if (productNumber.containsKey(productId)) {
                     Double number = productNumber.get(productId);
-                    productNumber.put(inep.getProductEntity().getProductId(), number + inep.getNumber());
+                    productNumber.put(productId, number + inep.getNumber());
                 } else {
                     productNumber.put(productId, inep.getNumber());
                 }
@@ -60,10 +66,24 @@ public class StoreServiceImpl implements StoreService {
                 int productId = outep.getProductEntity().getProductId();
                 if (productNumber.containsKey(productId)) {
                     Double number = productNumber.get(productId);
-                    productNumber.put(outep.getProductEntity().getProductId(), number - outep.getNumber());
+                    productNumber.put(productId, number - outep.getNumber());
                 } else {
                     productNumber.put(productId, -outep.getNumber());
                 }
+            }
+        }
+
+        for (InOutBatchEntity inout : inoutBatchDao.findByStoreId(sid)) {
+            if (inout.getStatus() != InOutBatchStatusEnum.COMPLETED.getName()) {
+                continue;
+            }
+
+            int productId = inout.getProductId();
+            if (productNumber.containsKey(productId)) {
+                Double number = productNumber.get(productId);
+                productNumber.put(productId, number + inout.getNumber() * (inout.getInOrOut() == 1 ? 1 : -1));
+            } else {
+                productNumber.put(productId, inout.getNumber() * (inout.getInOrOut() == 1 ? 1 : -1));
             }
         }
 

@@ -13,6 +13,7 @@ public class InOutBatchVO {
     private Integer inOrOut;
     private Double number;
     private int code;
+    private String message;
 
     public InOutBatchVO(InOutBatchEntity io) {
         if (io == null) {
@@ -29,7 +30,8 @@ public class InOutBatchVO {
         this.code = 1;
     }
 
-    public InOutBatchVO() {
+    public InOutBatchVO(String message) {
         this.code = 0;
+        this.message = message;
     }
 }
