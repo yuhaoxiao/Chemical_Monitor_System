@@ -1,8 +1,11 @@
 package cn.nju.edu.chemical_monitor_system.utils.safeu_util;
 
 import cn.nju.edu.chemical_monitor_system.constant.ConstantVariables;
+import cn.nju.edu.chemical_monitor_system.dao.ProductDao;
+import cn.nju.edu.chemical_monitor_system.entity.CasEntity;
 import cn.nju.edu.chemical_monitor_system.entity.ProductEntity;
 import lombok.Data;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Arrays;
 
@@ -15,24 +18,27 @@ public class Product {
     private int featureNums = ConstantVariables.featureNums;
     private String name;
 
+    @Autowired
+    private ProductDao productDao;
+
     Product() {
     }
 
-    Product(ProductEntity productEntity) {
+    Product(int productId) {
+        ProductEntity productEntity = productDao.findById(productId).get();
         this.nums = new double[featureNums];
-        nums[0] = Math.random() * 100;
-        nums[1] = Math.random() * 100;
-        nums[2] = Math.random() * 100;
+        CasEntity cas = productEntity.getCasEntity();
+        nums[0] = cas.getFusionPoint();
+        nums[1] = cas.getBoilingPoint();
+        nums[2] = cas.getExistType();
+        nums[3] = cas.getIsOrganic();
+        nums[4] = cas.getOxidation();
+        nums[5] = cas.getReducibility();
+        nums[6] = cas.getInflammability();
+        nums[7] = cas.getExplosion();
         this.productId = productEntity.getProductId();
         this.isAllocated = false;
         this.name = productEntity.getCasEntity().getName();
-    }
-
-    Product(int productId, String name) {
-        this.nums = new double[this.featureNums];
-        this.productId = productId;
-        this.isAllocated = false;
-        this.name = name;
     }
 
     void add(Product product) {
@@ -47,7 +53,6 @@ public class Product {
             nums[i] /= divisor;
         }
     }
-
 
     //计算两个节点之间的距离公式，目前先简单采用欧几里得公式计算
     double awayFrom(Product p) {

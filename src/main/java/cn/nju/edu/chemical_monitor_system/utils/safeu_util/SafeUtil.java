@@ -65,7 +65,7 @@ public class SafeUtil {
     //入库是否安全
     public boolean isSafe(int productId, int storeId) {
         List<Integer> storeIds = new ArrayList<>();//之后改成调用接口
-        ProductEntity productEntity = productDao.findFirstByProductId(productId);
+        ProductEntity productEntity = productDao.findById(productId).get();
         Product inProduct = new Product(productEntity);
         double max = Double.MIN_VALUE;
         double min = Double.MAX_VALUE;
