@@ -10,7 +10,7 @@ import cn.nju.edu.chemical_monitor_system.entity.ExpressProductEntity;
 import cn.nju.edu.chemical_monitor_system.entity.ProductEntity;
 import cn.nju.edu.chemical_monitor_system.entity.StoreEntity;
 import cn.nju.edu.chemical_monitor_system.service.ExpressService;
-import cn.nju.edu.chemical_monitor_system.utils.safeu_util.SafeUtil;
+import cn.nju.edu.chemical_monitor_system.utils.safe_util.SafeUtil;
 import cn.nju.edu.chemical_monitor_system.vo.ExpressProductVO;
 import cn.nju.edu.chemical_monitor_system.vo.ExpressVO;
 import org.springframework.beans.factory.annotation.Autowired;

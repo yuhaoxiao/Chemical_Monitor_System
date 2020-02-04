@@ -1,10 +1,12 @@
-package cn.nju.edu.chemical_monitor_system.utils.safeu_util;
+package cn.nju.edu.chemical_monitor_system.utils.safe_util;
 
 import cn.nju.edu.chemical_monitor_system.constant.ConstantVariables;
 import cn.nju.edu.chemical_monitor_system.dao.ProductDao;
 import cn.nju.edu.chemical_monitor_system.dao.StoreDao;
 import cn.nju.edu.chemical_monitor_system.entity.CasEntity;
 import cn.nju.edu.chemical_monitor_system.entity.ProductEntity;
+import cn.nju.edu.chemical_monitor_system.service.ProductService;
+import cn.nju.edu.chemical_monitor_system.service.StoreService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,9 +17,9 @@ import java.util.stream.Collectors;
 @Service
 public class SafeUtil {
     @Autowired
-    StoreDao storeDao;
+    StoreService storeService;
     @Autowired
-    ProductDao productDao;
+    ProductService productService;
 
     public static void main(String[] args) {
         List<ProductEntity> productEntities = new ArrayList<>();
@@ -64,14 +66,13 @@ public class SafeUtil {
 
     //入库是否安全
     public boolean isSafe(int productId, int storeId) {
-        List<Integer> storeIds = new ArrayList<>();//之后改成调用接口
-        ProductEntity productEntity = productDao.findById(productId).get();
-        Product inProduct = new Product(productEntity);
+        List<Integer> storeIds = storeService.getAllStoreId();
+        Product inProduct = new Product(productId);
         double max = Double.MIN_VALUE;
         double min = Double.MAX_VALUE;
         double targetStoreDistance = 0;
         for (int i = 0; i < storeIds.size(); i++) {
-            List<ProductEntity> productEntities = new ArrayList<>();//之后改成调用接口
+            List<Integer> productEntities = new ArrayList<>(storeService.getStoreProduct(storeIds.get(i)).keySet());
             List<Product> products = productEntities.stream()
                     .map(Product::new).collect(Collectors.toList());
             Cluster cluster = new Cluster();

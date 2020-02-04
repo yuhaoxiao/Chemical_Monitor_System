@@ -1,4 +1,4 @@
-package cn.nju.edu.chemical_monitor_system.utils.safeu_util;
+package cn.nju.edu.chemical_monitor_system.utils.safe_util;
 
 
 class Distance {
