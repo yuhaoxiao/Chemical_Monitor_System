@@ -16,6 +16,7 @@ public class BatchVO {
     private int code;
     private UserEntity userEntity;
     private String type;
+    private String message;
 
     public BatchVO(BatchEntity b) {
         if (b == null) {
@@ -32,8 +33,9 @@ public class BatchVO {
         this.type = b.getType();
     }
 
-    public BatchVO() {
+    public BatchVO(String message) {
         this.code = 0;
+        this.message = message;
     }
 
 }

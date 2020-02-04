@@ -40,7 +40,6 @@ public class BatchEntity {
         this.productionLineId = productionLineId;
     }
 
-
     @Basic
     @Column(name = "Time")
     public Timestamp getTime() {

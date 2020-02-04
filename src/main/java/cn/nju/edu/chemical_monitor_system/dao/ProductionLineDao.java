@@ -5,6 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.io.Serializable;
 
-public interface ProductLineDao extends JpaRepository<ProductionLineEntity, Serializable> {
+public interface ProductionLineDao extends JpaRepository<ProductionLineEntity, Serializable> {
     
 }
