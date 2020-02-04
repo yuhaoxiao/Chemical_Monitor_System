@@ -1,6 +1,7 @@
 package cn.nju.edu.chemical_monitor_system.controller;
 
 import cn.nju.edu.chemical_monitor_system.service.ProductService;
+import cn.nju.edu.chemical_monitor_system.service.RfidService;
 import cn.nju.edu.chemical_monitor_system.vo.ProductVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,9 +14,14 @@ public class ProductController {
     @Autowired
     private ProductService productService;
 
+    @Autowired
+    private RfidService rfidService;
+
     @PostMapping(value = "product/add_product")
     public ProductVO addProduct(int batchId, int casId, double number) {
-        return productService.addProduct(batchId, casId, number);
+        ProductVO productVO = productService.addProduct(batchId, casId, number);
+        rfidService.writeRfid(productVO.getProductId());
+        return productVO;
     }
 
     @GetMapping(value = "product/get_product")

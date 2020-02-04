@@ -15,6 +15,8 @@ public class BatchVO {
     private Timestamp time;
     private int code;
     private UserEntity userEntity;
+    private String type;
+    private String message;
 
     public BatchVO(BatchEntity b) {
         if (b == null) {
@@ -28,10 +30,12 @@ public class BatchVO {
         this.time = b.getTime();
         this.code = 1;
         this.userEntity = b.getUserEntity();
+        this.type = b.getType();
     }
 
-    public BatchVO() {
+    public BatchVO(String message) {
         this.code = 0;
+        this.message = message;
     }
 
 }

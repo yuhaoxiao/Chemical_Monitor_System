@@ -18,7 +18,7 @@ public class BatchEntity {
     private Timestamp time;
     private String status;
     private UserEntity userEntity;
-
+    private String type;
 
     @Id
     @Column(name = "Batch_id")
@@ -40,7 +40,6 @@ public class BatchEntity {
         this.productionLineId = productionLineId;
     }
 
-
     @Basic
     @Column(name = "Time")
     public Timestamp getTime() {
@@ -59,6 +58,16 @@ public class BatchEntity {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    @Basic
+    @Column(name = "Type")
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     @ManyToOne
