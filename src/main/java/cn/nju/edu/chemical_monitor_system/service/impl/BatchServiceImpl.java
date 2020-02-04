@@ -96,7 +96,7 @@ public class BatchServiceImpl implements BatchService {
             return null;
         }
 
-        return inoutBatchDao.findByBatchIdAndInOrOut(batchId, isIn ? 1 : 0).stream().map(InOutBatchVO::new).collect(Collectors.toList());
+        return inoutBatchDao.findByBatchIdAndInout(batchId, isIn ? 1 : 0).stream().map(InOutBatchVO::new).collect(Collectors.toList());
     }
 
 }

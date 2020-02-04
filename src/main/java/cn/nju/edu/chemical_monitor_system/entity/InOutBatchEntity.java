@@ -10,7 +10,7 @@ public class InOutBatchEntity {
     private int productId;
     private int storeId;
     private int batchId;
-    private Integer inOrOut;
+    private Integer inout;
     private Double number;
     private String status;
 
@@ -55,13 +55,13 @@ public class InOutBatchEntity {
     }
 
     @Basic
-    @Column(name = "InOrOut")
-    public Integer getInOrOut() {
-        return inOrOut;
+    @Column(name = "Inout")
+    public Integer getInout() {
+        return inout;
     }
 
-    public void setInOrOut(Integer inOrOut) {
-        this.inOrOut = inOrOut;
+    public void setInout(Integer inOrOut) {
+        this.inout = inOrOut;
     }
 
     @Basic
@@ -95,7 +95,7 @@ public class InOutBatchEntity {
         if (productId != that.productId) return false;
         if (storeId != that.storeId) return false;
         if (batchId != that.batchId) return false;
-        if (!Objects.equals(inOrOut, that.inOrOut)) return false;
+        if (!Objects.equals(inout, that.inout)) return false;
         if (!Objects.equals(number, that.number)) return false;
         if (!Objects.equals(status, that.status)) return false;
 
@@ -108,7 +108,7 @@ public class InOutBatchEntity {
         result = 31 * result + productId;
         result = 31 * result + storeId;
         result = 31 * result + batchId;
-        result = 31 * result + (inOrOut != null ? inOrOut.hashCode() : 0);
+        result = 31 * result + (inout != null ? inout.hashCode() : 0);
         result = 31 * result + (number != null ? number.hashCode() : 0);
         result = 31 * result + (status != null ? status.hashCode() : 0);
         return result;

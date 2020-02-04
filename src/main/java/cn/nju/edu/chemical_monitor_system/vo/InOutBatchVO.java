@@ -21,11 +21,11 @@ public class InOutBatchVO {
             return;
         }
 
-        this.inOrOut = io.getInOrOut();
+        this.inOrOut = io.getInout();
         this.productId = io.getProductId();
         this.storeId = io.getStoreId();
         this.batchId = io.getBatchId();
-        this.inOrOut = io.getInOrOut();
+        this.inOrOut = io.getInout();
         this.number = io.getNumber();
         this.code = 1;
     }

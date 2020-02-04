@@ -65,7 +65,7 @@ public class InoutBatchServiceImpl implements InoutBatchService {
         inOutBatchEntity.setStoreId(storeId);
         inOutBatchEntity.setStatus("not start");
         inOutBatchEntity.setNumber(number);
-        inOutBatchEntity.setInOrOut(isIn ? 1 : 0);
+        inOutBatchEntity.setInout(isIn ? 1 : 0);
         inoutBatchDao.saveAndFlush(inOutBatchEntity);
         return new InOutBatchVO(inOutBatchEntity);
     }
