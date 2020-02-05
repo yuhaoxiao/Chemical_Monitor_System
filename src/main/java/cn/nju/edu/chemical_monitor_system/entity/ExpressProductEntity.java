@@ -12,6 +12,7 @@ public class ExpressProductEntity {
     private ProductEntity productEntity;
     private Double number;
     private ExpressEntity expressEntity;
+    private int Status;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -56,6 +57,15 @@ public class ExpressProductEntity {
         this.expressEntity = expressEntity;
     }
 
+    @Basic
+    @Column(name = "Status")
+    public int getStatus() {
+        return Status;
+    }
+
+    public void setStatus(int status) {
+        Status = status;
+    }
 
     @Override
     public boolean equals(Object o) {

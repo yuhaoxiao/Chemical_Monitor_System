@@ -6,12 +6,12 @@ import org.springframework.stereotype.Service;
 @Service
 public class RfidServiceImpl implements RfidService {
     @Override
-    public int readRfid() {
-        return 0;
+    public String readRfid(String port) {
+        return null;
     }
 
     @Override
-    public void writeRfid(int productId) {
-
+    public String writeRfid(String rfid, String port) {
+        return null;
     }
 }

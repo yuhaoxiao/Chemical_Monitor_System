@@ -11,4 +11,6 @@ public interface ProductDao extends JpaRepository<ProductEntity, Serializable> {
     List<ProductEntity> findByBatchIdAndCasEntity(int batchId, CasEntity cas);
 
     List<ProductEntity> findByBatchId(int batchId);
+
+    ProductEntity findByProductId(int productId);
 }

@@ -22,6 +22,9 @@ public class ExpressVO {
     private List<ExpressProductVO> expressProductVOS;
     private String message;
 
+    public ExpressVO(){
+
+    }
     public ExpressVO(ExpressEntity e) {
         if (e == null) {
             this.code = 0;

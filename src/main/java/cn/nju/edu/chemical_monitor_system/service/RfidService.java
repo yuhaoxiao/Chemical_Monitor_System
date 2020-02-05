@@ -2,7 +2,7 @@ package cn.nju.edu.chemical_monitor_system.service;
 
 public interface RfidService {
 
-    int readRfid();
+    String readRfid(String port);//-1表示没有读成功
 
-    void writeRfid(int productId);
+    String writeRfid(String rfid,String port);//-1表示没有写成功
 }
