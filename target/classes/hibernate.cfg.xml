@@ -18,5 +18,6 @@
         <mapping class="cn.nju.edu.chemical_monitor_system.entity.ProductionLineEntity"/>
         <mapping class="cn.nju.edu.chemical_monitor_system.entity.StoreEntity"/>
         <mapping class="cn.nju.edu.chemical_monitor_system.entity.InOutBatchEntity"/>
+        <mapping class="cn.nju.edu.chemical_monitor_system.entity.EncryptionEntity"/>
     </session-factory>
 </hibernate-configuration>

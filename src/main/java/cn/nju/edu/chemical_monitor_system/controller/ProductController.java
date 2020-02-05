@@ -20,7 +20,7 @@ public class ProductController {
     @PostMapping(value = "product/add_product")
     public ProductVO addProduct(int batchId, int casId, double number) {
         ProductVO productVO = productService.addProduct(batchId, casId, number);
-        rfidService.writeRfid(productVO.getProductId());
+        rfidService.writeRfid(productVO.getProductId() + "", "1");
         return productVO;
     }
 
