@@ -10,6 +10,7 @@ import cn.nju.edu.chemical_monitor_system.entity.StoreEntity;
 import cn.nju.edu.chemical_monitor_system.service.ExpressService;
 import cn.nju.edu.chemical_monitor_system.service.RfidService;
 import cn.nju.edu.chemical_monitor_system.utils.encryption_util.EncryptionUtil;
+import cn.nju.edu.chemical_monitor_system.utils.rfid_util.RfidUtil;
 import cn.nju.edu.chemical_monitor_system.utils.safe_util.SafeUtil;
 import cn.nju.edu.chemical_monitor_system.vo.ExpressProductVO;
 import cn.nju.edu.chemical_monitor_system.vo.ExpressVO;
@@ -52,7 +53,7 @@ public class ExpressServiceImpl implements ExpressService {
     EncryptionUtil encryptionUtil;
 
     @Autowired
-    private RfidService rfidService;
+    private RfidUtil rfidUtil;
 
     @Override
     public ExpressVO createExpress(int inputStoreId, int outputStoreId, Map<Integer, Double> productNumberMap) {
@@ -80,7 +81,6 @@ public class ExpressServiceImpl implements ExpressService {
             if (!productOpt.isPresent()) {
                 continue;
             }
-
             ep.setProductEntity(productOpt.get());
             ep.setExpressEntity(expressEntity);
             ep.setStatus(ExpressProductStatusEnum.NOT_START.getCode());
@@ -93,7 +93,7 @@ public class ExpressServiceImpl implements ExpressService {
         return new ExpressVO(expressEntity);
     }
 
-    public ExpressVO inputExpress(int expressId, int userId) {
+    private ExpressVO inputExpress(int expressId, int userId) {
         Optional<ExpressEntity> expressOpt = expressDao.findById(expressId);
 
         if (!expressOpt.isPresent()) {
@@ -142,56 +142,6 @@ public class ExpressServiceImpl implements ExpressService {
 
     }
 
-    class ReadRfidThread implements Callable<String> {
-        String port;
-
-        ReadRfidThread(String port) {
-            this.port = port;
-        }
-
-        @Override
-        public String call() throws Exception {
-            String rfid;
-            //返回结果为-1代表读取失败，继续读取
-            while ((rfid = rfidService.readRfid(port)).equals("-1")) {
-                Thread.sleep(1000);
-            }
-            return rfid;
-        }
-    }
-
-    class WriteRfidThread implements Callable<String> {
-        String port;
-        String rfid;
-
-        WriteRfidThread(String rfid, String port) {
-            this.port = port;
-            this.rfid = rfid;
-        }
-
-        @Override
-        public String call() throws Exception {
-            String newRfid;
-            //返回结果为-1代表写入失败，继续写入
-            while ((newRfid = rfidService.writeRfid(rfid, port)).equals("-1")) {
-                Thread.sleep(1000);
-            }
-            return newRfid;
-        }
-    }
-
-    private String limitTimeTask(Callable<String> thread) {
-        FutureTask<String> futureTask = new FutureTask<>(thread);
-        new Thread(futureTask).start();
-        String result = "";
-        try {
-            //设置超时时间4秒
-            result = futureTask.get(4000, TimeUnit.MILLISECONDS);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-        return result;
-    }
 
     @Override
     public ProductVO outputProduct(int expressId, int userId) {
@@ -199,8 +149,7 @@ public class ExpressServiceImpl implements ExpressService {
         ExpressEntity expressEntity = expressDao.findFirstByExpressId(expressId);
         //从物流单里面的store获得port
         String port = expressEntity.getOutputStore().getPort();
-        Callable<String> readThread = new ReadRfidThread(port);
-        String rfid = limitTimeTask(readThread);
+        String rfid = rfidUtil.read(port);
         //如果没有读到结果
         if (rfid.equals("")) {
             ProductVO p = new ProductVO();
@@ -236,8 +185,7 @@ public class ExpressServiceImpl implements ExpressService {
     public ProductVO inputProduct(int expressId, int userId) {
         ExpressEntity expressEntity = expressDao.findFirstByExpressId(expressId);
         String port = expressEntity.getInputStore().getPort();
-        Callable<String> readThread = new ReadRfidThread(port);
-        String rfid = limitTimeTask(readThread);
+        String rfid = rfidUtil.read(port);
         //如果没有读到结果
         if (rfid.equals("")) {
             ProductVO p = new ProductVO();
@@ -295,8 +243,7 @@ public class ExpressServiceImpl implements ExpressService {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                Callable<String> writeThread = new WriteRfidThread(port, newRfid);
-                String writeRfid = limitTimeTask(writeThread);
+                String writeRfid = rfidUtil.write(rfid,port);
                 if (writeRfid.equals("")) {
                     ExpressVO expressVO = new ExpressVO();
                     expressVO.setCode(0);
