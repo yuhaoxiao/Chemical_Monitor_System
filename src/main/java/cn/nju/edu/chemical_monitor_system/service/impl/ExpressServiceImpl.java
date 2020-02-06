@@ -10,7 +10,6 @@ import cn.nju.edu.chemical_monitor_system.entity.StoreEntity;
 import cn.nju.edu.chemical_monitor_system.service.ExpressService;
 import cn.nju.edu.chemical_monitor_system.service.RfidService;
 import cn.nju.edu.chemical_monitor_system.utils.encryption_util.EncryptionUtil;
-import cn.nju.edu.chemical_monitor_system.utils.safe_util.Product;
 import cn.nju.edu.chemical_monitor_system.utils.safe_util.SafeUtil;
 import cn.nju.edu.chemical_monitor_system.vo.ExpressProductVO;
 import cn.nju.edu.chemical_monitor_system.vo.ExpressVO;
@@ -19,12 +18,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.FutureTask;
 import java.util.concurrent.TimeUnit;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
@@ -306,7 +306,6 @@ public class ExpressServiceImpl implements ExpressService {
                 //写入成功之后才进行保存
                 expressProductEntity.setStatus(ExpressProductStatusEnum.OUT_INVENTORY.getCode());//更新状态为已出库
                 expressProductDao.saveAndFlush(expressProductEntity);
-
             }
             if (expressProductEntity.getStatus() == ExpressProductStatusEnum.OUT_INVENTORY.getCode()) {
                 temp++;
