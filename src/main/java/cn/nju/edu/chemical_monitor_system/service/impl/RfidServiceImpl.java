@@ -7,11 +7,14 @@ import org.springframework.stereotype.Service;
 public class RfidServiceImpl implements RfidService {
     @Override
     public String readRfid(String port) {
-        return null;
+        //模拟概率成功
+        double a = Math.random();
+        return a > 0.8 ? "131" : "-1";
     }
 
     @Override
     public String writeRfid(String rfid, String port) {
-        return null;
+        double a = Math.random();
+        return a > 0.99 ? "131" : "-1";
     }
 }

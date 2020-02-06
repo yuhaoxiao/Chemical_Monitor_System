@@ -28,7 +28,7 @@ public class EncryptionEntity {
     }
 
     @Basic
-    @Column(name = "InputStore_id")
+    @Column(name = "Inputstore_id")
     public Integer getInputStoreId() {
         return inputStoreId;
     }
@@ -38,7 +38,7 @@ public class EncryptionEntity {
     }
 
     @Basic
-    @Column(name = "OutputStore_id")
+    @Column(name = "Outputstore_id")
     public Integer getOutputStoreId() {
         return outputStoreId;
     }
@@ -48,7 +48,7 @@ public class EncryptionEntity {
     }
 
     @Basic
-    @Column(name = "PublicKey")
+    @Column(name = "Publickey")
     public String getPublicKey() {
         return publicKey;
     }
@@ -58,7 +58,7 @@ public class EncryptionEntity {
     }
 
     @Basic
-    @Column(name = "PrivateKey")
+    @Column(name = "Privatekey")
     public String getPrivateKey() {
         return privateKey;
     }

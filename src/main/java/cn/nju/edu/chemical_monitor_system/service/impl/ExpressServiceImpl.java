@@ -3,10 +3,7 @@ package cn.nju.edu.chemical_monitor_system.service.impl;
 import cn.nju.edu.chemical_monitor_system.constant.ExpressProductStatusEnum;
 import cn.nju.edu.chemical_monitor_system.constant.ExpressStatusEnum;
 import cn.nju.edu.chemical_monitor_system.dao.*;
-import cn.nju.edu.chemical_monitor_system.entity.ExpressEntity;
-import cn.nju.edu.chemical_monitor_system.entity.ExpressProductEntity;
-import cn.nju.edu.chemical_monitor_system.entity.ProductEntity;
-import cn.nju.edu.chemical_monitor_system.entity.StoreEntity;
+import cn.nju.edu.chemical_monitor_system.entity.*;
 import cn.nju.edu.chemical_monitor_system.service.ExpressService;
 import cn.nju.edu.chemical_monitor_system.service.RfidService;
 import cn.nju.edu.chemical_monitor_system.utils.encryption_util.EncryptionUtil;
@@ -151,7 +148,7 @@ public class ExpressServiceImpl implements ExpressService {
         String port = expressEntity.getOutputStore().getPort();
         String rfid = rfidUtil.read(port);
         //如果没有读到结果
-        if (rfid.equals("")) {
+        if (rfid.equals("-1")) {
             ProductVO p = new ProductVO();
             p.setCode(0);
             p.setMessage("扫描超时请重试");
@@ -159,7 +156,8 @@ public class ExpressServiceImpl implements ExpressService {
         }
         String newRfid = null;
         try {
-            //进行解密
+            //进行解密,由于读出来的数据没有加密过，先模拟已经加密过
+            rfid = encryptionUtil.encrypt(rfid, expressEntity.getInputStore().getStoreId(), expressEntity.getOutputStore().getStoreId());
             newRfid = encryptionUtil.decrypt(rfid, expressEntity.getInputStore().getStoreId(), expressEntity.getOutputStore().getStoreId());
         } catch (Exception e) {
             e.printStackTrace();
@@ -168,7 +166,7 @@ public class ExpressServiceImpl implements ExpressService {
         //拆解信息
         int productId = Integer.parseInt(newRfid.substring(0, 1));
         int expressIdOfProduct = Integer.parseInt(newRfid.substring(1, 2));
-
+        double number = Double.parseDouble(newRfid.substring(2, 3));
         //如果扫描的货物不是当前物流单内的，返回报错
         if (expressId != expressIdOfProduct) {
             ProductVO p = new ProductVO();
@@ -182,12 +180,52 @@ public class ExpressServiceImpl implements ExpressService {
     }
 
     @Override
+    public ExpressVO outputProductRewrite(int productId, int expressId, int userId) {
+        ExpressEntity expressEntity = expressDao.findFirstByExpressId(expressId);
+        String port = expressEntity.getOutputStore().getPort();
+        //更新expressProduct变为已出库并判断是否所有的expressProduct的状态都变成已出库
+        int temp = 0;//对已出库product计数
+        List<ExpressProductEntity> expressProductEntities = expressEntity.getExpressProductEntities();
+        for (ExpressProductEntity expressProductEntity : expressProductEntities) {
+            if (expressProductEntity.getProductEntity().getProductId() == productId) {
+                double number = expressProductEntity.getNumber();
+                String rfid = productId + "" + expressId + "" + number;//更新新的expressId，不过之后需要修改，可能不是简单的字符串连接
+                String newRfid = null;
+                try {
+                    //写之前加密
+                    newRfid = encryptionUtil.encrypt(rfid, expressEntity.getInputStore().getStoreId(), expressEntity.getOutputStore().getStoreId());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                String writeRfid = rfidUtil.write(newRfid, port);
+                if (writeRfid.equals("-1")) {
+                    ExpressVO expressVO = new ExpressVO();
+                    expressVO.setCode(0);
+                    expressVO.setMessage("写入失败");
+                    return expressVO;
+                }
+                //写入成功之后才进行保存
+                expressProductEntity.setStatus(ExpressProductStatusEnum.OUT_INVENTORY.getCode());//更新状态为已出库
+                expressProductDao.saveAndFlush(expressProductEntity);
+            }
+            if (expressProductEntity.getStatus() == ExpressProductStatusEnum.OUT_INVENTORY.getCode()) {
+                temp++;
+            }
+            //全部出库
+            if (temp == expressProductEntities.size()) {
+                return outputExpress(expressId, userId);
+            }
+        }
+        return new ExpressVO(expressEntity);
+    }
+
+    @Override
     public ProductVO inputProduct(int expressId, int userId) {
         ExpressEntity expressEntity = expressDao.findFirstByExpressId(expressId);
         String port = expressEntity.getInputStore().getPort();
         String rfid = rfidUtil.read(port);
         //如果没有读到结果
-        if (rfid.equals("")) {
+        if (rfid.equals("-1")) {
             ProductVO p = new ProductVO();
             p.setCode(0);
             p.setMessage("扫描超时请重试");
@@ -196,6 +234,7 @@ public class ExpressServiceImpl implements ExpressService {
         String newRfid = null;
         try {
             //进行解密
+            rfid = encryptionUtil.encrypt(rfid, expressEntity.getInputStore().getStoreId(), expressEntity.getOutputStore().getStoreId());
             newRfid = encryptionUtil.decrypt(rfid, expressEntity.getInputStore().getStoreId(), expressEntity.getOutputStore().getStoreId());
         } catch (Exception e) {
             e.printStackTrace();
@@ -225,43 +264,4 @@ public class ExpressServiceImpl implements ExpressService {
         return productVO;
     }
 
-    @Override
-    public ExpressVO outputProductRewrite(int productId, int expressId, int userId) {
-        ExpressEntity expressEntity = expressDao.findFirstByExpressId(expressId);
-        String port = expressEntity.getOutputStore().getPort();
-        //更新expressProduct变为已出库并判断是否所有的expressProduct的状态都变成已出库
-        int temp = 0;//对已出库product计数
-        List<ExpressProductEntity> expressProductEntities = expressEntity.getExpressProductEntities();
-        for (ExpressProductEntity expressProductEntity : expressProductEntities) {
-            if (expressProductEntity.getProductEntity().getProductId() == productId) {
-                double number = expressProductEntity.getNumber();
-                String rfid = productId + "" + expressId + "" + number;//更新新的expressId，不过之后需要修改，可能不是简单的字符串连接
-                String newRfid = null;
-                try {
-                    //写之前加密
-                    newRfid = encryptionUtil.encrypt(rfid, expressEntity.getInputStore().getStoreId(), expressEntity.getOutputStore().getStoreId());
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                String writeRfid = rfidUtil.write(rfid,port);
-                if (writeRfid.equals("")) {
-                    ExpressVO expressVO = new ExpressVO();
-                    expressVO.setCode(0);
-                    expressVO.setMessage("写入失败");
-                    return expressVO;
-                }
-                //写入成功之后才进行保存
-                expressProductEntity.setStatus(ExpressProductStatusEnum.OUT_INVENTORY.getCode());//更新状态为已出库
-                expressProductDao.saveAndFlush(expressProductEntity);
-            }
-            if (expressProductEntity.getStatus() == ExpressProductStatusEnum.OUT_INVENTORY.getCode()) {
-                temp++;
-            }
-            //全部出库
-            if (temp == expressProductEntities.size()) {
-                return outputExpress(expressId, userId);
-            }
-        }
-        return new ExpressVO(expressEntity);
-    }
 }

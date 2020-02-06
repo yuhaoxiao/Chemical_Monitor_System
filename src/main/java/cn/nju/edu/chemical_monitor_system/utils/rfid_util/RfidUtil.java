@@ -11,23 +11,29 @@ import java.util.concurrent.TimeUnit;
 @Component
 public class RfidUtil {
     @Autowired
-    static RfidService rfidService;
+    RfidService rfidService;
+
     class ReadRfidThread implements Callable<String> {
         String port;
 
         ReadRfidThread(String port) {
             this.port = port;
         }
+
         @Override
         public String call() throws Exception {
-            String rfid;
+            String rfid = "-1";
             //返回结果为-1代表读取失败，继续读取
-            while ((rfid = rfidService.readRfid(port)).equals("-1")) {
+            while (true) {
+                rfid = rfidService.readRfid(port);
+                if (!rfid.equals("-1")) {
+                    return rfid;
+                }
                 Thread.sleep(1000);
             }
-            return rfid;
         }
     }
+
     class WriteRfidThread implements Callable<String> {
         String rfid;
         String port;
@@ -41,29 +47,36 @@ public class RfidUtil {
         public String call() throws Exception {
             String newRfid;
             //返回结果为-1代表写入失败，继续写入
-            while ((newRfid = rfidService.writeRfid(rfid, port)).equals("-1")) {
+            while (true) {
+                newRfid = rfidService.writeRfid(rfid, port);
+                if (!newRfid.equals("-1")) {
+                    return newRfid;
+                }
                 Thread.sleep(1000);
             }
-            return newRfid;
         }
     }
 
-    private String limitTimeTask(Callable<String> thread) {
+    private String limitTaskTime(Callable<String> thread) {
         FutureTask<String> futureTask = new FutureTask<>(thread);
         new Thread(futureTask).start();
-        String result = "";
+        String result = "-1";
         try {
             //设置超时时间4秒
             result = futureTask.get(4000, TimeUnit.MILLISECONDS);
         } catch (Exception ex) {
+            futureTask.cancel(true);
             ex.printStackTrace();
+            return result;
         }
         return result;
     }
-    public String read(String port){
-        return limitTimeTask(new ReadRfidThread(port));
+
+    public String read(String port) {
+        return limitTaskTime(new ReadRfidThread(port));
     }
-    public String write(String rfid,String port){
-        return limitTimeTask(new WriteRfidThread(rfid,port));
+
+    public String write(String rfid, String port) {
+        return limitTaskTime(new WriteRfidThread(rfid, port));
     }
 }

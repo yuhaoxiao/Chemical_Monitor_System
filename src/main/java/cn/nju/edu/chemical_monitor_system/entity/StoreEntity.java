@@ -14,7 +14,7 @@ public class StoreEntity {
     private String name;
     private List<ExpressEntity> inExpressEntities;//该仓库作为入库所绑定的清单
     private List<ExpressEntity> outExpressEntities;//该仓库作为出库所绑定的清单
-    private String port="8088";
+    private String port;
 
     @Id
     @Column(name = "Store_id")
@@ -66,7 +66,8 @@ public class StoreEntity {
         this.outExpressEntities = outExpressEntities;
     }
 
-
+    @Basic
+    @Column(name = "Port")
     public String getPort() {
         return port;
     }

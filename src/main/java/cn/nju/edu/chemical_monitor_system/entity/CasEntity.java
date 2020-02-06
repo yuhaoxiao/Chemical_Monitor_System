@@ -52,7 +52,7 @@ public class CasEntity {
     }
 
     @Basic
-    @Column(name = "FusionPoint")
+    @Column(name = "Fusionpoint")
     public double getFusionPoint() {
         return fusionPoint;
     }
@@ -62,7 +62,7 @@ public class CasEntity {
     }
 
     @Basic
-    @Column(name = "BoilingPoint")
+    @Column(name = "Boilingpoint")
     public double getBoilingPoint() {
         return boilingPoint;
     }
@@ -72,7 +72,7 @@ public class CasEntity {
     }
 
     @Basic
-    @Column(name = "ExistType")
+    @Column(name = "Existtype")
     public int getExistType() {
         return existType;
     }
@@ -82,7 +82,7 @@ public class CasEntity {
     }
 
     @Basic
-    @Column(name = "IsOrganic")
+    @Column(name = "Isorganic")
     public int getIsOrganic() {
         return isOrganic;
     }

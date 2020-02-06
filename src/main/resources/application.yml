@@ -15,6 +15,8 @@ spring:
   thymeleaf:
      mode: LEGACYHTML5
      cache: false
+  jackson:
+    property-naming-strategy: LOWER_CAMEL_CASE
 
 server:
   port: 8088

@@ -1,14 +1,13 @@
 package cn.nju.edu.chemical_monitor_system.controller;
 
+import cn.nju.edu.chemical_monitor_system.request.CreateExpressRequest;
 import cn.nju.edu.chemical_monitor_system.service.ExpressService;
 import cn.nju.edu.chemical_monitor_system.vo.ExpressProductVO;
 import cn.nju.edu.chemical_monitor_system.vo.ExpressVO;
 import cn.nju.edu.chemical_monitor_system.vo.ProductVO;
 import cn.nju.edu.chemical_monitor_system.vo.UserVO;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -25,8 +24,12 @@ public class ExpressController {
     }
 
     @PostMapping(value = "express/create_express")
-    public ExpressVO createExpress(int inputStoreId, int outputStoreId, Map<Integer,Double> productNumberMap) {
-        return expressService.createExpress(inputStoreId, outputStoreId, productNumberMap);
+    public ExpressVO createExpress(@RequestBody CreateExpressRequest createExpressRequest) {
+        return expressService.createExpress(
+                createExpressRequest.getInputStoreId(),
+                createExpressRequest.getOutputStoreId(),
+                createExpressRequest.getProductNumberMap()
+        );
     }
 
     @PostMapping(value = "express/output_product")
@@ -34,10 +37,11 @@ public class ExpressController {
         UserVO userVO = (UserVO) httpServletRequest.getSession().getAttribute("User");
         return expressService.outputProduct(expressId, userVO.getUserId());
     }
+
     @PostMapping(value = "express/output_product_rewrite")
-    public ExpressVO outputProductWrite(int productId,int expressId, HttpServletRequest httpServletRequest) {
+    public ExpressVO outputProductWrite(int productId, int expressId, HttpServletRequest httpServletRequest) {
         UserVO userVO = (UserVO) httpServletRequest.getSession().getAttribute("User");
-        return expressService.outputProductRewrite(productId,expressId, userVO.getUserId());
+        return expressService.outputProductRewrite(productId, expressId, userVO.getUserId());
     }
 
     @PostMapping(value = "express/input_product")

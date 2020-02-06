@@ -22,9 +22,10 @@ public class ExpressVO {
     private List<ExpressProductVO> expressProductVOS;
     private String message;
 
-    public ExpressVO(){
+    public ExpressVO() {
 
     }
+
     public ExpressVO(ExpressEntity e) {
         if (e == null) {
             this.code = 0;
@@ -37,8 +38,12 @@ public class ExpressVO {
         this.status = e.getStatus();
         this.inputStoreId = e.getInputStore().getStoreId();
         this.outputStoreId = e.getOutputStore().getStoreId();
-        this.inputUserId = e.getInputUser().getUserId();
-        this.outputUserId = e.getOutputUser().getUserId();
+        if (e.getInputUser() != null) {
+            this.inputUserId = e.getInputUser().getUserId();
+        }
+        if (e.getOutputUser() != null) {
+            this.outputUserId = e.getOutputUser().getUserId();
+        }
         this.code = 1;
         this.expressProductVOS = e.getExpressProductEntities().stream()
                 .map(ExpressProductVO::new)
