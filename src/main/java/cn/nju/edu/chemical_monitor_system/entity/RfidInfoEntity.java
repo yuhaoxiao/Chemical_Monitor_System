@@ -15,4 +15,12 @@ public class RfidInfoEntity {
 
     private double number;
 
+    public RfidInfoEntity(String s) {
+
+    }
+
+    public String ToString() {
+        return null;
+    }
+
 }
