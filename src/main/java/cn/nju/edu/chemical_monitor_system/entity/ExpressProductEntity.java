@@ -10,9 +10,11 @@ import java.util.Objects;
 public class ExpressProductEntity {
     private int expressProductId;
     private ProductEntity productEntity;
-    private Double number;
+    private double number;
     private ExpressEntity expressEntity;
     private int Status;
+    private double inputNumber;
+    private double outputNumber;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,13 +40,34 @@ public class ExpressProductEntity {
 
     @Basic
     @Column(name = "Number")
-    public Double getNumber() {
+    public double getNumber() {
         return number;
     }
 
-    public void setNumber(Double number) {
+    public void setNumber(double number) {
         this.number = number;
     }
+
+    @Basic
+    @Column(name = "inputnumber")
+    public double getInputNumber() {
+        return inputNumber;
+    }
+
+    public void setInputNumber(double inputNumber) {
+        this.inputNumber = inputNumber;
+    }
+
+    @Basic
+    @Column(name = "outputnumber")
+    public double getOutputNumber() {
+        return outputNumber;
+    }
+
+    public void setOutputNumber(double outputNumber) {
+        this.outputNumber = outputNumber;
+    }
+
 
     @ManyToOne
     @JoinColumn(name = "Express_id")
@@ -71,21 +94,18 @@ public class ExpressProductEntity {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
         ExpressProductEntity that = (ExpressProductEntity) o;
-
-        if (expressProductId != that.expressProductId) return false;
-        if (expressEntity.getExpressId() != that.getExpressEntity().getExpressId()) return false;
-        if (productEntity.getProductId() != that.getProductEntity().getProductId()) return false;
-        return Objects.equals(number, that.number);
+        return expressProductId == that.expressProductId &&
+                Double.compare(that.number, number) == 0 &&
+                Status == that.Status &&
+                Double.compare(that.inputNumber, inputNumber) == 0 &&
+                Double.compare(that.outputNumber, outputNumber) == 0 &&
+                Objects.equals(productEntity, that.productEntity) &&
+                Objects.equals(expressEntity, that.expressEntity);
     }
 
     @Override
     public int hashCode() {
-        int result = expressProductId;
-        result = 31 * result + expressEntity.getExpressId();
-        result = 31 * result + productEntity.getProductId();
-        result = 31 * result + (number != null ? number.hashCode() : 0);
-        return result;
+        return Objects.hash(expressProductId, productEntity, number, expressEntity, Status, inputNumber, outputNumber);
     }
 }
