@@ -136,9 +136,7 @@ public class ExpressServiceImpl implements ExpressService {
         return productOpt.map(productEntity -> productEntity.getExpressProductEntities().stream()
                 .map(ExpressProductVO::new)
                 .collect(Collectors.toList())).orElseGet(ArrayList::new);
-
     }
-
 
     @Override
     public ProductVO outputProduct(int expressId, int userId) {
@@ -149,10 +147,7 @@ public class ExpressServiceImpl implements ExpressService {
         String rfid = rfidUtil.read(port);
         //如果没有读到结果
         if (rfid.equals("-1")) {
-            ProductVO p = new ProductVO();
-            p.setCode(0);
-            p.setMessage("扫描超时请重试");
-            return p;
+            return new ProductVO("扫描超时请重试");
         }
         String newRfid = null;
         try {
@@ -169,10 +164,7 @@ public class ExpressServiceImpl implements ExpressService {
         double number = Double.parseDouble(newRfid.substring(2, 3));
         //如果扫描的货物不是当前物流单内的，返回报错
         if (expressId != expressIdOfProduct) {
-            ProductVO p = new ProductVO();
-            p.setCode(0);
-            p.setMessage("该商品不在该物流批次内，请重新扫描");
-            return p;
+            return new ProductVO("该商品不在该物流批次内，请重新扫描");
         }
         ProductVO productVO = new ProductVO(productDao.findByProductId(productId));
         productVO.setCode(1);
@@ -199,10 +191,7 @@ public class ExpressServiceImpl implements ExpressService {
                 }
                 String writeRfid = rfidUtil.write(newRfid, port);
                 if (writeRfid.equals("-1")) {
-                    ExpressVO expressVO = new ExpressVO();
-                    expressVO.setCode(0);
-                    expressVO.setMessage("写入失败");
-                    return expressVO;
+                    return new ExpressVO("写入失败");
                 }
                 //写入成功之后才进行保存
                 expressProductEntity.setStatus(ExpressProductStatusEnum.OUT_INVENTORY.getCode());//更新状态为已出库
@@ -226,10 +215,7 @@ public class ExpressServiceImpl implements ExpressService {
         String rfid = rfidUtil.read(port);
         //如果没有读到结果
         if (rfid.equals("-1")) {
-            ProductVO p = new ProductVO();
-            p.setCode(0);
-            p.setMessage("扫描超时请重试");
-            return p;
+            return new ProductVO("扫描超时请重试");
         }
         String newRfid = null;
         try {

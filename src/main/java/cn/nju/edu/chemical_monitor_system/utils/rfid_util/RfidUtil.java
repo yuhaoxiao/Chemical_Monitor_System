@@ -10,6 +10,7 @@ import java.util.concurrent.TimeUnit;
 
 @Component
 public class RfidUtil {
+
     @Autowired
     RfidService rfidService;
 
