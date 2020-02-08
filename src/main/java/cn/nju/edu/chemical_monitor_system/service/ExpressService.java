@@ -11,8 +11,6 @@ public interface ExpressService {
 
     ExpressVO createExpress(int inputStoreId, int outputStoreId, Map<Integer, Double> productNumberMap);
 
-    ExpressVO outputExpress(int expressId, int userId);
-
     ExpressVO getExpress(int expressId);
 
     List<ExpressProductVO> getProductExpress(int productId);
@@ -20,8 +18,6 @@ public interface ExpressService {
     ProductVO outputProduct(int expressId, int userId);
 
     ProductVO inputProduct(int expressId, int userId);
-
-    ExpressVO outputProductRewrite(int productId, int expressId, int userId);
 
 
 }
