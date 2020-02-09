@@ -24,7 +24,7 @@ public class InoutController {
     }
 
     @PostMapping(value = "inout/update_inout")
-    public InOutBatchVO updateInout(int inoutId, String status) {
-        return inoutService.updateInout(inoutId, status);
+    public InOutBatchVO InputBatch(int batchId) {
+        return inoutService.InputBatch(batchId);
     }
 }

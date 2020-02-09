@@ -9,10 +9,12 @@ import cn.nju.edu.chemical_monitor_system.entity.InOutBatchEntity;
 import cn.nju.edu.chemical_monitor_system.entity.ProductEntity;
 import cn.nju.edu.chemical_monitor_system.entity.StoreEntity;
 import cn.nju.edu.chemical_monitor_system.service.InoutBatchService;
+import cn.nju.edu.chemical_monitor_system.utils.rfid_util.RfidUtil;
 import cn.nju.edu.chemical_monitor_system.vo.InOutBatchVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -29,6 +31,9 @@ public class InoutBatchServiceImpl implements InoutBatchService {
 
     @Autowired
     private ProductDao productDao;
+
+    @Autowired
+    private RfidUtil rfidUtil;
 
     @Override
     public InOutBatchVO getInout(int ioId) {
@@ -71,16 +76,26 @@ public class InoutBatchServiceImpl implements InoutBatchService {
     }
 
     @Override
-    public InOutBatchVO updateInout(int ioId, String status) {
-        Optional<InOutBatchEntity> inOutBatchOpt = inoutBatchDao.findById(ioId);
+    public InOutBatchVO InputBatch(int batchId) {
+        Optional<BatchEntity> batchOpt = batchDao.findById(batchId);
 
-        if (!inOutBatchOpt.isPresent()) {
-            return new InOutBatchVO("上下线id不存在");
+        if (!batchOpt.isPresent()) {
+            return new InOutBatchVO("批次id不存在");
         }
 
-        InOutBatchEntity inOutBatchEntity = inOutBatchOpt.get();
-        inOutBatchEntity.setStatus(status);
-        inoutBatchDao.saveAndFlush(inOutBatchEntity);
-        return new InOutBatchVO(inOutBatchEntity);
+        List<InOutBatchEntity> inOutBatchs = inoutBatchDao.findByBatchIdAndInout(batchId, 1);
+
+        if (inOutBatchs == null || inOutBatchs.size() == 0) {
+            return new InOutBatchVO("该批次没有原材料");
+        }
+
+        int storeId = inOutBatchs.get(0).getStoreId();
+        String port = storeDao.findById(storeId).get().getPort();
+
+
+
+        return null;
     }
+
+
 }

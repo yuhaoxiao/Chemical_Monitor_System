@@ -8,5 +8,5 @@ public interface InoutBatchService {
 
     InOutBatchVO createInout(int batchId, int storeId, int productId, double number, boolean isIn);
 
-    InOutBatchVO updateInout(int ioId, String status);
+    InOutBatchVO InputBatch(int batchId);
 }
