@@ -7,7 +7,7 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
-public class SystemConfiguration implements WebMvcConfigurer {
+public class LoginConfig implements WebMvcConfigurer {
 
     @Autowired
     LoginHandlerInterceptor loginHandlerInterceptor;
