@@ -141,7 +141,6 @@ public class ExpressServiceImpl implements ExpressService {
         String newRfid = null;
         try {
             //进行解密,由于读出来的数据没有加密过，先模拟已经加密过
-            rfid = encryptionUtil.encrypt(rfid, expressEntity.getInputStore().getStoreId(), expressEntity.getOutputStore().getStoreId());
             newRfid = encryptionUtil.decrypt(rfid, expressEntity.getInputStore().getStoreId(), expressEntity.getOutputStore().getStoreId());
         } catch (Exception e) {
             e.printStackTrace();
@@ -225,6 +224,10 @@ public class ExpressServiceImpl implements ExpressService {
         for (ExpressProductEntity expressProductEntity : expressProductEntities) {
             if (expressProductEntity.getProductEntity().getProductId() == productId) {
                 double number = expressProductEntity.getNumber();
+                String writeRfid = rfidUtil.write(newRfid, port);
+                if (writeRfid.equals("-1")) {
+                    return new ProductVO("写入失败");
+                }
                 expressProductEntity.setInputNumber(expressProductEntity.getInputNumber() + inputNumber);
                 if (expressProductEntity.getInputNumber() == number) {
                     expressProductEntity.setStatus(ExpressProductStatusEnum.IN_INVENTORY.getCode());//更新状态为已入库

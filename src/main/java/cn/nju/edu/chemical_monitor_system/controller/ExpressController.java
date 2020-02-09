@@ -37,13 +37,6 @@ public class ExpressController {
         UserVO userVO = (UserVO) httpServletRequest.getSession().getAttribute("User");
         return expressService.outputProduct(expressId, userVO.getUserId());
     }
-
-    @PostMapping(value = "express/output_product_rewrite")
-    public ExpressVO outputProductWrite(int productId, int expressId, HttpServletRequest httpServletRequest) {
-        UserVO userVO = (UserVO) httpServletRequest.getSession().getAttribute("User");
-        return expressService.outputProductRewrite(productId, expressId, userVO.getUserId());
-    }
-
     @PostMapping(value = "express/input_product")
     public ProductVO inputProduct(int expressId, HttpServletRequest httpServletRequest) {
         UserVO userVO = (UserVO) httpServletRequest.getSession().getAttribute("User");
