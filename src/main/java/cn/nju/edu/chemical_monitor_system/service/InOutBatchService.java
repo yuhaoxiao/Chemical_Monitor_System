@@ -2,7 +2,7 @@ package cn.nju.edu.chemical_monitor_system.service;
 
 import cn.nju.edu.chemical_monitor_system.vo.InOutBatchVO;
 
-public interface InoutBatchService {
+public interface InOutBatchService {
 
     InOutBatchVO getInout(int ioId);
 

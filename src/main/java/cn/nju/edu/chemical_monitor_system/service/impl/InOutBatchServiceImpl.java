@@ -1,14 +1,12 @@
 package cn.nju.edu.chemical_monitor_system.service.impl;
 
+import cn.nju.edu.chemical_monitor_system.constant.InOutBatchStatusEnum;
 import cn.nju.edu.chemical_monitor_system.dao.BatchDao;
 import cn.nju.edu.chemical_monitor_system.dao.InoutBatchDao;
 import cn.nju.edu.chemical_monitor_system.dao.ProductDao;
 import cn.nju.edu.chemical_monitor_system.dao.StoreDao;
-import cn.nju.edu.chemical_monitor_system.entity.BatchEntity;
-import cn.nju.edu.chemical_monitor_system.entity.InOutBatchEntity;
-import cn.nju.edu.chemical_monitor_system.entity.ProductEntity;
-import cn.nju.edu.chemical_monitor_system.entity.StoreEntity;
-import cn.nju.edu.chemical_monitor_system.service.InoutBatchService;
+import cn.nju.edu.chemical_monitor_system.entity.*;
+import cn.nju.edu.chemical_monitor_system.service.InOutBatchService;
 import cn.nju.edu.chemical_monitor_system.utils.rfid_util.RfidUtil;
 import cn.nju.edu.chemical_monitor_system.vo.InOutBatchVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +16,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class InoutBatchServiceImpl implements InoutBatchService {
+public class InOutBatchServiceImpl implements InOutBatchService {
 
     @Autowired
     private InoutBatchDao inoutBatchDao;
@@ -91,11 +89,44 @@ public class InoutBatchServiceImpl implements InoutBatchService {
 
         int storeId = inOutBatchs.get(0).getStoreId();
         String port = storeDao.findById(storeId).get().getPort();
+        String rfidInfo = rfidUtil.read(port);
+        RfidInfoEntity rfidInfoEntity = new RfidInfoEntity(rfidInfo);
+        int productId = rfidInfoEntity.getProductId();
 
+        for (InOutBatchEntity inOutBatchEntity : inOutBatchs) {
+            if (inOutBatchEntity.getProductId() != productId) {
+                continue;
+            }
 
+            Double finishedNumber = inOutBatchEntity.getFinishedNumber() + rfidInfoEntity.getNumber();
 
-        return null;
+            if (finishedNumber > inOutBatchEntity.getNumber()) {
+                return new InOutBatchVO("上线了数量为" + rfidInfoEntity.getNumber() + "的产品id为" + productId +
+                        "的产品，超出了所需的" + (inOutBatchEntity.getNumber() - finishedNumber) + "的数量");
+            } else {
+                inOutBatchEntity.setFinishedNumber(finishedNumber);
+
+                if (finishedNumber < inOutBatchEntity.getNumber()) {
+                    inoutBatchDao.saveAndFlush(inOutBatchEntity);
+                    return new InOutBatchVO(inOutBatchEntity);
+                }
+
+                inOutBatchEntity.setStatus(InOutBatchStatusEnum.COMPLETED.getName());
+                inoutBatchDao.saveAndFlush(inOutBatchEntity);
+                List<InOutBatchEntity> newInOutBatchs = inoutBatchDao.findByBatchIdAndInout(batchId, 1);
+
+                for (InOutBatchEntity newInoutBatch : newInOutBatchs) {
+                    if (!newInoutBatch.getStatus().equals(InOutBatchStatusEnum.COMPLETED.getName())) {
+                        return new InOutBatchVO(inOutBatchEntity);
+                    }
+                }
+
+                InOutBatchVO inOutBatchVO = new InOutBatchVO(inOutBatchEntity);
+                inOutBatchVO.setCode(2);
+                return inOutBatchVO;
+            }
+        }
+
+        return new InOutBatchVO("该批次没有产品id为" + productId + "的原材料");
     }
-
-
 }

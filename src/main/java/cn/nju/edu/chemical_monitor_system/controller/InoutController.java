@@ -1,6 +1,6 @@
 package cn.nju.edu.chemical_monitor_system.controller;
 
-import cn.nju.edu.chemical_monitor_system.service.InoutBatchService;
+import cn.nju.edu.chemical_monitor_system.service.InOutBatchService;
 import cn.nju.edu.chemical_monitor_system.vo.InOutBatchVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class InoutController {
 
     @Autowired
-    private InoutBatchService inoutService;
+    private InOutBatchService inoutService;
 
     @GetMapping(value = "inout/get_inout")
     public InOutBatchVO getInout(int inoutId) {

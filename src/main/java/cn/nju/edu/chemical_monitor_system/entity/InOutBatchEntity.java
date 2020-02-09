@@ -12,6 +12,7 @@ public class InOutBatchEntity {
     private int batchId;
     private Integer inout;
     private Double number;
+    private Double finishedNumber;
     private String status;
 
     @Id
@@ -55,13 +56,23 @@ public class InOutBatchEntity {
     }
 
     @Basic
-    @Column(name = "Inout")
+    @Column(name = "InOrout")
     public Integer getInout() {
         return inout;
     }
 
     public void setInout(Integer inOrOut) {
         this.inout = inOrOut;
+    }
+
+    @Basic
+    @Column(name = "FinishedNumber")
+    public Double getFinishedNumber() {
+        return finishedNumber;
+    }
+
+    public void setFinishedNumber(Double finishedNumber) {
+        this.finishedNumber = finishedNumber;
     }
 
     @Basic
@@ -97,6 +108,7 @@ public class InOutBatchEntity {
         if (batchId != that.batchId) return false;
         if (!Objects.equals(inout, that.inout)) return false;
         if (!Objects.equals(number, that.number)) return false;
+        if (!Objects.equals(finishedNumber, that.finishedNumber)) return false;
         if (!Objects.equals(status, that.status)) return false;
 
         return true;
@@ -110,6 +122,7 @@ public class InOutBatchEntity {
         result = 31 * result + batchId;
         result = 31 * result + (inout != null ? inout.hashCode() : 0);
         result = 31 * result + (number != null ? number.hashCode() : 0);
+        result = 31 * result + (finishedNumber != null ? finishedNumber.hashCode() : 0);
         result = 31 * result + (status != null ? status.hashCode() : 0);
         return result;
     }
