@@ -65,6 +65,26 @@ public class ExpressServiceImpl implements ExpressService {
         if (!outputStoreOpt.isPresent()) {
             return new ExpressVO("出库仓库id不存在");
         }
+        List<Integer> notSafeProducts=new ArrayList<>();
+        for(Integer productId:productNumberMap.keySet()){
+            if(!safeUtil.isSafe(productId,inputStoreId)){
+                notSafeProducts.add(productId);
+            }
+        }
+        if(notSafeProducts.size()!=0){
+            StringBuilder s=new StringBuilder();
+            s.append("标号为");
+            for(Integer productId:notSafeProducts){
+                s.append(productId);
+                s.append(" ");
+            }
+            s.append("的商品不能入库");
+            ExpressVO result=new ExpressVO();
+            result.setCode(0);
+            result.setMessage(s.toString());
+            return result;
+        }
+
 
         expressEntity.setInputStore(inputStoreOpt.get());
         expressEntity.setOutputStore(outputStoreOpt.get());
@@ -78,7 +98,8 @@ public class ExpressServiceImpl implements ExpressService {
             if (!productOpt.isPresent()) {
                 continue;
             }
-            ep.setProductEntity(productOpt.get());
+            ProductEntity productEntity=productOpt.get();
+            ep.setProductEntity(productEntity);
             ep.setExpressEntity(expressEntity);
             ep.setStatus(ExpressProductStatusEnum.NOT_START.getCode());
             ep.setNumber(entry.getValue());
