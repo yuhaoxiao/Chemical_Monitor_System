@@ -1,6 +1,7 @@
 package cn.nju.edu.chemical_monitor_system.service.impl;
 
 import cn.nju.edu.chemical_monitor_system.constant.InOutBatchStatusEnum;
+import cn.nju.edu.chemical_monitor_system.dao.ExpressDao;
 import cn.nju.edu.chemical_monitor_system.dao.InoutBatchDao;
 import cn.nju.edu.chemical_monitor_system.dao.StoreDao;
 import cn.nju.edu.chemical_monitor_system.entity.ExpressEntity;
@@ -27,6 +28,9 @@ public class StoreServiceImpl implements StoreService {
     @Autowired
     private InoutBatchDao inoutBatchDao;
 
+    @Autowired
+    private ExpressDao expressDao;
+
     @Override
     public List<Integer> getAllStoreId() {
         List<StoreEntity> stores = storeDao.findAll();
@@ -49,7 +53,7 @@ public class StoreServiceImpl implements StoreService {
         StoreEntity store = storeDao.findById(sid).get();
         Map<Integer, Double> productNumber = new HashMap<>();
 
-        for (ExpressEntity in : store.getInExpressEntities()) {
+        for (ExpressEntity in : expressDao.findByInputStoreId(sid)) {
             for (ExpressProductEntity inep : in.getExpressProductEntities()) {
                 int productId = inep.getProductEntity().getProductId();
                 if (productNumber.containsKey(productId)) {
@@ -61,7 +65,7 @@ public class StoreServiceImpl implements StoreService {
             }
         }
 
-        for (ExpressEntity out : store.getOutExpressEntities()) {
+        for (ExpressEntity out : expressDao.findByOutputStoreId(sid)) {
             for (ExpressProductEntity outep : out.getExpressProductEntities()) {
                 int productId = outep.getProductEntity().getProductId();
                 if (productNumber.containsKey(productId)) {

@@ -15,6 +15,10 @@ public class RfidInfoEntity {
 
     private double number;
 
+    public RfidInfoEntity() {
+
+    }
+
     public RfidInfoEntity(String s) {
 
     }

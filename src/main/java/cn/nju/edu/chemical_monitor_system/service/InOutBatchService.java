@@ -9,4 +9,6 @@ public interface InOutBatchService {
     InOutBatchVO createInout(int batchId, int storeId, int productId, double number, boolean isIn);
 
     InOutBatchVO InputBatch(int batchId);
+
+    InOutBatchVO OutputBatch(int batchId, int productId, double number);
 }

@@ -23,8 +23,13 @@ public class InoutController {
         return inoutService.createInout(batchId, storeId, productId, number, isIn);
     }
 
-    @PostMapping(value = "inout/update_inout")
+    @PostMapping(value = "inout/input_batch")
     public InOutBatchVO InputBatch(int batchId) {
         return inoutService.InputBatch(batchId);
+    }
+
+    @PostMapping(value = "inout/output_batch")
+    public InOutBatchVO OutputBatch(int batchId, int productId, double number) {
+        return inoutService.OutputBatch(batchId, productId, number);
     }
 }
