@@ -1,4 +1,5 @@
 package cn.nju.edu.chemical_monitor_system.utils.encryption_util;
+import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
 
 import javax.crypto.Cipher;
@@ -7,17 +8,18 @@ import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 
 public class AES {
-    static String charset = "utf-8";
+    static String ALGORITHM="AES";
+    static int KEY_SIZE=128;
     public static byte[] encrypt(String content, String password) {
         try {
             SecureRandom secureRandom = SecureRandom.getInstance("SHA1PRNG") ;
-            secureRandom.setSeed(password.getBytes(charset));
-            KeyGenerator kgen = KeyGenerator.getInstance("DES");
-            kgen.init(56, secureRandom);
+            secureRandom.setSeed(password.getBytes(StandardCharsets.UTF_8));
+            KeyGenerator kgen = KeyGenerator.getInstance(ALGORITHM);
+            kgen.init(KEY_SIZE, secureRandom);
             SecretKey secretKey = kgen.generateKey();
             byte[] enCodeFormat = secretKey.getEncoded();
-            SecretKeySpec key = new SecretKeySpec(enCodeFormat, "DES");
-            Cipher cipher = Cipher.getInstance("DES");// 创建密码器
+            SecretKeySpec key = new SecretKeySpec(enCodeFormat, ALGORITHM);
+            Cipher cipher = Cipher.getInstance(ALGORITHM);// 创建密码器
             byte[] byteContent = content.getBytes("utf-8");
             cipher.init(Cipher.ENCRYPT_MODE, key);// 初始化
             byte[] result = cipher.doFinal(byteContent);
@@ -30,13 +32,13 @@ public class AES {
     public static byte[] decrypt(byte[] content, String password) {
         try {
             SecureRandom secureRandom = SecureRandom.getInstance("SHA1PRNG") ;
-            secureRandom.setSeed(password.getBytes(charset));
-            KeyGenerator kgen = KeyGenerator.getInstance("DES");
-            kgen.init(56, secureRandom);
+            secureRandom.setSeed(password.getBytes(StandardCharsets.UTF_8));
+            KeyGenerator kgen = KeyGenerator.getInstance(ALGORITHM);
+            kgen.init(KEY_SIZE, secureRandom);
             SecretKey secretKey = kgen.generateKey();
             byte[] enCodeFormat = secretKey.getEncoded();
-            SecretKeySpec key = new SecretKeySpec(enCodeFormat, "DES");
-            Cipher cipher = Cipher.getInstance("DES");// 创建密码器
+            SecretKeySpec key = new SecretKeySpec(enCodeFormat, ALGORITHM);
+            Cipher cipher = Cipher.getInstance(ALGORITHM);// 创建密码器
             cipher.init(Cipher.DECRYPT_MODE, key);// 初始化
             byte[] result = cipher.doFinal(content);
             return result; // 加密
@@ -47,7 +49,7 @@ public class AES {
     }
 
     public static void main(String[] args) {
-        String content = "DDDDDDASDAWESDSDW";
+        String content = "DDDDDDDDddddddd";
         String password = "123";
         //加密
         System.out.println("加密前：" + content);

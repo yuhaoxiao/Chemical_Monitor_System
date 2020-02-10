@@ -1,6 +1,5 @@
 package cn.nju.edu.chemical_monitor_system.service;
 
-import cn.nju.edu.chemical_monitor_system.entity.RfidInfoEntity;
 
 public interface RfidService {
 

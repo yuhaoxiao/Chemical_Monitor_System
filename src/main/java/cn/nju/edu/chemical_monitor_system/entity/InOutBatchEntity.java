@@ -66,7 +66,7 @@ public class InOutBatchEntity {
     }
 
     @Basic
-    @Column(name = "FinishedNumber")
+    @Column(name = "Finishednumber")
     public Double getFinishedNumber() {
         return finishedNumber;
     }
