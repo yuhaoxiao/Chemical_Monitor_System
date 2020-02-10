@@ -22,7 +22,7 @@ public class ProductionLineEntity {
 
     @ManyToOne
     @JoinColumn(name = "enterprise_id")
-    @JsonBackReference
+    @JsonBackReference(value="EnterpriseEntity")
     public EnterpriseEntity getEnterpriseEntity() {
         return enterpriseEntity;
     }

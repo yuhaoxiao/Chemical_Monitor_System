@@ -14,10 +14,10 @@ public class ExpressEntity {
     private Timestamp outputTime;
     private Timestamp inputTime;
     private int status;
-    private UserEntity inputUser;
-    private UserEntity outputUser;
-    private StoreEntity inputStore;
-    private StoreEntity outputStore;
+    private Integer inputUserId;
+    private Integer outputUserId;
+    private int inputStoreId;
+    private int outputStoreId;
     private List<ExpressProductEntity> expressProductEntities;
 
     @Id
@@ -62,54 +62,45 @@ public class ExpressEntity {
         this.status = status;
     }
 
-    @ManyToOne
-    @JoinColumn(name = "Output_User_id")
-    @JsonBackReference
-    public UserEntity getOutputUser() {
-        return outputUser;
-    }
-
-    public void setOutputUser(UserEntity outputUser) {
-        this.outputUser = outputUser;
-    }
-
-    @ManyToOne
     @JoinColumn(name = "Input_User_id")
-    @JsonBackReference
-    public UserEntity getInputUser() {
-        return inputUser;
+    public Integer getInputUserId() {
+        return inputUserId;
     }
 
-    public void setInputUser(UserEntity inputUser) {
-        this.inputUser = inputUser;
+    public void setInputUserId(Integer inputUserId) {
+        this.inputUserId = inputUserId;
     }
 
-    @ManyToOne
+    @JoinColumn(name = "Output_User_id")
+    public Integer getOutputUserId() {
+        return outputUserId;
+    }
+
+    public void setOutputUserId(Integer outputUserId) {
+        this.outputUserId = outputUserId;
+    }
+
     @JoinColumn(name = "Input_Store_id")
-    @JsonBackReference
-    public StoreEntity getInputStore() {
-        return inputStore;
+    public Integer getInputStoreId() {
+        return inputStoreId;
     }
 
-    public void setInputStore(StoreEntity inputStore) {
-        this.inputStore = inputStore;
+    public void setInputStoreId(Integer inputStoreId) {
+        this.inputStoreId = inputStoreId;
     }
 
-
-    @ManyToOne
     @JoinColumn(name = "Output_Store_id")
-    @JsonBackReference
-    public StoreEntity getOutputStore() {
-        return outputStore;
+    public int getOutputStoreId() {
+        return outputStoreId;
     }
 
-    public void setOutputStore(StoreEntity outputStore) {
-        this.outputStore = outputStore;
+    public void setOutputStoreId(Integer outputStoreId) {
+        this.outputStoreId = outputStoreId;
     }
 
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "expressEntity", fetch = FetchType.LAZY)
-    @JsonBackReference
+    @JsonBackReference(value = "ExpressProductEntities")
     public List<ExpressProductEntity> getExpressProductEntities() {
         return expressProductEntities;
     }
@@ -126,10 +117,10 @@ public class ExpressEntity {
         ExpressEntity that = (ExpressEntity) o;
 
         if (expressId != that.expressId) return false;
-        if (inputUser.getUserId() != that.getInputUser().getUserId()) return false;
-        if (outputUser.getUserId() != that.getOutputUser().getUserId()) return false;
-        if (inputStore.getStoreId() != that.getInputStore().getStoreId()) return false;
-        if (outputStore.getStoreId() != that.getOutputStore().getStoreId()) return false;
+        if (inputUserId != (that.getInputUserId())) return false;
+        if (outputUserId != that.getOutputUserId()) return false;
+        if (inputStoreId != that.getInputStoreId()) return false;
+        if (outputStoreId != that.getOutputStoreId()) return false;
         if (!Objects.equals(outputTime, that.outputTime)) return false;
         if (!Objects.equals(inputTime, that.inputTime)) return false;
         return Objects.equals(status, that.status);
@@ -140,11 +131,11 @@ public class ExpressEntity {
         int result = expressId;
         result = 31 * result + (outputTime != null ? outputTime.hashCode() : 0);
         result = 31 * result + (inputTime != null ? inputTime.hashCode() : 0);
-        result = 31 * result + (status ==0 ? Integer.valueOf(status).hashCode() : 0);
-        result = 31 * result + inputUser.getUserId();
-        result = 31 * result + outputUser.getUserId();
-        result = 31 * result + inputStore.getStoreId();
-        result = 31 * result + outputStore.getStoreId();
+        result = 31 * result + (status == 0 ? Integer.valueOf(status).hashCode() : 0);
+        result = 31 * result + inputUserId;
+        result = 31 * result + outputUserId;
+        result = 31 * result + inputStoreId;
+        result = 31 * result + outputStoreId;
         return result;
     }
 }

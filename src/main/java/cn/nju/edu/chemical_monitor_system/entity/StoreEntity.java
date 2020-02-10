@@ -12,8 +12,6 @@ public class StoreEntity {
     private int storeId;
     private int enterpriseId;
     private String name;
-    private List<ExpressEntity> inExpressEntities;//该仓库作为入库所绑定的清单
-    private List<ExpressEntity> outExpressEntities;//该仓库作为出库所绑定的清单
     private String port;
 
     @Id
@@ -46,25 +44,6 @@ public class StoreEntity {
         this.name = name;
     }
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "inputStore", fetch = FetchType.LAZY)
-    @JsonBackReference
-    public List<ExpressEntity> getInExpressEntities() {
-        return inExpressEntities;
-    }
-
-    public void setInExpressEntities(List<ExpressEntity> inExpressEntities) {
-        this.inExpressEntities = inExpressEntities;
-    }
-
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "outputStore", fetch = FetchType.LAZY)
-    @JsonBackReference
-    public List<ExpressEntity> getOutExpressEntities() {
-        return outExpressEntities;
-    }
-
-    public void setOutExpressEntities(List<ExpressEntity> outExpressEntities) {
-        this.outExpressEntities = outExpressEntities;
-    }
 
     @Basic
     @Column(name = "Port")

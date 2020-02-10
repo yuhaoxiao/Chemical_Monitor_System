@@ -64,7 +64,7 @@ public class UserEntity {
 
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "userEntity", fetch = FetchType.LAZY)
-    @JsonBackReference
+    @JsonBackReference(value="BatchEntities")
     public List<BatchEntity> getBatchEntities() {
         return batchEntities;
     }
@@ -74,7 +74,7 @@ public class UserEntity {
     }
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "inputUser", fetch = FetchType.LAZY)
-    @JsonBackReference
+    @JsonBackReference(value="ExpressEntities")
     public List<ExpressEntity> getInExpressEntities() {
         return inExpressEntities;
     }
@@ -84,7 +84,7 @@ public class UserEntity {
     }
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "outputUser", fetch = FetchType.LAZY)
-    @JsonBackReference
+    @JsonBackReference(value="OutExpressEntities")
     public List<ExpressEntity> getOutExpressEntities() {
         return outExpressEntities;
     }

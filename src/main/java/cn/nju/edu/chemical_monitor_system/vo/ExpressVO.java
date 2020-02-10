@@ -36,13 +36,13 @@ public class ExpressVO {
         this.outputTime = e.getOutputTime();
         this.inputTime = e.getInputTime();
         this.status = e.getStatus();
-        this.inputStoreId = e.getInputStore().getStoreId();
-        this.outputStoreId = e.getOutputStore().getStoreId();
-        if (e.getInputUser() != null) {
-            this.inputUserId = e.getInputUser().getUserId();
+        this.inputStoreId = e.getInputStoreId();
+        this.outputStoreId = e.getOutputStoreId();
+        if (e.getInputUserId() != null) {
+            this.inputUserId = e.getInputUserId();
         }
-        if (e.getOutputUser() != null) {
-            this.outputUserId = e.getOutputUser().getUserId();
+        if (e.getOutputUserId() != null) {
+            this.outputUserId = e.getOutputUserId();
         }
         this.code = 1;
         this.expressProductVOS = e.getExpressProductEntities().stream()

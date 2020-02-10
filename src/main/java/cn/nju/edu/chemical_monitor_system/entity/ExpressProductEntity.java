@@ -29,7 +29,7 @@ public class ExpressProductEntity {
 
     @ManyToOne
     @JoinColumn(name = "Product_id")
-    @JsonBackReference
+    @JsonBackReference(value = "ProductEntity")
     public ProductEntity getProductEntity() {
         return productEntity;
     }
@@ -71,7 +71,7 @@ public class ExpressProductEntity {
 
     @ManyToOne
     @JoinColumn(name = "Express_id")
-    @JsonBackReference
+    @JsonBackReference(value = "ExpressEntity")
     public ExpressEntity getExpressEntity() {
         return expressEntity;
     }

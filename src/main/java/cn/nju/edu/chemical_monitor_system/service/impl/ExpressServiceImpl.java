@@ -5,7 +5,6 @@ import cn.nju.edu.chemical_monitor_system.constant.ExpressStatusEnum;
 import cn.nju.edu.chemical_monitor_system.dao.*;
 import cn.nju.edu.chemical_monitor_system.entity.*;
 import cn.nju.edu.chemical_monitor_system.service.ExpressService;
-import cn.nju.edu.chemical_monitor_system.service.RfidService;
 import cn.nju.edu.chemical_monitor_system.utils.encryption_util.EncryptionUtil;
 import cn.nju.edu.chemical_monitor_system.utils.rfid_util.RfidUtil;
 import cn.nju.edu.chemical_monitor_system.utils.safe_util.SafeUtil;
@@ -20,9 +19,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.Callable;
-import java.util.concurrent.FutureTask;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 @Service
@@ -86,8 +82,8 @@ public class ExpressServiceImpl implements ExpressService {
         }
 
 
-        expressEntity.setInputStore(inputStoreOpt.get());
-        expressEntity.setOutputStore(outputStoreOpt.get());
+        expressEntity.setInputStoreId(inputStoreId);
+        expressEntity.setOutputStoreId(outputStoreId);
         expressEntity.setStatus(ExpressStatusEnum.NOT_START.getCode());
 
         List<ExpressProductEntity> expressProductEntities = new ArrayList<>();
@@ -112,14 +108,14 @@ public class ExpressServiceImpl implements ExpressService {
     }
 
     private void inputExpress(ExpressEntity expressEntity, int userId) {
-        expressEntity.setInputUser(userDao.findById(userId).get());
+        expressEntity.setInputUserId(userId);
         expressEntity.setInputTime(new Timestamp(System.currentTimeMillis()));
         expressEntity.setStatus(ExpressStatusEnum.IN_INVENTORY.getCode());
         expressDao.save(expressEntity);
     }
 
     private void outputExpress(ExpressEntity expressEntity, int userId) {
-        expressEntity.setOutputUser(userDao.findById(userId).get());
+        expressEntity.setOutputUserId(userId);
         expressEntity.setOutputTime(new Timestamp(System.currentTimeMillis()));
         expressEntity.setStatus(ExpressStatusEnum.OUT_INVENTORY.getCode());
         expressDao.save(expressEntity);
@@ -153,7 +149,10 @@ public class ExpressServiceImpl implements ExpressService {
 
         ExpressEntity expressEntity = expressOpt.get();
         //从物流单里面的store获得port
-        String port = expressEntity.getOutputStore().getPort();
+        int outputStoreId=expressEntity.getOutputStoreId();
+        int inputStoreId=expressEntity.getInputStoreId();
+        StoreEntity storeEntity=storeDao.findByStoreId(outputStoreId);
+        String port = storeEntity.getPort();
         String rfid = rfidUtil.read(port);
         //如果没有读到结果
         if (rfid.equals("-1")) {
@@ -162,7 +161,7 @@ public class ExpressServiceImpl implements ExpressService {
         String newRfid = null;
         try {
             //进行解密,由于读出来的数据没有加密过，先模拟已经加密过
-            newRfid = encryptionUtil.decrypt(rfid, expressEntity.getInputStore().getStoreId(), expressEntity.getOutputStore().getStoreId());
+            newRfid = encryptionUtil.decrypt(rfid, inputStoreId, outputStoreId);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -185,7 +184,7 @@ public class ExpressServiceImpl implements ExpressService {
                 double number = expressProductEntity.getNumber();//该批次总共需要出库的量
                 try {
                     //写之前加密
-                    newRfid = encryptionUtil.encrypt(rfidInfoEntity.toString(), expressEntity.getInputStore().getStoreId(), expressEntity.getOutputStore().getStoreId());
+                    newRfid = encryptionUtil.encrypt(rfidInfoEntity.toString(), inputStoreId, outputStoreId);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -219,7 +218,10 @@ public class ExpressServiceImpl implements ExpressService {
             return new ProductVO("物流id不存在");
         }
         ExpressEntity expressEntity = expressOpt.get();
-        String port = expressEntity.getInputStore().getPort();
+        int outputStoreId=expressEntity.getOutputStoreId();
+        int inputStoreId=expressEntity.getInputStoreId();
+        StoreEntity storeEntity=storeDao.findByStoreId(outputStoreId);
+        String port = storeEntity.getPort();
         String rfid = rfidUtil.read(port);
         //如果没有读到结果
         if (rfid.equals("-1")) {
@@ -228,8 +230,8 @@ public class ExpressServiceImpl implements ExpressService {
         String newRfid = null;
         try {
             //进行解密
-            rfid = encryptionUtil.encrypt(rfid, expressEntity.getInputStore().getStoreId(), expressEntity.getOutputStore().getStoreId());
-            newRfid = encryptionUtil.decrypt(rfid, expressEntity.getInputStore().getStoreId(), expressEntity.getOutputStore().getStoreId());
+            rfid = encryptionUtil.encrypt(rfid, inputStoreId, outputStoreId);
+            newRfid = encryptionUtil.decrypt(rfid, inputStoreId, outputStoreId);
         } catch (Exception e) {
             e.printStackTrace();
         }

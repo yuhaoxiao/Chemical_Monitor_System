@@ -9,4 +9,5 @@ import java.util.List;
 
 public interface StoreDao extends JpaRepository<StoreEntity, Serializable> {
 
+    StoreEntity findByStoreId(int storeId);
 }

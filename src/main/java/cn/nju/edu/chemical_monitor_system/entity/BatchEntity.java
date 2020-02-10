@@ -72,7 +72,7 @@ public class BatchEntity {
 
     @ManyToOne
     @JoinColumn(name = "User_id")
-    @JsonBackReference
+    @JsonBackReference(value = "UserEntity")
     public UserEntity getUserEntity() {
         return userEntity;
     }
