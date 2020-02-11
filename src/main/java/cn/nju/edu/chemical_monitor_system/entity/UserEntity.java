@@ -19,8 +19,6 @@ public class UserEntity {
     private String password;
     private String type;
     private List<BatchEntity> batchEntities;
-    private List<ExpressEntity> inExpressEntities;//该操作员作为入库者所绑定的清单
-    private List<ExpressEntity> outExpressEntities;//该操作员作为出库者所绑定的清单
 
     @Id
     @Column(name = "User_id")
@@ -73,25 +71,6 @@ public class UserEntity {
         this.batchEntities = batchEntities;
     }
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "inputUser", fetch = FetchType.LAZY)
-    @JsonBackReference(value="ExpressEntities")
-    public List<ExpressEntity> getInExpressEntities() {
-        return inExpressEntities;
-    }
-
-    public void setInExpressEntities(List<ExpressEntity> inExpressEntities) {
-        this.inExpressEntities = inExpressEntities;
-    }
-
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "outputUser", fetch = FetchType.LAZY)
-    @JsonBackReference(value="OutExpressEntities")
-    public List<ExpressEntity> getOutExpressEntities() {
-        return outExpressEntities;
-    }
-
-    public void setOutExpressEntities(List<ExpressEntity> outExpressEntities) {
-        this.outExpressEntities = outExpressEntities;
-    }
 
     @Override
     public boolean equals(Object o) {

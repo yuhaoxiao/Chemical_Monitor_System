@@ -6,10 +6,12 @@ import cn.nju.edu.chemical_monitor_system.entity.CasEntity;
 import cn.nju.edu.chemical_monitor_system.entity.ProductEntity;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
 
 @Data
+@Component
 public class Product {
     private double[] nums;//数值类型属性
     private Boolean[] booleans;//bool类型属性
