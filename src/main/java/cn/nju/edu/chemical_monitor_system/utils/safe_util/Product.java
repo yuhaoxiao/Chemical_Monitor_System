@@ -20,14 +20,10 @@ public class Product {
     private int featureNums = ConstantVariables.featureNums;
     private String name;
 
-    @Autowired
-    private ProductDao productDao;
-
     Product() {
     }
 
-    Product(int productId) {
-        ProductEntity productEntity = productDao.findById(productId).get();
+    Product(ProductEntity productEntity) {
         this.nums = new double[featureNums];
         CasEntity cas = productEntity.getCasEntity();
         nums[0] = cas.getFusionPoint() / (double) ConstantVariables.maxFusionPoint;

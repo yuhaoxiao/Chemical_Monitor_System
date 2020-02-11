@@ -17,7 +17,7 @@ public class ProductList implements Iterable<Product> {
 
     ProductList(List<ProductEntity> productEntities, int featureNums) {
         productList = productEntities.stream().map(productEntity -> {
-            Product product = new Product(productEntity.getProductId());
+            Product product = new Product(productEntity);
 
             double[] nums = new double[featureNums];
             nums[0] = Math.random() * 100;

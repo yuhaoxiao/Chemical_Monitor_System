@@ -2,7 +2,6 @@ package cn.nju.edu.chemical_monitor_system.utils.safe_util;
 
 import cn.nju.edu.chemical_monitor_system.constant.ConstantVariables;
 import cn.nju.edu.chemical_monitor_system.dao.ProductDao;
-import cn.nju.edu.chemical_monitor_system.dao.StoreDao;
 import cn.nju.edu.chemical_monitor_system.entity.CasEntity;
 import cn.nju.edu.chemical_monitor_system.entity.ProductEntity;
 import cn.nju.edu.chemical_monitor_system.service.ProductService;
@@ -16,10 +15,15 @@ import java.util.stream.Collectors;
 
 @Service
 public class SafeUtil {
+
     @Autowired
     StoreService storeService;
+
     @Autowired
     ProductService productService;
+
+    @Autowired
+    ProductDao productDao;
 
     public static void main(String[] args) {
         List<ProductEntity> productEntities = new ArrayList<>();
@@ -67,14 +71,14 @@ public class SafeUtil {
     //入库是否安全
     public boolean isSafe(int productId, int storeId) {
         List<Integer> storeIds = storeService.getAllStoreId();
-        Product inProduct = new Product(productId);
+        Product inProduct = new Product(productDao.findById(productId).get());
         double max = Double.MIN_VALUE;
         double min = Double.MAX_VALUE;
         double targetStoreDistance = 0;
         for (int i = 0; i < storeIds.size(); i++) {
-            List<Integer> productEntities = new ArrayList<>(storeService.getStoreProduct(storeIds.get(i)).keySet());
-            List<Product> products = productEntities.stream()
-                    .map(Product::new).collect(Collectors.toList());
+            List<Integer> productIds = new ArrayList<>(storeService.getStoreProduct(storeIds.get(i)).keySet());
+            List<Product> products = productIds.stream()
+                    .map(id -> new Product(productDao.findById(id).get())).collect(Collectors.toList());
             Cluster cluster = new Cluster();
             cluster.addAll(products);
             cluster.updateCenter();
