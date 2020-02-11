@@ -2,6 +2,7 @@ package cn.nju.edu.chemical_monitor_system.controller;
 
 import cn.nju.edu.chemical_monitor_system.request.CreateExpressRequest;
 import cn.nju.edu.chemical_monitor_system.service.ExpressService;
+import cn.nju.edu.chemical_monitor_system.utils.kafka_util.KafkaProducer;
 import cn.nju.edu.chemical_monitor_system.vo.ExpressProductVO;
 import cn.nju.edu.chemical_monitor_system.vo.ExpressVO;
 import cn.nju.edu.chemical_monitor_system.vo.ProductVO;
@@ -11,12 +12,12 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 public class ExpressController {
 
     private final ExpressService expressService;
+
 
     @Autowired
     public ExpressController(ExpressService expressService) {
@@ -37,6 +38,7 @@ public class ExpressController {
         UserVO userVO = (UserVO) httpServletRequest.getSession().getAttribute("User");
         return expressService.outputProduct(expressId, userVO.getUserId());
     }
+
     @PostMapping(value = "express/input_product")
     public ProductVO inputProduct(int expressId, HttpServletRequest httpServletRequest) {
         UserVO userVO = (UserVO) httpServletRequest.getSession().getAttribute("User");

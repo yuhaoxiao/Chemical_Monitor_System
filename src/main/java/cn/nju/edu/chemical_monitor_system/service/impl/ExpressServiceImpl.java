@@ -6,6 +6,7 @@ import cn.nju.edu.chemical_monitor_system.dao.*;
 import cn.nju.edu.chemical_monitor_system.entity.*;
 import cn.nju.edu.chemical_monitor_system.service.ExpressService;
 import cn.nju.edu.chemical_monitor_system.utils.encryption_util.EncryptionUtil;
+import cn.nju.edu.chemical_monitor_system.utils.kafka_util.KafkaProducer;
 import cn.nju.edu.chemical_monitor_system.utils.rfid_util.RfidUtil;
 import cn.nju.edu.chemical_monitor_system.utils.safe_util.SafeUtil;
 import cn.nju.edu.chemical_monitor_system.vo.ExpressProductVO;
@@ -48,6 +49,9 @@ public class ExpressServiceImpl implements ExpressService {
     @Autowired
     private RfidUtil rfidUtil;
 
+    @Autowired
+    private KafkaProducer kafkaProducer;
+
     @Override
     public ExpressVO createExpress(int inputStoreId, int outputStoreId, Map<Integer, Double> productNumberMap) {
         ExpressEntity expressEntity = new ExpressEntity();
@@ -61,6 +65,7 @@ public class ExpressServiceImpl implements ExpressService {
         if (!outputStoreOpt.isPresent()) {
             return new ExpressVO("出库仓库id不存在");
         }
+        /*
         List<Integer> notSafeProducts=new ArrayList<>();
         for(Integer productId:productNumberMap.keySet()){
             if(!safeUtil.isSafe(productId,inputStoreId)){
@@ -80,7 +85,7 @@ public class ExpressServiceImpl implements ExpressService {
             result.setMessage(s.toString());
             return result;
         }
-
+*/
 
         expressEntity.setInputStoreId(inputStoreId);
         expressEntity.setOutputStoreId(outputStoreId);
@@ -94,7 +99,7 @@ public class ExpressServiceImpl implements ExpressService {
             if (!productOpt.isPresent()) {
                 continue;
             }
-            ProductEntity productEntity=productOpt.get();
+            ProductEntity productEntity = productOpt.get();
             ep.setProductEntity(productEntity);
             ep.setExpressEntity(expressEntity);
             ep.setStatus(ExpressProductStatusEnum.NOT_START.getCode());
@@ -104,6 +109,7 @@ public class ExpressServiceImpl implements ExpressService {
 
         expressEntity.setExpressProductEntities(expressProductEntities);
         expressDao.save(expressEntity);
+        kafkaProducer.sendExpress(new ExpressVO(expressEntity));
         return new ExpressVO(expressEntity);
     }
 
@@ -149,9 +155,9 @@ public class ExpressServiceImpl implements ExpressService {
 
         ExpressEntity expressEntity = expressOpt.get();
         //从物流单里面的store获得port
-        int outputStoreId=expressEntity.getOutputStoreId();
-        int inputStoreId=expressEntity.getInputStoreId();
-        StoreEntity storeEntity=storeDao.findByStoreId(outputStoreId);
+        int outputStoreId = expressEntity.getOutputStoreId();
+        int inputStoreId = expressEntity.getInputStoreId();
+        StoreEntity storeEntity = storeDao.findByStoreId(outputStoreId);
         String port = storeEntity.getPort();
         String rfid = rfidUtil.read(port);
         //如果没有读到结果
@@ -218,9 +224,9 @@ public class ExpressServiceImpl implements ExpressService {
             return new ProductVO("物流id不存在");
         }
         ExpressEntity expressEntity = expressOpt.get();
-        int outputStoreId=expressEntity.getOutputStoreId();
-        int inputStoreId=expressEntity.getInputStoreId();
-        StoreEntity storeEntity=storeDao.findByStoreId(outputStoreId);
+        int outputStoreId = expressEntity.getOutputStoreId();
+        int inputStoreId = expressEntity.getInputStoreId();
+        StoreEntity storeEntity = storeDao.findByStoreId(outputStoreId);
         String port = storeEntity.getPort();
         String rfid = rfidUtil.read(port);
         //如果没有读到结果

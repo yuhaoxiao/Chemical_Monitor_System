@@ -14,10 +14,13 @@ public class LoginConfig implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
+/*
         registry.addInterceptor(loginHandlerInterceptor)
                 .addPathPatterns("/**")
                 .excludePathPatterns("/user/login", "/user/register")//登录注册页面不进行拦截
                 .excludePathPatterns("/static/**");//静态资源不进行拦截，具体路径之后进行相应更改
+*/
+
     }
 
 }

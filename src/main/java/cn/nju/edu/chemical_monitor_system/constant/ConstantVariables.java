@@ -12,5 +12,5 @@ public class ConstantVariables {
     public final static int maxReducibility = 9;
     public final static int maxInflammability = 9;
     public final static int maxExplosion = 9;
-
+    public final static String MANAGER_MESSAGE="ManagerMessage";
 }
