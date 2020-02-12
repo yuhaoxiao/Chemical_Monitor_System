@@ -13,6 +13,7 @@ public class RedisTest extends BaseTest{
     @Test
     public void testSetAndGet()
     {
+
         ExpressEntity expressEntity=expressDao.findFirstByExpressId(3);
         redisUtil.set("express3",expressEntity);
         System.out.println(((ExpressEntity)redisUtil.get("express3")).getInputStoreId());
