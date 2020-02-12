@@ -21,10 +21,6 @@ spring:
   redis:
     host: 127.0.0.1
     port: 6379
-    jedis:
-      pool:
-        max-idle: 100
-        max-wait: 100
   kafka:
     consumer:
       group-id: foo

@@ -99,8 +99,7 @@ public class ExpressServiceImpl implements ExpressService {
             if (!productOpt.isPresent()) {
                 continue;
             }
-            ProductEntity productEntity = productOpt.get();
-            ep.setProductEntity(productEntity);
+            ep.setProductId(entry.getKey());
             ep.setExpressEntity(expressEntity);
             ep.setStatus(ExpressProductStatusEnum.NOT_START.getCode());
             ep.setNumber(entry.getValue());
@@ -138,11 +137,8 @@ public class ExpressServiceImpl implements ExpressService {
 
     @Override
     public List<ExpressProductVO> getProductExpress(int productId) {
-        Optional<ProductEntity> productOpt = productDao.findById(productId);
-
-        return productOpt.map(productEntity -> productEntity.getExpressProductEntities().stream()
-                .map(ExpressProductVO::new)
-                .collect(Collectors.toList())).orElseGet(ArrayList::new);
+        return expressProductDao.findByProductId(productId).stream().map(ExpressProductVO::new)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -186,7 +182,7 @@ public class ExpressServiceImpl implements ExpressService {
         int temp = 0;//对已出库product计数
         List<ExpressProductEntity> expressProductEntities = expressEntity.getExpressProductEntities();
         for (ExpressProductEntity expressProductEntity : expressProductEntities) {
-            if (expressProductEntity.getProductEntity().getProductId() == productId) {
+            if (expressProductEntity.getProductId() == productId) {
                 double number = expressProductEntity.getNumber();//该批次总共需要出库的量
                 try {
                     //写之前加密
@@ -251,7 +247,7 @@ public class ExpressServiceImpl implements ExpressService {
         int temp = 0;//对已入库product计数
         List<ExpressProductEntity> expressProductEntities = expressEntity.getExpressProductEntities();
         for (ExpressProductEntity expressProductEntity : expressProductEntities) {
-            if (expressProductEntity.getProductEntity().getProductId() == productId) {
+            if (expressProductEntity.getProductId() == productId) {
                 double number = expressProductEntity.getNumber();
                 String writeRfid = rfidUtil.write(newRfid, port);
                 if (writeRfid.equals("-1")) {

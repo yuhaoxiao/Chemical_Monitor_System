@@ -9,7 +9,7 @@ import java.util.Objects;
 @Table(name = "expressproduct", schema = "mydb")
 public class ExpressProductEntity {
     private int expressProductId;
-    private ProductEntity productEntity;
+    private int productId;
     private double number;
     private ExpressEntity expressEntity;
     private int Status;
@@ -27,15 +27,14 @@ public class ExpressProductEntity {
         this.expressProductId = expressProductId;
     }
 
-    @ManyToOne
-    @JoinColumn(name = "Product_id")
-    @JsonBackReference(value = "ProductEntity")
-    public ProductEntity getProductEntity() {
-        return productEntity;
+    @Basic
+    @Column(name = "Product_id")
+    public int getProductId() {
+        return productId;
     }
 
-    public void setProductEntity(ProductEntity productEntity) {
-        this.productEntity = productEntity;
+    public void setProductId(int productId) {
+        this.productId = productId;
     }
 
     @Basic
@@ -100,12 +99,12 @@ public class ExpressProductEntity {
                 Status == that.Status &&
                 Double.compare(that.inputNumber, inputNumber) == 0 &&
                 Double.compare(that.outputNumber, outputNumber) == 0 &&
-                Objects.equals(productEntity, that.productEntity) &&
+                productId==that.getProductId() &&
                 Objects.equals(expressEntity, that.expressEntity);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(expressProductId, productEntity, number, expressEntity, Status, inputNumber, outputNumber);
+        return Objects.hash(expressProductId, productId, number, expressEntity, Status, inputNumber, outputNumber);
     }
 }
