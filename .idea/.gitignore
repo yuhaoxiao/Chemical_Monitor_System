@@ -2,3 +2,4 @@
 # Datasource local storage ignored files
 /dataSources/
 /workspace.xml
+*.xml
