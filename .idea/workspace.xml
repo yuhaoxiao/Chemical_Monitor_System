@@ -1,14 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="78dca6cd-d589-4046-9790-5f1186d1b9ea" name="Default Changelist" comment="xiaoyuhao">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/cn/nju/edu/chemical_monitor_system/utils/safe_util/Product.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cn/nju/edu/chemical_monitor_system/utils/safe_util/Product.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/cn/nju/edu/chemical_monitor_system/utils/safe_util/ProductList.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cn/nju/edu/chemical_monitor_system/utils/safe_util/ProductList.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/cn/nju/edu/chemical_monitor_system/utils/safe_util/SafeUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cn/nju/edu/chemical_monitor_system/utils/safe_util/SafeUtil.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/application.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cn/nju/edu/chemical_monitor_system/constant/ConstantVariables.class" beforeDir="false" />
-    </list>
+    <list default="true" id="78dca6cd-d589-4046-9790-5f1186d1b9ea" name="Default Changelist" comment="xiaoyuhao" />
     <ignored path="$PROJECT_DIR$/target/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -377,7 +370,7 @@
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1581428763223" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1581428778934" />
     <property name="database.console.LAST_STATE" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="project.structure.last.edited" value="Modules" />
@@ -484,7 +477,7 @@
       <workItem from="1581312524832" duration="152000" />
       <workItem from="1581312794817" duration="5019000" />
       <workItem from="1581320690198" duration="1228000" />
-      <workItem from="1581427424506" duration="1317000" />
+      <workItem from="1581427424506" duration="1485000" />
     </task>
     <task id="LOCAL-00001" summary="xiaoyuhao">
       <created>1579795942758</created>
@@ -560,7 +553,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="10574000" />
+    <option name="totallyTimeSpent" value="10742000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1680" height="1050" extended-state="0" />
