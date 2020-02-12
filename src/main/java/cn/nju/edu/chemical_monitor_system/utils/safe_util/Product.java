@@ -14,7 +14,6 @@ import java.util.Arrays;
 @Component
 public class Product {
     private double[] nums;//数值类型属性
-    private Boolean[] booleans;//bool类型属性
     private boolean isAllocated;//判断是否已经被分配到质心
     private int productId;
     private int featureNums = ConstantVariables.featureNums;
@@ -23,6 +22,12 @@ public class Product {
     Product() {
     }
 
+    Product(int productId){
+        this.productId = productId;
+        this.isAllocated = false;
+        this.nums = new double[featureNums];
+        this.name="center";
+    }
     Product(ProductEntity productEntity) {
         this.nums = new double[featureNums];
         CasEntity cas = productEntity.getCasEntity();
@@ -36,7 +41,7 @@ public class Product {
         nums[7] = cas.getExplosion() / (double) ConstantVariables.maxExplosion;
         this.productId = productEntity.getProductId();
         this.isAllocated = false;
-        this.name = productEntity.getCasEntity().getName();
+        this.name = cas.getName();
     }
 
     void add(Product product) {

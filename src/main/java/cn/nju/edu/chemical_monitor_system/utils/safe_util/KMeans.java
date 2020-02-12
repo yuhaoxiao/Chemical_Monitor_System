@@ -1,6 +1,8 @@
 package cn.nju.edu.chemical_monitor_system.utils.safe_util;
 
 
+import cn.nju.edu.chemical_monitor_system.constant.ConstantVariables;
+
 class KMeans {
     private Distance distance;
     private int iterationNum;
@@ -32,13 +34,13 @@ class KMeans {
         return new Cluster(products.get(index));
     }
 
-    ClusterList runKMeans(ProductList products, int k) {
+    ClusterList runKMeans(ProductList products) {
         ClusterList clusters = new ClusterList();
         products.clearAllocated();
 
-        //初始化一个簇，再根据最远原则选择更多的簇知道满足k个
+        //初始化一个簇，再根据最远原则选择更多的簇直到满足k个
         clusters.add(selectProductAsClusterRandomly(products));
-        while (clusters.size() < k) {
+        while (clusters.size() < ConstantVariables.clusterNum) {
             clusters.add(createFurthestCluster(products, clusters));
         }
 

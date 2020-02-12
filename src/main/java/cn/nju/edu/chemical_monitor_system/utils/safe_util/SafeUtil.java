@@ -40,18 +40,18 @@ public class SafeUtil {
             p.setCasEntity(c);
             productEntities.add(p);
         }
-        new SafeUtil().getSafeProducts(p1, productEntities, 3);
+        new SafeUtil().getSafeProducts(p1, productEntities);
     }
 
-    public List<Product> getSafeProducts(ProductEntity inProduct, List<ProductEntity> productEntities, int featureNums) {
+    public List<Product> getSafeProducts(ProductEntity inProduct, List<ProductEntity> productEntities) {
         int productId = inProduct.getProductId();
         productEntities.add(inProduct);
-        ProductList products = new ProductList(productEntities, featureNums);
+        ProductList products = new ProductList(productEntities);
 
         Distance distance = new Distance();
         int iterationNum = ConstantVariables.iterationNum;//设置迭代次数
         KMeans k = new KMeans(distance, iterationNum);
-        ClusterList clusters = k.runKMeans(products, featureNums);
+        ClusterList clusters = k.runKMeans(products);
         output(clusters);
         return clusters.getClusterByProductId(productId);
     }

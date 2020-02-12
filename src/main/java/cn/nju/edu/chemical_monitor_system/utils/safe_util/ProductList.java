@@ -15,18 +15,8 @@ public class ProductList implements Iterable<Product> {
     ProductList() {
     }
 
-    ProductList(List<ProductEntity> productEntities, int featureNums) {
-        productList = productEntities.stream().map(productEntity -> {
-            Product product = new Product(productEntity);
-
-            double[] nums = new double[featureNums];
-            nums[0] = Math.random() * 100;
-            nums[1] = Math.random() * 100;
-            nums[2] = Math.random() * 100;
-            product.setNums(nums);
-
-            return product;
-        }).collect(Collectors.toList());
+    ProductList(List<ProductEntity> productEntities) {
+        productList = productEntities.stream().map(Product::new).collect(Collectors.toList());
     }
 
     void add(Product p) {
