@@ -13,7 +13,6 @@ public class ProductEntity {
     private int batchId;
     private CasEntity casEntity;
     private Double number;
-    private List<ExpressProductEntity> expressProductEntities;
 
     @Id
     @Column(name = "Product_id")
@@ -56,15 +55,6 @@ public class ProductEntity {
         this.number = number;
     }
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "productEntity", fetch = FetchType.LAZY)
-    @JsonBackReference(value="ExpressProductEntities")
-    public List<ExpressProductEntity> getExpressProductEntities() {
-        return expressProductEntities;
-    }
-
-    public void setExpressProductEntities(List<ExpressProductEntity> expressProductEntities) {
-        this.expressProductEntities = expressProductEntities;
-    }
 
     @Override
     public boolean equals(Object o) {

@@ -55,7 +55,7 @@ public class StoreServiceImpl implements StoreService {
 
         for (ExpressEntity in : expressDao.findByInputStoreId(sid)) {
             for (ExpressProductEntity inep : in.getExpressProductEntities()) {
-                int productId = inep.getProductEntity().getProductId();
+                int productId = inep.getProductId();
                 if (productNumber.containsKey(productId)) {
                     Double number = productNumber.get(productId);
                     productNumber.put(productId, number + inep.getNumber());
@@ -67,7 +67,7 @@ public class StoreServiceImpl implements StoreService {
 
         for (ExpressEntity out : expressDao.findByOutputStoreId(sid)) {
             for (ExpressProductEntity outep : out.getExpressProductEntities()) {
-                int productId = outep.getProductEntity().getProductId();
+                int productId = outep.getProductId();
                 if (productNumber.containsKey(productId)) {
                     Double number = productNumber.get(productId);
                     productNumber.put(productId, number - outep.getNumber());
