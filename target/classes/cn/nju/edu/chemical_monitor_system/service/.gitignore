@@ -1,1 +1,9 @@
-*.class
+/BatchService.class
+/CasService.class
+/EnterpriseService.class
+/ExpressService.class
+/InOutBatchService.class
+/ProductService.class
+/RfidService.class
+/StoreService.class
+/UserService.class

@@ -12,4 +12,8 @@ public interface ExpressDao extends JpaRepository<ExpressEntity, Serializable> {
     List<ExpressEntity> findByInputStoreId(int inputStoreId);
 
     List<ExpressEntity> findByOutputStoreId(int outputStoreId);
+
+    List<ExpressEntity> findByInputUserId(int uid);
+
+    List<ExpressEntity> findByOutputUserId(int uid);
 }

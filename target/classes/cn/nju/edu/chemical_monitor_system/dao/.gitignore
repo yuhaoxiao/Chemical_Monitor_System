@@ -1,1 +1,11 @@
-*.class
+/BatchDao.class
+/CasDao.class
+/EncryptionDao.class
+/EnterpriseDao.class
+/ExpressDao.class
+/ExpressProductDao.class
+/InoutBatchDao.class
+/ProductDao.class
+/ProductionLineDao.class
+/StoreDao.class
+/UserDao.class

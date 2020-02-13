@@ -1,1 +1,9 @@
-*.class
+/BatchController.class
+/CASController.class
+/Controller.class
+/EnterpriseController.class
+/ExpressController.class
+/InoutController.class
+/ProductController.class
+/StoreController.class
+/UserController.class

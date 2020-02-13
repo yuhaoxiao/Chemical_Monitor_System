@@ -25,7 +25,7 @@ public class InoutController {
     /**
      * 添加批次的产品，数据库同时完成产品以及产品入库的持久化
      * @param addProductRequest 传入Cas码-数量的Map
-     * @return 为null的话说明传入的id中有不合法的
+     * @return 为null的话说明传入的id中有不存在的
      */
     @PostMapping(value = "inout/add_product")
     public List<InOutBatchVO> addProduct(@RequestBody AddProductRequest addProductRequest) {

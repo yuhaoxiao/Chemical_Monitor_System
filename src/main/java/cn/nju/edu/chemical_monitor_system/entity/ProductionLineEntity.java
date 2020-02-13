@@ -9,6 +9,7 @@ import javax.persistence.*;
 public class ProductionLineEntity {
     private int productionLineId;
     private EnterpriseEntity enterpriseEntity;
+    private int enable;
 
     @Id
     @Column(name = "ProductionLine_id")
@@ -22,13 +23,23 @@ public class ProductionLineEntity {
 
     @ManyToOne
     @JoinColumn(name = "enterprise_id")
-    @JsonBackReference(value="EnterpriseEntity")
+    @JsonBackReference(value = "EnterpriseEntity")
     public EnterpriseEntity getEnterpriseEntity() {
         return enterpriseEntity;
     }
 
     public void setEnterpriseEntity(EnterpriseEntity enterpriseEntity) {
         this.enterpriseEntity = enterpriseEntity;
+    }
+
+    @Basic
+    @Column(name = "Enable")
+    public int getEnable() {
+        return enable;
+    }
+
+    public void setEnable(int enable) {
+        this.enable = enable;
     }
 
     @Override

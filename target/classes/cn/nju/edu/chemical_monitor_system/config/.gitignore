@@ -1,1 +1,3 @@
-*.class
+/LoginConfig.class
+/RedisConfig.class
+/WebSocketConfig.class

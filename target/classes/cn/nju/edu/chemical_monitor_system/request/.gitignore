@@ -1,1 +1,3 @@
-*.class
+/AddProductRequest.class
+/CreateBatchRequest.class
+/CreateExpressRequest.class

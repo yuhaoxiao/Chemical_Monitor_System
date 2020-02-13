@@ -1,1 +1,2 @@
-*.class
+/KafkaProducer.class
+/KafkaReceiver.class

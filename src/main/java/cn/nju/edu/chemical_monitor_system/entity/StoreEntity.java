@@ -1,9 +1,6 @@
 package cn.nju.edu.chemical_monitor_system.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-
 import javax.persistence.*;
-import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -13,6 +10,7 @@ public class StoreEntity {
     private int enterpriseId;
     private String name;
     private String port;
+    private int enable;
 
     @Id
     @Column(name = "Store_id")
@@ -44,6 +42,15 @@ public class StoreEntity {
         this.name = name;
     }
 
+    @Basic
+    @Column(name = "Enable")
+    public int getEnable() {
+        return enable;
+    }
+
+    public void setEnable(int enable) {
+        this.enable = enable;
+    }
 
     @Basic
     @Column(name = "Port")
