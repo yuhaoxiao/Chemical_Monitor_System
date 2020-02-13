@@ -10,9 +10,11 @@ import cn.nju.edu.chemical_monitor_system.vo.InOutBatchVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class InOutBatchServiceImpl implements InOutBatchService {
@@ -195,19 +197,43 @@ public class InOutBatchServiceImpl implements InOutBatchService {
         Optional<BatchEntity> batchOpt = batchDao.findById(batchId);
         Optional<StoreEntity> storeOpt = storeDao.findById(storeId);
 
-        if (!batchOpt.isPresent()||) {
+        if (!batchOpt.isPresent() || !storeOpt.isPresent()) {
             return null;
         }
 
+        List<ProductEntity> productEntities = new ArrayList<>();
         for (Map.Entry<Integer, Double> entry : casNumberMap.entrySet()) {
             int casId = entry.getKey();
             double number = entry.getValue();
 
             Optional<CasEntity> casOpt = casDao.findById(casId);
-            if(!casOpt.isPresent()){
+            if (!casOpt.isPresent()) {
                 return null;
             }
+
+            ProductEntity productEntity = new ProductEntity();
+            productEntity.setBatchId(batchId);
+            productEntity.setCasEntity(casOpt.get());
+            productEntity.setNumber(number);
+            productEntities.add(productEntity);
         }
-        return null;
+
+        productDao.saveAll(productEntities);
+        List<InOutBatchEntity> inOutBatchEntities = new ArrayList<>();
+
+        for (ProductEntity productEntity : productEntities) {
+            InOutBatchEntity inOutBatchEntity = new InOutBatchEntity();
+            inOutBatchEntity.setInout(0);
+            inOutBatchEntity.setFinishedNumber(0.0);
+            inOutBatchEntity.setStatus(InOutBatchStatusEnum.NOT_START.getName());
+            inOutBatchEntity.setNumber(productEntity.getNumber());
+            inOutBatchEntity.setStoreId(storeId);
+            inOutBatchEntity.setProductId(productEntity.getProductId());
+            inOutBatchEntity.setBatchId(batchId);
+            inOutBatchEntities.add(inOutBatchEntity);
+        }
+
+        inoutBatchDao.saveAll(inOutBatchEntities);
+        return inOutBatchEntities.stream().map(InOutBatchVO::new).collect(Collectors.toList());
     }
 }

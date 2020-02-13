@@ -1,6 +1,5 @@
 package cn.nju.edu.chemical_monitor_system.controller;
 
-import cn.nju.edu.chemical_monitor_system.constant.BatchStatusEnum;
 import cn.nju.edu.chemical_monitor_system.request.CreateBatchRequest;
 import cn.nju.edu.chemical_monitor_system.service.BatchService;
 import cn.nju.edu.chemical_monitor_system.vo.BatchVO;
@@ -14,9 +13,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
-import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -25,6 +21,11 @@ public class BatchController {
     @Autowired
     private BatchService batchService;
 
+    /**
+     * 创建批次
+     * @param createBatchRequest 其中的inoutBatch是原材料
+     * @return
+     */
     @PostMapping(value = "batch/create_batch")
     public BatchVO createBatch(@RequestBody CreateBatchRequest createBatchRequest, HttpServletRequest httpServletRequest) {
         UserVO userVO = (UserVO) httpServletRequest.getSession().getAttribute("User");
