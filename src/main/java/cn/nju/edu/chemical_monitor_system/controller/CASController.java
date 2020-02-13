@@ -12,7 +12,7 @@ public class CASController {
     @Autowired
     private CasService casService;
 
-    @GetMapping(value = "cas/get_cas")
+    @GetMapping(value = "/cas/get_cas")
     public CasVO getCAS(int casId){
         return casService.getCas(casId);
     }

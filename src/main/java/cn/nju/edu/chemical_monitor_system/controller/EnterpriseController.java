@@ -15,22 +15,22 @@ public class EnterpriseController {
     @Autowired
     private EnterpriseService enterpriseService;
 
-    @PostMapping(value = "enterprise/add_enterprise")
+    @PostMapping(value = "/enterprise/add_enterprise")
     public EnterpriseVO addEnterprise(String name){
         return enterpriseService.addEnterprise(name);
     }
 
-    @PostMapping(value = "enterprise/delete_enterprise")
+    @PostMapping(value = "/enterprise/delete_enterprise")
     public EnterpriseVO deleteEnterprise(int eid){
         return enterpriseService.deleteEnterprise(eid);
     }
 
-    @PostMapping(value = "enterprise/update_enterprise")
+    @PostMapping(value = "/enterprise/update_enterprise")
     public EnterpriseVO updateEnterprise(EnterpriseVO enterpriseVO){
         return enterpriseService.updateEnterprise(enterpriseVO);
     }
 
-    @GetMapping(value = "enterprise/search_enterprise")
+    @GetMapping(value = "/enterprise/search_enterprise")
     public List<EnterpriseVO> searchEnterprise(String s){
         return enterpriseService.searchEnterprise(s);
     }

@@ -26,24 +26,24 @@ public class BatchController {
      * @param createBatchRequest 其中的inoutBatch是原材料
      * @return
      */
-    @PostMapping(value = "batch/create_batch")
+    @PostMapping(value = "/batch/create_batch")
     public BatchVO createBatch(@RequestBody CreateBatchRequest createBatchRequest, HttpServletRequest httpServletRequest) {
         UserVO userVO = (UserVO) httpServletRequest.getSession().getAttribute("User");
         return batchService.createBatch(createBatchRequest.getProductionlineId(), createBatchRequest.getTime(),
                 createBatchRequest.getType(), createBatchRequest.getInOutBatchVOS(), userVO.getUserId());
     }
 
-    @GetMapping(value = "batch/get_batch")
+    @GetMapping(value = "/batch/get_batch")
     public BatchVO getBatch(int batchId) {
         return batchService.getBatch(batchId);
     }
 
-    @GetMapping(value = "batch/get_batch_product")
+    @GetMapping(value = "/batch/get_batch_product")
     public List<ProductVO> getBatchProduct(int batchId) {
         return batchService.getBatchProduct(batchId);
     }
 
-    @GetMapping(value = "batch/get_batch_inout")
+    @GetMapping(value = "/batch/get_batch_inout")
     public List<InOutBatchVO> getBatchInout(int batchId, boolean isIn) {
         return batchService.getBatchInout(batchId, isIn);
     }

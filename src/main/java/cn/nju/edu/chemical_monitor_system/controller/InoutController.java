@@ -17,7 +17,7 @@ public class InoutController {
     @Autowired
     private InOutBatchService inoutService;
 
-    @GetMapping(value = "inout/get_inout")
+    @GetMapping(value = "/inout/get_inout")
     public InOutBatchVO getInout(int inoutId) {
         return inoutService.getInout(inoutId);
     }
@@ -27,18 +27,18 @@ public class InoutController {
      * @param addProductRequest 传入Cas码-数量的Map
      * @return 为null的话说明传入的id中有不存在的
      */
-    @PostMapping(value = "inout/add_product")
+    @PostMapping(value = "/inout/add_product")
     public List<InOutBatchVO> addProduct(@RequestBody AddProductRequest addProductRequest) {
         return inoutService.addProduct(addProductRequest.getBatchId(),
                 addProductRequest.getCasNumberMap(), addProductRequest.getStoreId());
     }
 
-    @PostMapping(value = "inout/input_batch")
+    @PostMapping(value = "/inout/input_batch")
     public InOutBatchVO InputBatch(int batchId) {
         return inoutService.inputBatch(batchId);
     }
 
-    @PostMapping(value = "inout/output_batch")
+    @PostMapping(value = "/inout/output_batch")
     public InOutBatchVO OutputBatch(int batchId, int productId, double number) {
         return inoutService.outputBatch(batchId, productId, number);
     }
