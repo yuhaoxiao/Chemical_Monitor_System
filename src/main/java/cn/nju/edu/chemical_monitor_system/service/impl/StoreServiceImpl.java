@@ -90,9 +90,9 @@ public class StoreServiceImpl implements StoreService {
             int productId = inout.getProductId();
             if (productNumber.containsKey(productId)) {
                 Double number = productNumber.get(productId);
-                productNumber.put(productId, number + inout.getNumber() * (inout.getInout() == 1 ? 1 : -1));
+                productNumber.put(productId, number + inout.getNumber() * (inout.getInout() == 1 ? -1 : 1));
             } else {
-                productNumber.put(productId, inout.getNumber() * (inout.getInout() == 1 ? 1 : -1));
+                productNumber.put(productId, inout.getNumber() * (inout.getInout() == 1 ? -1 : 1));
             }
         }
 

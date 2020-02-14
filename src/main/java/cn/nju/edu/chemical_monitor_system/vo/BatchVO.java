@@ -5,6 +5,7 @@ import cn.nju.edu.chemical_monitor_system.entity.UserEntity;
 import lombok.Data;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -34,6 +35,7 @@ public class BatchVO {
         this.code = 1;
         this.userEntity = b.getUserEntity();
         this.type = b.getType();
+        this.inOutBatchVOS = new ArrayList<>();
     }
 
     public BatchVO(String message) {

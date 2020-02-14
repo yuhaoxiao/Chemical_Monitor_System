@@ -1,11 +1,10 @@
 package cn.nju.edu.chemical_monitor_system.request;
 
-import cn.nju.edu.chemical_monitor_system.vo.InOutBatchVO;
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import java.sql.Timestamp;
 import java.util.List;
 
 @Getter
@@ -13,12 +12,15 @@ import java.util.List;
 @ToString
 public class CreateBatchRequest {
 
-    private int productionlineId;
+    private int type; // 0代表生产，1代表入园（只有products），2代表出园（只有raws），3代表销毁（只有raws）
+    private int productionLineId;
+    private List<RawRequest> raws;
 
-    private Timestamp time;
-
-    private String type;
-
-    private List<InOutBatchVO> inOutBatchVOS;
+    @Data
+    public class RawRequest { // 新建inbatch
+        private int productId;
+        private int storeId;
+        private double number;
+    }
 
 }

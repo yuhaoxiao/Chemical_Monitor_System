@@ -192,48 +192,4 @@ public class InOutBatchServiceImpl implements InOutBatchService {
         return new InOutBatchVO("该批次没有产品id为" + productId + "的产品");
     }
 
-    @Override
-    public List<InOutBatchVO> addProduct(int batchId, Map<Integer, Double> casNumberMap, int storeId) {
-        Optional<BatchEntity> batchOpt = batchDao.findById(batchId);
-        Optional<StoreEntity> storeOpt = storeDao.findById(storeId);
-
-        if (!batchOpt.isPresent() || !storeOpt.isPresent()) {
-            return null;
-        }
-
-        List<ProductEntity> productEntities = new ArrayList<>();
-        for (Map.Entry<Integer, Double> entry : casNumberMap.entrySet()) {
-            int casId = entry.getKey();
-            double number = entry.getValue();
-
-            Optional<CasEntity> casOpt = casDao.findById(casId);
-            if (!casOpt.isPresent()) {
-                return null;
-            }
-
-            ProductEntity productEntity = new ProductEntity();
-            productEntity.setBatchId(batchId);
-            productEntity.setCasEntity(casOpt.get());
-            productEntity.setNumber(number);
-            productEntities.add(productEntity);
-        }
-
-        productDao.saveAll(productEntities);
-        List<InOutBatchEntity> inOutBatchEntities = new ArrayList<>();
-
-        for (ProductEntity productEntity : productEntities) {
-            InOutBatchEntity inOutBatchEntity = new InOutBatchEntity();
-            inOutBatchEntity.setInout(0);
-            inOutBatchEntity.setFinishedNumber(0.0);
-            inOutBatchEntity.setStatus(InOutBatchStatusEnum.NOT_START.getName());
-            inOutBatchEntity.setNumber(productEntity.getNumber());
-            inOutBatchEntity.setStoreId(storeId);
-            inOutBatchEntity.setProductId(productEntity.getProductId());
-            inOutBatchEntity.setBatchId(batchId);
-            inOutBatchEntities.add(inOutBatchEntity);
-        }
-
-        inoutBatchDao.saveAll(inOutBatchEntities);
-        return inOutBatchEntities.stream().map(InOutBatchVO::new).collect(Collectors.toList());
-    }
 }
