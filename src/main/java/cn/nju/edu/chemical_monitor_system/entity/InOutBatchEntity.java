@@ -6,7 +6,7 @@ import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
-@Table(name = "InOutBatch", schema = "mydb")
+@Table(name = "Inoutbatch", schema = "mydb")
 public class InOutBatchEntity {
     private int inOutId;
     private int productId;
@@ -31,7 +31,7 @@ public class InOutBatchEntity {
     }
 
     @Id
-    @Column(name = "InOut_id")
+    @Column(name = "Inout_id")
     public int getInOutId() {
         return inOutId;
     }
@@ -71,7 +71,7 @@ public class InOutBatchEntity {
     }
 
     @Basic
-    @Column(name = "InOrout")
+    @Column(name = "Inorout")
     public Integer getInout() {
         return inout;
     }

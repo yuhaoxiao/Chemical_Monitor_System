@@ -14,5 +14,5 @@ public interface InoutBatchDao extends JpaRepository<InOutBatchEntity, Serializa
 
     List<InOutBatchEntity> findByBatchIdAndInout(int batchId, int isIn);
 
-    List<InOutBatchEntity> findByBatchIdAndInoutAndProductIdAndStoreId(int batchId,int ProductId,int StoreId,int isIn);
+    List<InOutBatchEntity> findByBatchIdAndProductIdAndStoreIdAndInout(int batchId,int ProductId,int StoreId,int isIn);
 }
