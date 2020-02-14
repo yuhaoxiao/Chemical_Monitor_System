@@ -38,7 +38,7 @@ public class StoreServiceImpl implements StoreService {
     }
 
     @Override
-    public StoreVO getStore(int sid) {
+    public StoreVO getStoreById(int sid) {
         Optional<StoreEntity> storeOpt = storeDao.findById(sid);
 
         if (!storeOpt.isPresent()) {
@@ -50,7 +50,12 @@ public class StoreServiceImpl implements StoreService {
 
     @Override
     public Map<Integer, Double> getStoreProduct(int sid) {
-        StoreEntity store = storeDao.findById(sid).get();
+        Optional<StoreEntity> storeOpt = storeDao.findById(sid);
+
+        if (!storeOpt.isPresent()) {
+            return null;
+        }
+
         Map<Integer, Double> productNumber = new HashMap<>();
 
         for (ExpressEntity in : expressDao.findByInputStoreId(sid)) {
@@ -92,6 +97,70 @@ public class StoreServiceImpl implements StoreService {
         }
 
         return productNumber;
+    }
+
+    @Override
+    public StoreVO addStore(int eid, String name) {
+        List<StoreEntity> existed = storeDao.findByEnterpriseIdAndName(eid, name);
+
+        if (existed != null && existed.size() != 0) {
+            return new StoreVO("该企业下已有同名仓库");
+        }
+
+        StoreEntity storeEntity = new StoreEntity();
+        storeEntity.setEnable(1);
+        storeEntity.setEnterpriseId(eid);
+        storeEntity.setName(name);
+        storeDao.saveAndFlush(storeEntity);
+        return new StoreVO(storeEntity);
+    }
+
+    @Override
+    public StoreVO deleteStore(int sid) {
+        Optional<StoreEntity> storeOpt = storeDao.findById(sid);
+
+        if (!storeOpt.isPresent()) {
+            return new StoreVO("仓库id不存在");
+        }
+
+        StoreEntity storeEntity = storeOpt.get();
+        storeEntity.setEnable(0);
+        storeDao.saveAndFlush(storeEntity);
+        return new StoreVO(storeEntity);
+    }
+
+    @Override
+    public StoreVO updateStore(StoreVO storeVO) {
+        Optional<StoreEntity> storeOpt = storeDao.findById(storeVO.getStoreId());
+
+        if (!storeOpt.isPresent()) {
+            return new StoreVO("仓库id不存在");
+        }
+
+        StoreEntity storeEntity = new StoreEntity();
+        storeEntity.setName(storeVO.getName());
+        storeEntity.setEnterpriseId(storeVO.getEnterpriseId());
+        storeEntity.setEnable(storeVO.getEnable());
+        storeDao.saveAndFlush(storeEntity);
+        return new StoreVO(storeEntity);
+    }
+
+    @Override
+    public List<StoreVO> searchStore(String s) {
+        List<StoreEntity> storeEntities = storeDao.findByNameLike("%" + s + "%");
+
+        try {
+            int sid = Integer.parseInt(s);
+            Optional<StoreEntity> storeOpt = storeDao.findById(sid);
+
+            if (storeOpt.isPresent()) {
+                storeEntities.add(storeOpt.get());
+            }
+        } catch (Exception e) {
+
+        }
+
+        return storeEntities.stream().map(StoreVO::new).collect(Collectors.toList());
     }
 
 

@@ -9,6 +9,7 @@ public class EnterpriseVO {
     private int enterpriseId;
     private String name;
     private int code;
+    private String message;
 
     public EnterpriseVO(EnterpriseEntity e) {
         if (e == null) {
@@ -21,8 +22,9 @@ public class EnterpriseVO {
         this.code = 1;
     }
 
-    public EnterpriseVO() {
+    public EnterpriseVO(String message) {
         this.code = 0;
+        this.message = message;
     }
 
 }

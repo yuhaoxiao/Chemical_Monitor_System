@@ -1,5 +1,6 @@
 package cn.nju.edu.chemical_monitor_system.vo;
 
+import cn.nju.edu.chemical_monitor_system.constant.InOutBatchStatusEnum;
 import cn.nju.edu.chemical_monitor_system.entity.InOutBatchEntity;
 import lombok.Data;
 
@@ -12,6 +13,9 @@ public class InOutBatchVO {
     private int batchId;
     private Integer inOrOut;
     private Double number;
+    private String status;
+    private Double finishedNumber;
+
     private int code;
     private String message;
 
@@ -27,6 +31,8 @@ public class InOutBatchVO {
         this.batchId = io.getBatchId();
         this.inOrOut = io.getInout();
         this.number = io.getNumber();
+        this.status = InOutBatchStatusEnum.NOT_START.getName();
+        this.finishedNumber = 0.0;
         this.code = 1;
     }
 

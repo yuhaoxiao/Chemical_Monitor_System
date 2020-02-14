@@ -9,6 +9,7 @@ public class StoreVO {
     private int storeId;
     private int enterpriseId;
     private String name;
+    private int enable;
     private int code;
     private String message;
 
@@ -21,6 +22,7 @@ public class StoreVO {
         this.storeId = s.getStoreId();
         this.enterpriseId = s.getEnterpriseId();
         this.name = s.getName();
+        this.enable = s.getEnable();
         this.code = 1;
     }
 

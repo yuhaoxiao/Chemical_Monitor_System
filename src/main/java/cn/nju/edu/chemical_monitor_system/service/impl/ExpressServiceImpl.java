@@ -153,7 +153,7 @@ public class ExpressServiceImpl implements ExpressService {
         //从物流单里面的store获得port
         int outputStoreId = expressEntity.getOutputStoreId();
         int inputStoreId = expressEntity.getInputStoreId();
-        StoreEntity storeEntity = storeDao.findByStoreId(outputStoreId);
+        StoreEntity storeEntity = storeDao.findById(outputStoreId).get();
         String port = storeEntity.getPort();
         String rfid = rfidUtil.read(port);
         //如果没有读到结果
@@ -222,7 +222,7 @@ public class ExpressServiceImpl implements ExpressService {
         ExpressEntity expressEntity = expressOpt.get();
         int outputStoreId = expressEntity.getOutputStoreId();
         int inputStoreId = expressEntity.getInputStoreId();
-        StoreEntity storeEntity = storeDao.findByStoreId(outputStoreId);
+        StoreEntity storeEntity = storeDao.findById(outputStoreId).get();
         String port = storeEntity.getPort();
         String rfid = rfidUtil.read(port);
         //如果没有读到结果

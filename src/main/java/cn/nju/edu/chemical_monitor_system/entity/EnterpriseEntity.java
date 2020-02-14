@@ -8,6 +8,7 @@ import java.util.Objects;
 public class EnterpriseEntity {
     private int enterpriseId;
     private String name;
+    private int enable;
 
     @Id
     @Column(name = "Enterprise_id")
@@ -27,6 +28,16 @@ public class EnterpriseEntity {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    @Basic
+    @Column(name = "Enable")
+    public int getEnable() {
+        return enable;
+    }
+
+    public void setEnable(int enable) {
+        this.enable = enable;
     }
 
     @Override

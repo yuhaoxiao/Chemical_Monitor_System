@@ -3,6 +3,7 @@ package cn.nju.edu.chemical_monitor_system.service.impl;
 import cn.nju.edu.chemical_monitor_system.constant.BatchStatusEnum;
 import cn.nju.edu.chemical_monitor_system.dao.*;
 import cn.nju.edu.chemical_monitor_system.entity.BatchEntity;
+import cn.nju.edu.chemical_monitor_system.entity.InOutBatchEntity;
 import cn.nju.edu.chemical_monitor_system.entity.ProductionLineEntity;
 import cn.nju.edu.chemical_monitor_system.service.BatchService;
 import cn.nju.edu.chemical_monitor_system.vo.BatchVO;
@@ -35,7 +36,7 @@ public class BatchServiceImpl implements BatchService {
     private UserDao userDao;
 
     @Override
-    public BatchVO createBatch(int productlineId, Timestamp time, String type, int userId) {
+    public BatchVO createBatch(int productlineId, Timestamp time, String type, List<InOutBatchVO> inOutBatchVOS, int userId) {
         Optional<ProductionLineEntity> productionLineOpt = productionLineDao.findById(productlineId);
 
         if (!productionLineOpt.isPresent()) {
@@ -49,20 +50,17 @@ public class BatchServiceImpl implements BatchService {
         batchEntity.setType(type);
         batchEntity.setUserEntity(userDao.findById(userId).get());
         batchDao.saveAndFlush(batchEntity);
-        return new BatchVO(batchEntity);
-    }
+        BatchVO batchVO = new BatchVO(batchEntity);
 
-    @Override
-    public BatchVO updateBatch(int batchId, String status) {
-        Optional<BatchEntity> batchOpt = batchDao.findById(batchId);
-
-        if(!batchOpt.isPresent()){
-            return new BatchVO("批次id不存在");
+        if (inOutBatchVOS == null || inOutBatchVOS.size() == 0) {
+            return new BatchVO(batchEntity);
         }
 
-        BatchEntity batchEntity = batchOpt.get();
-        batchEntity.setStatus(status);
-        batchDao.saveAndFlush(batchEntity);
+        List<InOutBatchEntity> inOutBatchEntities = inOutBatchVOS.stream().map(InOutBatchEntity::new).collect(Collectors.toList());
+        inoutBatchDao.saveAll(inOutBatchEntities);
+        List<InOutBatchVO> newInOutBatchVOs = inOutBatchEntities.stream().map(InOutBatchVO::new).collect(Collectors.toList());
+        batchVO.setInOutBatchVOS(newInOutBatchVOs);
+
         return new BatchVO(batchEntity);
     }
 

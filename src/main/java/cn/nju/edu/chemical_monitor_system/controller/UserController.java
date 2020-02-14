@@ -35,12 +35,22 @@ public class UserController {
     }
 
     @PostMapping(value = "/user/register")
-    public UserVO register(String userId, String password) {
-        return userService.register(userId, password);
+    public UserVO register(String name, String password, String type) {
+        return userService.register(name, password, type);
     }
 
     @GetMapping(value = "/user/get_user")
     public UserVO getUser(int uid) {
         return userService.getUser(uid);
+    }
+
+    @PostMapping(value = "/user/delete_user")
+    public UserVO deleteUser(int uid){
+        return userService.deleteUser(uid);
+    }
+
+    @PostMapping(value = "/user/update_user")
+    public UserVO updateUser(UserVO userVO){
+        return userService.updateUser(userVO);
     }
 }

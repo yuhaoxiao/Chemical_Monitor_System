@@ -1,10 +1,8 @@
 package cn.nju.edu.chemical_monitor_system.service.impl;
 
+import cn.nju.edu.chemical_monitor_system.constant.BatchStatusEnum;
 import cn.nju.edu.chemical_monitor_system.constant.InOutBatchStatusEnum;
-import cn.nju.edu.chemical_monitor_system.dao.BatchDao;
-import cn.nju.edu.chemical_monitor_system.dao.InoutBatchDao;
-import cn.nju.edu.chemical_monitor_system.dao.ProductDao;
-import cn.nju.edu.chemical_monitor_system.dao.StoreDao;
+import cn.nju.edu.chemical_monitor_system.dao.*;
 import cn.nju.edu.chemical_monitor_system.entity.*;
 import cn.nju.edu.chemical_monitor_system.service.InOutBatchService;
 import cn.nju.edu.chemical_monitor_system.utils.rfid_util.RfidUtil;
@@ -12,8 +10,11 @@ import cn.nju.edu.chemical_monitor_system.vo.InOutBatchVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class InOutBatchServiceImpl implements InOutBatchService {
@@ -31,6 +32,9 @@ public class InOutBatchServiceImpl implements InOutBatchService {
     private ProductDao productDao;
 
     @Autowired
+    private CasDao casDao;
+
+    @Autowired
     private RfidUtil rfidUtil;
 
     @Override
@@ -45,40 +49,17 @@ public class InOutBatchServiceImpl implements InOutBatchService {
     }
 
     @Override
-    public InOutBatchVO createInout(int batchId, int storeId, int productId, double number, boolean isIn) {
-        Optional<BatchEntity> batchOpt = batchDao.findById(batchId);
-        Optional<StoreEntity> storeOpt = storeDao.findById(storeId);
-        Optional<ProductEntity> productOpt = productDao.findById(productId);
-
-        if (!batchOpt.isPresent()) {
-            return new InOutBatchVO("批次id不存在");
-        }
-
-        if (!storeOpt.isPresent()) {
-            return new InOutBatchVO("仓库id不存在");
-        }
-
-        if (!productOpt.isPresent()) {
-            return new InOutBatchVO("产品id不存在");
-        }
-
-        InOutBatchEntity inOutBatchEntity = new InOutBatchEntity();
-        inOutBatchEntity.setBatchId(batchId);
-        inOutBatchEntity.setProductId(productId);
-        inOutBatchEntity.setStoreId(storeId);
-        inOutBatchEntity.setStatus("not start");
-        inOutBatchEntity.setNumber(number);
-        inOutBatchEntity.setInout(isIn ? 1 : 0);
-        inoutBatchDao.saveAndFlush(inOutBatchEntity);
-        return new InOutBatchVO(inOutBatchEntity);
-    }
-
-    @Override
-    public InOutBatchVO InputBatch(int batchId) {
+    public InOutBatchVO inputBatch(int batchId) {
         Optional<BatchEntity> batchOpt = batchDao.findById(batchId);
 
         if (!batchOpt.isPresent()) {
             return new InOutBatchVO("批次id不存在");
+        }
+
+        BatchEntity batchEntity = batchOpt.get();
+        if (batchEntity.getStatus().equals(BatchStatusEnum.NOT_START.getName())) {
+            batchEntity.setStatus(BatchStatusEnum.IN_BATCH.getName());
+            batchDao.saveAndFlush(batchEntity);
         }
 
         List<InOutBatchEntity> inOutBatchs = inoutBatchDao.findByBatchIdAndInout(batchId, 1);
@@ -123,6 +104,9 @@ public class InOutBatchServiceImpl implements InOutBatchService {
 
                 InOutBatchVO inOutBatchVO = new InOutBatchVO(inOutBatchEntity);
                 inOutBatchVO.setCode(2);
+                BatchEntity batch = batchDao.findById(batchId).get();
+                batch.setStatus(BatchStatusEnum.IN_PROCESS.getName());
+                batchDao.saveAndFlush(batch);
                 return inOutBatchVO;
             }
         }
@@ -131,12 +115,18 @@ public class InOutBatchServiceImpl implements InOutBatchService {
     }
 
     @Override
-    public InOutBatchVO OutputBatch(int batchId, int productId, double number) {
+    public InOutBatchVO outputBatch(int batchId, int productId, double number) {
         Optional<BatchEntity> batchOpt = batchDao.findById(batchId);
         Optional<ProductEntity> productOpt = productDao.findById(productId);
 
         if (!batchOpt.isPresent()) {
             return new InOutBatchVO("批次id不存在");
+        }
+
+        BatchEntity batchEntity = batchOpt.get();
+        if (batchEntity.getStatus().equals(BatchStatusEnum.IN_PROCESS.getName())) {
+            batchEntity.setStatus(BatchStatusEnum.OUT_BATCH.getName());
+            batchDao.saveAndFlush(batchEntity);
         }
 
         if (!productOpt.isPresent()) {
@@ -191,11 +181,59 @@ public class InOutBatchServiceImpl implements InOutBatchService {
 
                 InOutBatchVO inOutBatchVO = new InOutBatchVO(inOutBatchEntity);
                 inOutBatchVO.setCode(2);
+                BatchEntity batch = batchDao.findById(batchId).get();
+                batch.setStatus(BatchStatusEnum.COMPLETE.getName());
+                batchDao.saveAndFlush(batch);
                 rfidUtil.write(rfidInfoEntity.toString(), port);
                 return inOutBatchVO;
             }
         }
 
         return new InOutBatchVO("该批次没有产品id为" + productId + "的产品");
+    }
+
+    @Override
+    public List<InOutBatchVO> addProduct(int batchId, Map<Integer, Double> casNumberMap, int storeId) {
+        Optional<BatchEntity> batchOpt = batchDao.findById(batchId);
+        Optional<StoreEntity> storeOpt = storeDao.findById(storeId);
+
+        if (!batchOpt.isPresent() || !storeOpt.isPresent()) {
+            return null;
+        }
+
+        List<ProductEntity> productEntities = new ArrayList<>();
+        for (Map.Entry<Integer, Double> entry : casNumberMap.entrySet()) {
+            int casId = entry.getKey();
+            double number = entry.getValue();
+
+            Optional<CasEntity> casOpt = casDao.findById(casId);
+            if (!casOpt.isPresent()) {
+                return null;
+            }
+
+            ProductEntity productEntity = new ProductEntity();
+            productEntity.setBatchId(batchId);
+            productEntity.setCasEntity(casOpt.get());
+            productEntity.setNumber(number);
+            productEntities.add(productEntity);
+        }
+
+        productDao.saveAll(productEntities);
+        List<InOutBatchEntity> inOutBatchEntities = new ArrayList<>();
+
+        for (ProductEntity productEntity : productEntities) {
+            InOutBatchEntity inOutBatchEntity = new InOutBatchEntity();
+            inOutBatchEntity.setInout(0);
+            inOutBatchEntity.setFinishedNumber(0.0);
+            inOutBatchEntity.setStatus(InOutBatchStatusEnum.NOT_START.getName());
+            inOutBatchEntity.setNumber(productEntity.getNumber());
+            inOutBatchEntity.setStoreId(storeId);
+            inOutBatchEntity.setProductId(productEntity.getProductId());
+            inOutBatchEntity.setBatchId(batchId);
+            inOutBatchEntities.add(inOutBatchEntity);
+        }
+
+        inoutBatchDao.saveAll(inOutBatchEntities);
+        return inOutBatchEntities.stream().map(InOutBatchVO::new).collect(Collectors.toList());
     }
 }

@@ -24,7 +24,7 @@ public class ExpressController {
         this.expressService = expressService;
     }
 
-    @PostMapping(value = "express/create_express")
+    @PostMapping(value = "/express/create_express")
     public ExpressVO createExpress(@RequestBody CreateExpressRequest createExpressRequest) {
         return expressService.createExpress(
                 createExpressRequest.getInputStoreId(),
@@ -33,24 +33,24 @@ public class ExpressController {
         );
     }
 
-    @PostMapping(value = "express/output_product")
+    @PostMapping(value = "/express/output_product")
     public ProductVO outputProduct(int expressId, HttpServletRequest httpServletRequest) {
         UserVO userVO = (UserVO) httpServletRequest.getSession().getAttribute("User");
         return expressService.outputProduct(expressId, userVO.getUserId());
     }
 
-    @PostMapping(value = "express/input_product")
+    @PostMapping(value = "/express/input_product")
     public ProductVO inputProduct(int expressId, HttpServletRequest httpServletRequest) {
         UserVO userVO = (UserVO) httpServletRequest.getSession().getAttribute("User");
         return expressService.inputProduct(expressId, userVO.getUserId());
     }
 
-    @GetMapping(value = "express/get_product_express")
+    @GetMapping(value = "/express/get_product_express")
     public List<ExpressProductVO> getProductExpress(int productId) {
         return expressService.getProductExpress(productId);
     }
 
-    @GetMapping(value = "express/get_express")
+    @GetMapping(value = "/express/get_express")
     public ExpressVO getExpress(int expressId) {
         return expressService.getExpress(expressId);
     }

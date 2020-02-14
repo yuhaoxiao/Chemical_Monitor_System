@@ -1,5 +1,7 @@
 package cn.nju.edu.chemical_monitor_system.entity;
 
+import cn.nju.edu.chemical_monitor_system.vo.InOutBatchVO;
+
 import javax.persistence.*;
 import java.util.Objects;
 
@@ -14,6 +16,19 @@ public class InOutBatchEntity {
     private Double number;
     private Double finishedNumber;
     private String status;
+
+    public InOutBatchEntity(){
+    }
+
+    public InOutBatchEntity(InOutBatchVO inOutBatchVO){
+        this.productId = inOutBatchVO.getProductId();
+        this.storeId = inOutBatchVO.getStoreId();
+        this.batchId = inOutBatchVO.getBatchId();
+        this.inout = inOutBatchVO.getInOrOut();
+        this.number = inOutBatchVO.getNumber();
+        this.finishedNumber = inOutBatchVO.getFinishedNumber();
+        this.status = inOutBatchVO.getStatus();
+    }
 
     @Id
     @Column(name = "Inout_id")

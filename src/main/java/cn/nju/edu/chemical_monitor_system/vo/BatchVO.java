@@ -5,6 +5,7 @@ import cn.nju.edu.chemical_monitor_system.entity.UserEntity;
 import lombok.Data;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 @Data
 public class BatchVO {
@@ -15,6 +16,8 @@ public class BatchVO {
     private Timestamp time;
     private int code;
     private UserEntity userEntity;
+    private List<InOutBatchVO> inOutBatchVOS;
+
     private String type;
     private String message;
 

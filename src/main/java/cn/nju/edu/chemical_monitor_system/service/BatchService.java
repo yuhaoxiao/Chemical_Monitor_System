@@ -9,9 +9,7 @@ import java.util.List;
 
 public interface BatchService {
 
-    BatchVO createBatch(int productlineId, Timestamp time, String type, int userId);
-
-    BatchVO updateBatch(int batchId, String status);
+    BatchVO createBatch(int productlineId, Timestamp time, String type, List<InOutBatchVO> inOutBatchVOS, int userId);
 
     BatchVO getBatch(int batchId);
 

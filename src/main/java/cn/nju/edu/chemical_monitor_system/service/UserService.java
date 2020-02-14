@@ -8,7 +8,11 @@ public interface UserService {
 
     UserVO login(String name, String password);
 
-    UserVO register(String name, String password);
+    UserVO register(String name, String password, String type);
 
     UserVO getUser(int uid);
+
+    UserVO deleteUser(int uid);
+
+    UserVO updateUser(UserVO userVO);
 }

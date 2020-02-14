@@ -18,6 +18,7 @@ public class UserEntity {
     private String name;
     private String password;
     private String type;
+    private int enable;
     private List<BatchEntity> batchEntities;
 
     @Id
@@ -60,9 +61,18 @@ public class UserEntity {
         this.type = type;
     }
 
+    @Basic
+    @Column(name = "Enable")
+    public int getEnable() {
+        return enable;
+    }
+
+    public void setEnable(int enable) {
+        this.enable = enable;
+    }
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "userEntity", fetch = FetchType.LAZY)
-    @JsonBackReference(value="BatchEntities")
+    @JsonBackReference(value = "BatchEntities")
     public List<BatchEntity> getBatchEntities() {
         return batchEntities;
     }
@@ -70,7 +80,6 @@ public class UserEntity {
     public void setBatchEntities(List<BatchEntity> batchEntities) {
         this.batchEntities = batchEntities;
     }
-
 
     @Override
     public boolean equals(Object o) {

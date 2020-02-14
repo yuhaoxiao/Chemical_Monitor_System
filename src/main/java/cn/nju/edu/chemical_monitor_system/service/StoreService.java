@@ -9,8 +9,15 @@ public interface StoreService {
 
     List<Integer> getAllStoreId();
 
-    StoreVO getStore(int sid);
+    StoreVO getStoreById(int sid);
 
     Map<Integer,Double> getStoreProduct(int sid);
 
+    StoreVO addStore(int eid, String name);
+
+    StoreVO deleteStore(int sid);
+
+    StoreVO updateStore(StoreVO storeVO);
+
+    List<StoreVO> searchStore(String s);
 }
