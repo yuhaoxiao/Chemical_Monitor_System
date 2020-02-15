@@ -16,4 +16,17 @@ public class ThroughputVO {
     private List<CASThroughputVO> produce; // 如果是企业和生产线，返回产品的数量；如果是园区，返回产品的数量；如果是仓库，返回一个长度为0的List
     private List<CASThroughputVO> in; // 如果是园区，返回入园的数量；如果是仓库，返回入库的数量；如果是企业和生产线；返回一个长度为0的List
     private List<CASThroughputVO> out; // 如果是园区，返回出园的数量；如果是仓库，返回出库的数量；如果是企业和生产线；返回一个长度为0的List
+    private String message;
+
+    public ThroughputVO(List<String> times, List<CASThroughputVO> c, List<CASThroughputVO> p, List<CASThroughputVO> i, List<CASThroughputVO> o) {
+        this.times = times;
+        this.consume = c;
+        this.produce = p;
+        this.out = o;
+        this.message = "";
+    }
+
+    public ThroughputVO(String message) {
+        this.message = message;
+    }
 }
