@@ -6,4 +6,6 @@ public interface ThroughputService {
 
     ThroughputVO getEntityThroughput(int entityType, int entityId, int timeType, String start, String end);
 
+    ThroughputVO getCasThroughput(int entityType, int entityId, int timeType, String start, String end, int casId);
+
 }

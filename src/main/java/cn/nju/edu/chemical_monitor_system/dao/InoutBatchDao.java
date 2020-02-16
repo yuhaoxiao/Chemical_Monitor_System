@@ -37,4 +37,23 @@ public interface InoutBatchDao extends JpaRepository<InOutBatchEntity, Serializa
             " and b.Type = ?1 and b.Time > ?2 and b.Time < ?3 and iob.InOrOut = ?4 and pl.ProductionLine_id = ?5" +
             " group by c.CAS_id order by c.CAS_id")
     List<Object> findByTypeAndInoutOfPL(String type, Timestamp start, Timestamp end, int isIn, int plid);
+
+    @Query(value = "select c.CAS_id, c.Name, sum(iob.Number) from batch b, inoutbatch iob, product p, cas c " +
+            "where iob.Batch_id = b.batch_id and iob.Product_id = p.Product_id and p.CAS_id = c.CAS_id" +
+            " and b.Type = ?1 and b.Time > ?2 and b.Time < ?3 and iob.InOrOut = ?4 and c.CAS_id = ?6")
+    List<Object> findByTypeAndInoutAndCasIdOfPark(String type, Timestamp start, Timestamp end, int isIn, int casId);
+
+    @Query(value = "select c.CAS_id, c.Name, sum(iob.Number) from batch b, inoutbatch iob, product p, cas c, " +
+            "productionline pl, enterprise e where iob.Batch_id = b.batch_id and iob.Product_id = p.Product_id and p.CAS_id = c.CAS_id" +
+            " and b.ProductionLine_id = pl.ProductionLine_id and e.Enterprise_id = pl.Enterprise_id" +
+            " and b.Type = ?1 and b.Time > ?2 and b.Time < ?3 and iob.InOrOut = ?4 and e.Enterprise_id = ?5" +
+            " and c.CAS_id = ?6")
+    List<Object> findByTypeAndInoutAndCasIdOfEnterprise(String type, Timestamp start, Timestamp end, int isIn, int eid, int casId);
+
+    @Query(value = "select c.CAS_id, c.Name, sum(iob.Number) from batch b, inoutbatch iob, product p, cas c, " +
+            "productionline pl where iob.Batch_id = b.batch_id and iob.Product_id = p.Product_id and p.CAS_id = c.CAS_id" +
+            " and b.ProductionLine_id = pl.ProductionLine_id " +
+            " and b.Type = ?1 and b.Time > ?2 and b.Time < ?3 and iob.InOrOut = ?4 and pl.ProductionLine_id = ?5" +
+            " and c.CAS_id = ?6")
+    List<Object> findByTypeAndInoutAndCasIdOfPL(String type, Timestamp start, Timestamp end, int isIn, int plid, int casId);
 }

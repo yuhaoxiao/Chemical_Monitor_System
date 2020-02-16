@@ -171,6 +171,121 @@ public class ThroughputServiceImpl implements ThroughputService {
         return new ThroughputVO(this.times, consume, produce, in, out);
     }
 
+    @Override
+    public ThroughputVO getCasThroughput(int entityType, int entityId, int timeType, String start, String end, int casId) {
+        if (timeType < 0 || timeType > 3) {
+            return new ThroughputVO("时间类型不正确");
+        }
+
+        if (entityType < 0 || entityType > 3) {
+            return new ThroughputVO("实体类型不正确");
+        }
+
+        this.times = new ArrayList<>();
+        this.timeIntervals = new ArrayList<>();
+
+        try {
+            this.getTimeIntervals(start, end, timeType);
+        } catch (Exception p) {
+            return new ThroughputVO("时间格式不正确");
+        }
+
+        List<CASThroughputVO> produce = new ArrayList<>();
+        List<CASThroughputVO> consume = new ArrayList<>();
+        List<CASThroughputVO> in = new ArrayList<>();
+        List<CASThroughputVO> out = new ArrayList<>();
+
+        Optional<CasEntity> casOpt = casDao.findById(casId);
+
+        if (!casOpt.isPresent()) {
+            return new ThroughputVO("Cas id不存在");
+        }
+
+        CasEntity casEntity = casOpt.get();
+        CASThroughputVO produceCasThroughputVO = new CASThroughputVO(casEntity.getCasId(), casEntity.getName());
+        CASThroughputVO consumeCasThroughputVO = new CASThroughputVO(casEntity.getCasId(), casEntity.getName());
+        CASThroughputVO inCasThroughputVO = new CASThroughputVO(casEntity.getCasId(), casEntity.getName());
+        CASThroughputVO outThroughputVO = new CASThroughputVO(casEntity.getCasId(), casEntity.getName());
+        produce.add(produceCasThroughputVO);
+        consume.add(consumeCasThroughputVO);
+        in.add(inCasThroughputVO);
+        out.add(outThroughputVO);
+
+        if (entityType == 0) {
+            for (Pair<Timestamp, Timestamp> timePair : timeIntervals) {
+                List<Object> produceResults = inoutBatchDao.findByTypeAndInoutAndCasIdOfPark(BatchTypeEnum.PRODUCE.getName(), timePair.getKey(), timePair.getValue(), 0, casId);
+                List<Object> consumeResults1 = inoutBatchDao.findByTypeAndInoutAndCasIdOfPark(BatchTypeEnum.PRODUCE.getName(), timePair.getKey(), timePair.getValue(), 1, casId);
+                List<Object> consumeResults2 = inoutBatchDao.findByTypeAndInoutAndCasIdOfPark(BatchTypeEnum.DESTROY.getName(), timePair.getKey(), timePair.getValue(), 1, casId);
+                List<Object> inResults = inoutBatchDao.findByTypeAndInoutAndCasIdOfPark(BatchTypeEnum.IN_PARK.getName(), timePair.getKey(), timePair.getValue(), 0, casId);
+                List<Object> outResults = inoutBatchDao.findByTypeAndInoutAndCasIdOfPark(BatchTypeEnum.PRODUCE.getName(), timePair.getKey(), timePair.getValue(), 1, casId);
+
+                produce.get(0).getThroughput().add((Double) ((Object[]) produceResults.get(0))[2]);
+                consume.get(0).getThroughput().add((Double) ((Object[]) consumeResults1.get(0))[2] + (Double) ((Object[]) consumeResults2.get(0))[2]);
+                in.get(0).getThroughput().add((Double) ((Object[]) inResults.get(0))[2]);
+                out.get(0).getThroughput().add((Double) ((Object[]) outResults.get(0))[2]);
+            }
+
+            produce.get(0).calculate();
+            consume.get(0).calculate();
+            in.get(0).calculate();
+            out.get(0).calculate();
+        } else if (entityType == 1) {
+            Optional<EnterpriseEntity> enterpriseOpt = enterpriseDao.findById(entityId);
+
+            if (!enterpriseOpt.isPresent()) {
+                return new ThroughputVO("企业id不存在");
+            }
+
+            for (Pair<Timestamp, Timestamp> timePair : timeIntervals) {
+                List<Object> produceResults = inoutBatchDao.findByTypeAndInoutAndCasIdOfEnterprise(BatchTypeEnum.PRODUCE.getName(), timePair.getKey(), timePair.getValue(), 0, entityId, casId);
+                List<Object> consumeResults1 = inoutBatchDao.findByTypeAndInoutAndCasIdOfEnterprise(BatchTypeEnum.PRODUCE.getName(), timePair.getKey(), timePair.getValue(), 1, entityId, casId);
+                List<Object> consumeResults2 = inoutBatchDao.findByTypeAndInoutAndCasIdOfEnterprise(BatchTypeEnum.DESTROY.getName(), timePair.getKey(), timePair.getValue(), 1, entityId, casId);
+
+                produce.get(0).getThroughput().add((Double) ((Object[]) produceResults.get(0))[2]);
+                consume.get(0).getThroughput().add((Double) ((Object[]) consumeResults1.get(0))[2] + (Double) ((Object[]) consumeResults2.get(0))[2]);
+            }
+
+            produce.get(0).calculate();
+            consume.get(0).calculate();
+        } else if (entityType == 2) {
+            Optional<ProductionLineEntity> productionLineOpt = productionLineDao.findById(entityId);
+
+            if (!productionLineOpt.isPresent()) {
+                return new ThroughputVO("生产线id不存在");
+            }
+
+            for (Pair<Timestamp, Timestamp> timePair : timeIntervals) {
+                List<Object> produceResults = inoutBatchDao.findByTypeAndInoutAndCasIdOfPL(BatchTypeEnum.PRODUCE.getName(), timePair.getKey(), timePair.getValue(), 0, entityId, casId);
+                List<Object> consumeResults1 = inoutBatchDao.findByTypeAndInoutAndCasIdOfPL(BatchTypeEnum.PRODUCE.getName(), timePair.getKey(), timePair.getValue(), 1, entityId, casId);
+                List<Object> consumeResults2 = inoutBatchDao.findByTypeAndInoutAndCasIdOfPL(BatchTypeEnum.DESTROY.getName(), timePair.getKey(), timePair.getValue(), 1, entityId, casId);
+
+                produce.get(0).getThroughput().add((Double) ((Object[]) produceResults.get(0))[2]);
+                consume.get(0).getThroughput().add((Double) ((Object[]) consumeResults1.get(0))[2] + (Double) ((Object[]) consumeResults2.get(0))[2]);
+            }
+
+            produce.get(0).calculate();
+            consume.get(0).calculate();
+        } else {
+            Optional<StoreEntity> storeOpt = storeDao.findById(entityId);
+
+            if (!storeOpt.isPresent()) {
+                return new ThroughputVO("仓库id不存在");
+            }
+
+            for (Pair<Timestamp, Timestamp> timePair : timeIntervals) {
+                List<Object> inResults = expressProductDao.findByInputStoreAndCasId(timePair.getKey(), timePair.getValue(), entityId, casId);
+                List<Object> outResults = expressProductDao.findByOutputStoreAndCasId(timePair.getKey(), timePair.getValue(), entityId, casId);
+
+                in.get(0).getThroughput().add((Double) ((Object[]) inResults.get(0))[2]);
+                out.get(0).getThroughput().add((Double) ((Object[]) outResults.get(0))[2]);
+            }
+
+            in.get(0).calculate();
+            out.get(0).calculate();
+        }
+        return new ThroughputVO(this.times, consume, produce, in, out);
+    }
+
     private void getTimeIntervals(String start, String end, int timeType) throws Exception {
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         dateFormat.setLenient(false);
