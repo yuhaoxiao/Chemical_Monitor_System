@@ -10,3 +10,5 @@
 /RfidInfoEntity.class
 /StoreEntity.class
 /UserEntity.class
+/PermissionEntity.class
+/RoleEntity.class
