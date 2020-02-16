@@ -7,3 +7,6 @@
 /ProductController.class
 /StoreController.class
 /UserController.class
+/HistoryController.class
+/ProductionLineController.class
+/ThroughController.class

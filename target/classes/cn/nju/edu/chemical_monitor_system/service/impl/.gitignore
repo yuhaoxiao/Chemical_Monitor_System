@@ -7,3 +7,5 @@
 /RfidServiceImpl.class
 /StoreServiceImpl.class
 /UserServiceImpl.class
+/ProductionLineServiceImpl.class
+/ThroughputServiceImpl.class
