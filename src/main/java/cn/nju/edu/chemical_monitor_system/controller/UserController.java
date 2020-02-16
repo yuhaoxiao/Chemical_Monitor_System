@@ -1,6 +1,7 @@
 package cn.nju.edu.chemical_monitor_system.controller;
 
 import cn.nju.edu.chemical_monitor_system.constant.UserStatusEnum;
+import cn.nju.edu.chemical_monitor_system.response.BaseResponse;
 import cn.nju.edu.chemical_monitor_system.service.UserService;
 import cn.nju.edu.chemical_monitor_system.vo.UserVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,16 +23,8 @@ public class UserController {
     }
 
     @PostMapping(value = "/user/login")
-    public UserVO login(String name, String password, HttpServletRequest request) {
-        UserVO user = userService.login(name, password);
-        if (user.getCode() == UserStatusEnum.LOGIN.getCode()) {
-            if (request.getSession(false) != null)
-                request.getSession(false).invalidate();
-            request.getSession(true);
-            request.getSession().setAttribute("User", user);
-        }
-        System.out.println("login happens!" + new Date());
-        return user;
+    public BaseResponse login(String name, String password, HttpServletRequest request) {
+        return userService.login(name,password);
     }
 
     @PostMapping(value = "/user/register")

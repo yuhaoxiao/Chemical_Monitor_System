@@ -1,11 +1,9 @@
-package cn.nju.edu.chemical_monitor_system.utils.safe_util;
+package cn.nju.edu.chemical_monitor_system.utils.safe;
 
 import cn.nju.edu.chemical_monitor_system.constant.ConstantVariables;
-import cn.nju.edu.chemical_monitor_system.dao.ProductDao;
 import cn.nju.edu.chemical_monitor_system.entity.CasEntity;
 import cn.nju.edu.chemical_monitor_system.entity.ProductEntity;
 import lombok.Data;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;

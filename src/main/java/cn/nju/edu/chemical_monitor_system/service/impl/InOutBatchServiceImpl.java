@@ -5,7 +5,7 @@ import cn.nju.edu.chemical_monitor_system.constant.InOutBatchStatusEnum;
 import cn.nju.edu.chemical_monitor_system.dao.*;
 import cn.nju.edu.chemical_monitor_system.entity.*;
 import cn.nju.edu.chemical_monitor_system.service.InOutBatchService;
-import cn.nju.edu.chemical_monitor_system.utils.rfid_util.RfidUtil;
+import cn.nju.edu.chemical_monitor_system.utils.rfid.RfidUtil;
 import cn.nju.edu.chemical_monitor_system.vo.InOutBatchVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

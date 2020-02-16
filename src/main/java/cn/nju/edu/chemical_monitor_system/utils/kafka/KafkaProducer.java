@@ -1,7 +1,6 @@
-package cn.nju.edu.chemical_monitor_system.utils.kafka_util;
+package cn.nju.edu.chemical_monitor_system.utils.kafka;
 
 import cn.nju.edu.chemical_monitor_system.constant.ConstantVariables;
-import cn.nju.edu.chemical_monitor_system.vo.CasVO;
 import cn.nju.edu.chemical_monitor_system.vo.ExpressVO;
 import com.alibaba.fastjson.JSON;
 import org.slf4j.Logger;

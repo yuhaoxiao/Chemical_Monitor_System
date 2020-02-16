@@ -1,4 +1,4 @@
-package cn.nju.edu.chemical_monitor_system.utils.web_socket_util;
+package cn.nju.edu.chemical_monitor_system.utils.socket;
 
 import java.io.IOException;
 import java.util.concurrent.CopyOnWriteArraySet;

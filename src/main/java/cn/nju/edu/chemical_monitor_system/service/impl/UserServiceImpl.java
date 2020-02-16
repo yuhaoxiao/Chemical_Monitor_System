@@ -6,8 +6,11 @@ import cn.nju.edu.chemical_monitor_system.dao.UserDao;
 import cn.nju.edu.chemical_monitor_system.entity.BatchEntity;
 import cn.nju.edu.chemical_monitor_system.entity.ExpressEntity;
 import cn.nju.edu.chemical_monitor_system.entity.UserEntity;
+import cn.nju.edu.chemical_monitor_system.response.BaseResponse;
 import cn.nju.edu.chemical_monitor_system.service.UserService;
+import cn.nju.edu.chemical_monitor_system.utils.shiro.JWTUtil;
 import cn.nju.edu.chemical_monitor_system.vo.UserVO;
+import org.apache.shiro.authz.UnauthorizedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,22 +32,13 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private ExpressDao expressDao;
 
-    public UserVO login(String name, String password) {
+    public BaseResponse login(String name, String password) {
         UserEntity user = userDao.findFirstByName(name);
-
-        if (user == null) {
-            return new UserVO("用户不存在");
+        if (user.getPassword().equals(password)) {
+            return new BaseResponse(200, "Login success", JWTUtil.sign(name, password));
+        } else {
+            throw new UnauthorizedException();
         }
-
-        if (!user.getPassword().equals(password)) {
-            return new UserVO("密码错误");
-        }
-
-        if (user.getEnable() == 0) {
-            return new UserVO("账号被删除，无法登录");
-        }
-
-        return new UserVO(user);
     }
 
     public UserVO register(String name, String password, String type) {

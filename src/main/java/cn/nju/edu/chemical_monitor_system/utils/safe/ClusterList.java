@@ -1,4 +1,4 @@
-package cn.nju.edu.chemical_monitor_system.utils.safe_util;
+package cn.nju.edu.chemical_monitor_system.utils.safe;
 
 import java.util.ArrayList;
 import java.util.Iterator;

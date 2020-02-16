@@ -1,5 +1,5 @@
-import cn.nju.edu.chemical_monitor_system.utils.batch_history_util.BatchHistoryUtil;
-import cn.nju.edu.chemical_monitor_system.utils.batch_history_util.HistoryNode;
+import cn.nju.edu.chemical_monitor_system.utils.history.BatchHistoryUtil;
+import cn.nju.edu.chemical_monitor_system.utils.history.HistoryNode;
 import com.alibaba.fastjson.JSON;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;

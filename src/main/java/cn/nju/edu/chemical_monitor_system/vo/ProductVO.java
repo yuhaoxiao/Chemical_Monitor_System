@@ -2,7 +2,6 @@ package cn.nju.edu.chemical_monitor_system.vo;
 
 import cn.nju.edu.chemical_monitor_system.entity.CasEntity;
 import cn.nju.edu.chemical_monitor_system.entity.ProductEntity;
-import cn.nju.edu.chemical_monitor_system.utils.safe_util.Product;
 import lombok.Data;
 
 @Data

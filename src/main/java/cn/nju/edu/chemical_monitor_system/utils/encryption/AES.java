@@ -1,4 +1,4 @@
-package cn.nju.edu.chemical_monitor_system.utils.encryption_util;
+package cn.nju.edu.chemical_monitor_system.utils.encryption;
 import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
 

@@ -1,4 +1,4 @@
-package cn.nju.edu.chemical_monitor_system.utils.redis_util;
+package cn.nju.edu.chemical_monitor_system.utils.redis;
 
 import org.springframework.beans.factory.annotation.Autowired;
 

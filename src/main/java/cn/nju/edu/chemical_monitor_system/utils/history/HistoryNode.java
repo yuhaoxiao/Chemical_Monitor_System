@@ -1,4 +1,4 @@
-package cn.nju.edu.chemical_monitor_system.utils.batch_history_util;
+package cn.nju.edu.chemical_monitor_system.utils.history;
 
 import lombok.Data;
 

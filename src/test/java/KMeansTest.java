@@ -1,6 +1,6 @@
 import cn.nju.edu.chemical_monitor_system.dao.ProductDao;
 import cn.nju.edu.chemical_monitor_system.entity.ProductEntity;
-import cn.nju.edu.chemical_monitor_system.utils.safe_util.SafeUtil;
+import cn.nju.edu.chemical_monitor_system.utils.safe.SafeUtil;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 

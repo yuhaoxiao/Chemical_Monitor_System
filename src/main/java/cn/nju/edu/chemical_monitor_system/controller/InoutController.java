@@ -27,11 +27,6 @@ public class InoutController {
      * @param addProductRequest 传入Cas码-数量的Map
      * @return 为null的话说明传入的id中有不存在的
      */
-    @PostMapping(value = "/inout/add_product")
-    public List<InOutBatchVO> addProduct(@RequestBody AddProductRequest addProductRequest) {
-        return inoutService.addProduct(addProductRequest.getBatchId(),
-                addProductRequest.getCasNumberMap(), addProductRequest.getStoreId());
-    }
 
     @PostMapping(value = "/inout/input_batch")
     public InOutBatchVO InputBatch(int batchId) {

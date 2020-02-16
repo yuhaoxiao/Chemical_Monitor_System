@@ -1,6 +1,6 @@
 import cn.nju.edu.chemical_monitor_system.dao.ExpressDao;
 import cn.nju.edu.chemical_monitor_system.entity.ExpressEntity;
-import cn.nju.edu.chemical_monitor_system.utils.redis_util.RedisUtil;
+import cn.nju.edu.chemical_monitor_system.utils.redis.RedisUtil;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 

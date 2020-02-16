@@ -1,4 +1,4 @@
-package cn.nju.edu.chemical_monitor_system.utils.rfid_util;
+package cn.nju.edu.chemical_monitor_system.utils.rfid;
 
 import cn.nju.edu.chemical_monitor_system.service.RfidService;
 import org.springframework.beans.factory.annotation.Autowired;
