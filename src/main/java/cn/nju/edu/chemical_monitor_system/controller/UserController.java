@@ -1,49 +1,59 @@
 package cn.nju.edu.chemical_monitor_system.controller;
 
-import cn.nju.edu.chemical_monitor_system.constant.UserStatusEnum;
 import cn.nju.edu.chemical_monitor_system.response.BaseResponse;
 import cn.nju.edu.chemical_monitor_system.service.UserService;
 import cn.nju.edu.chemical_monitor_system.vo.UserVO;
+import org.apache.shiro.authz.annotation.Logical;
+import org.apache.shiro.authz.annotation.RequiresAuthentication;
+import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Date;
+import javax.servlet.http.HttpServletResponse;
 
 @RestController
+@RequestMapping("/user")
 public class UserController {
-
-    private final UserService userService;
-
     @Autowired
-    public UserController(UserService userService) {
-        this.userService = userService;
+    private UserService userService;
+
+    @PostMapping(value = "/login")
+    public BaseResponse login(String name, String password, HttpServletResponse httpServletResponse)  {
+        return new BaseResponse(200,"登陆成功",userService.login(name,password,httpServletResponse));
     }
 
-    @PostMapping(value = "/user/login")
-    public BaseResponse login(String name, String password, HttpServletRequest request) {
-        return userService.login(name,password);
+    @PostMapping(value = "/logout")
+    public BaseResponse logout(HttpServletRequest httpServletRequest)  {
+        userService.logout(httpServletRequest);
+        return new BaseResponse(200,"注销成功",null);
     }
 
-    @PostMapping(value = "/user/register")
-    public UserVO register(String name, String password, String type) {
-        return userService.register(name, password, type);
+    @RequiresRoles(value={"administrator"})
+    @PostMapping(value = "/register")
+    public BaseResponse addUser(String name, String password, String type) {
+        return new BaseResponse(200,"注册成功",userService.register(name, password, type));
     }
 
-    @GetMapping(value = "/user/get_user")
-    public UserVO getUser(int uid) {
-        return userService.getUser(uid);
+    @GetMapping(value = "/get_user")
+    @RequiresRoles(logical = Logical.OR,value={"operator","administrator","monitor"})
+    @RequiresAuthentication
+    public BaseResponse getUser(int uid)  {
+        return new BaseResponse(200,"成功",userService.getUser(uid));
     }
 
-    @PostMapping(value = "/user/delete_user")
-    public UserVO deleteUser(int uid){
-        return userService.deleteUser(uid);
+    @RequiresRoles(value={"administrator"})
+    @PostMapping(value = "/delete_user")
+    public BaseResponse deleteUser(int uid){
+        return new BaseResponse(200,"成功",userService.deleteUser(uid));
     }
 
-    @PostMapping(value = "/user/update_user")
-    public UserVO updateUser(UserVO userVO){
-        return userService.updateUser(userVO);
+    @RequiresRoles(value={"administrator"})
+    @PostMapping(value = "/update_user")
+    public BaseResponse updateUser(UserVO userVO){
+        return new BaseResponse(200,"成功",userService.updateUser(userVO));
     }
 }

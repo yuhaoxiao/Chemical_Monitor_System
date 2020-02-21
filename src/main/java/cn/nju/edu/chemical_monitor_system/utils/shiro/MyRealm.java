@@ -1,9 +1,13 @@
 package cn.nju.edu.chemical_monitor_system.utils.shiro;
 
+import cn.nju.edu.chemical_monitor_system.constant.ConstantVariables;
 import cn.nju.edu.chemical_monitor_system.dao.UserDao;
 import cn.nju.edu.chemical_monitor_system.entity.PermissionEntity;
 import cn.nju.edu.chemical_monitor_system.entity.RoleEntity;
 import cn.nju.edu.chemical_monitor_system.entity.UserEntity;
+import cn.nju.edu.chemical_monitor_system.utils.redis.RedisUtil;
+import cn.nju.edu.chemical_monitor_system.utils.shiro.jwt.JWTToken;
+import cn.nju.edu.chemical_monitor_system.utils.shiro.jwt.JWTUtil;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
@@ -12,6 +16,8 @@ import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,7 +27,10 @@ public class MyRealm extends AuthorizingRealm {
 
     @Autowired
     private UserDao userDao;
+    @Autowired
+    RedisUtil redisUtil;
 
+    private static final Logger logger = LoggerFactory.getLogger(MyRealm.class);
 
     /**
      * 大坑！，必须重写此方法，不然Shiro会报错
@@ -36,7 +45,8 @@ public class MyRealm extends AuthorizingRealm {
      */
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
-        String username = JWTUtil.getUsername(principals.toString());
+        String username = JWTUtil.getClaim(principals.toString(), ConstantVariables.USERNAME);
+        logger.info("调用授权接口,调用用户为{}",username);
         UserEntity userEntity = userDao.findFirstByName(username);
         SimpleAuthorizationInfo simpleAuthorizationInfo = new SimpleAuthorizationInfo();
         for (RoleEntity role : userEntity.getRoleEntities()) {
@@ -54,21 +64,28 @@ public class MyRealm extends AuthorizingRealm {
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken auth) throws AuthenticationException {
         String token = (String) auth.getCredentials();
-        // 解密获得username，用于和数据库进行对比
-        String username = JWTUtil.getUsername(token);
+        String username = JWTUtil.getClaim(token, ConstantVariables.USERNAME);
         if (username == null) {
-            throw new AuthenticationException("token invalid");
+            throw new AuthenticationException("Token格式出错");
         }
-
         UserEntity userEntity = userDao.findFirstByName(username);
         if (userEntity == null) {
-            throw new AuthenticationException("User didn't existed!");
+            throw new AuthenticationException("用户不存在!");
         }
-
-        if (!JWTUtil.verify(token, username, userEntity.getPassword())) {
-            throw new AuthenticationException("Username or password error");
+        if (redisUtil.get(ConstantVariables.PREFIX_SHIRO_REFRESH_TOKEN_OLD + username)!=null) {
+            String oldTime = redisUtil.get(ConstantVariables.PREFIX_SHIRO_REFRESH_TOKEN_OLD + username).toString();
+            String time=JWTUtil.getClaim(token,ConstantVariables.CURRENT_TIME_MILLIS);
+            // 判断旧Token是否一致
+            if (time.equals(oldTime)) {
+                return new SimpleAuthenticationInfo(token, token, "userRealm");
+            }
         }
-
-        return new SimpleAuthenticationInfo(token, token, "my_realm");
+        if (JWTUtil.verify(token) && redisUtil.get(ConstantVariables.PREFIX_SHIRO_REFRESH_TOKEN + username) != null) {
+            String currentTimeMillisRedis = redisUtil.get(ConstantVariables.PREFIX_SHIRO_REFRESH_TOKEN + username).toString();
+            if (JWTUtil.getClaim(token, ConstantVariables.CURRENT_TIME_MILLIS).equals(currentTimeMillisRedis)) {
+                return new SimpleAuthenticationInfo(token, token, "userRealm");
+            }
+        }
+        throw new AuthenticationException("Token已过期(Token expired or incorrect.)");
     }
 }

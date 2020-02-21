@@ -1,4 +1,4 @@
-package cn.nju.edu.chemical_monitor_system.utils.shiro;
+package cn.nju.edu.chemical_monitor_system.utils.shiro.jwt;
 
 import org.apache.shiro.authc.AuthenticationToken;
 

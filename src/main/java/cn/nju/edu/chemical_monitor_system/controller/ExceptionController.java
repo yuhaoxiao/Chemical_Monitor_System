@@ -1,8 +1,9 @@
 package cn.nju.edu.chemical_monitor_system.controller;
 
 import cn.nju.edu.chemical_monitor_system.response.BaseResponse;
+import cn.nju.edu.chemical_monitor_system.exception.UnauthorizedException;
 import org.apache.shiro.ShiroException;
-import org.apache.shiro.authz.UnauthorizedException;
+import org.apache.shiro.authc.AuthenticationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -20,11 +21,18 @@ public class ExceptionController {
         return new BaseResponse(401, e.getMessage(), null);
     }
 
+    // 捕捉AuthenticationException
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    @ExceptionHandler(AuthenticationException.class)
+    public BaseResponse handle401(AuthenticationException e) {
+        return new BaseResponse(401, e.getMessage(), null);
+    }
+
     // 捕捉UnauthorizedException
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     @ExceptionHandler(UnauthorizedException.class)
-    public BaseResponse handle401() {
-        return new BaseResponse(401, "Unauthorized", null);
+    public BaseResponse handle401(UnauthorizedException e) {
+        return new BaseResponse(401, e.getMessage(), null);
     }
 
     // 捕捉其他所有异常

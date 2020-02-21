@@ -19,6 +19,9 @@ public class InOutBatchVO {
     private int code;
     private String message;
 
+    public InOutBatchVO(){
+
+    }
     public InOutBatchVO(InOutBatchEntity io) {
         if (io == null) {
             this.code = 0;

@@ -12,6 +12,9 @@ public class ProductionLineVO {
     private int enable;
     private String message;
 
+    public ProductionLineVO(){
+
+    }
     public ProductionLineVO(ProductionLineEntity pl) {
         if (pl == null) {
             this.code = 0;

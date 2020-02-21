@@ -6,9 +6,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 
@@ -18,10 +16,20 @@ public class RedisUtil {
     @Autowired
     private RedisTemplate<String, Object> redisTemplate;
 
+    private final String lockValue="lockValue";
     public RedisUtil(RedisTemplate<String, Object> redisTemplate) {
         this.redisTemplate = redisTemplate;
     }
 
+    //redis分布式锁
+    public boolean getLock(String lockName){
+        return redisTemplate.opsForValue().setIfAbsent(lockName,lockValue,3, TimeUnit.SECONDS);
+    }
+
+    //释放锁
+    public boolean releaseLock(String lockName){
+        return redisTemplate.delete(lockName);
+    }
     /**
      * 指定缓存失效时间
      * @param key 键
@@ -39,6 +47,17 @@ public class RedisUtil {
             return false;
         }
     }
+    public void clearAll(){
+        redisTemplate.delete(redisTemplate.keys("*"));
+    }
+    public int size(){
+        return Objects.requireNonNull(redisTemplate.keys("*")).size();
+    }
+
+    public Set<String> keys(){
+        return redisTemplate.keys("*");
+    }
+
 
     /**
      * 根据key 获取过期时间

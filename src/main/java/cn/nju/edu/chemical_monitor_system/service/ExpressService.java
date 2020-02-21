@@ -13,11 +13,13 @@ public interface ExpressService {
 
     ExpressVO getExpress(int expressId);
 
+    ExpressVO reverseExpress(int expressId);
+
     List<ExpressProductVO> getProductExpress(int productId);
 
-    ProductVO outputProduct(int expressId, int userId);
+    ProductVO outputProduct(int expressId);
 
-    ProductVO inputProduct(int expressId, int userId);
+    ProductVO inputProduct(int expressId);
 
 
 }

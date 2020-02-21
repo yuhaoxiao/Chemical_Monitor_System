@@ -18,7 +18,7 @@ public class WebSocketUtil {
     //记录当前在线连接数。
     private static int onlineCount = 0;
 
-    //每个客户端对应的MyWebSocket对象
+    //每个客户端对应的WebSocket对象
     private static CopyOnWriteArraySet<WebSocketUtil> webSocketSet = new CopyOnWriteArraySet<>();
 
     private Session session;

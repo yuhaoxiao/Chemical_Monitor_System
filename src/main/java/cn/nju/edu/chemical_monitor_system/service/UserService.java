@@ -1,13 +1,13 @@
 package cn.nju.edu.chemical_monitor_system.service;
 
-import cn.nju.edu.chemical_monitor_system.response.BaseResponse;
 import cn.nju.edu.chemical_monitor_system.vo.UserVO;
 
-import java.util.List;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 public interface UserService {
 
-    BaseResponse login(String name, String password);
+    UserVO login(String name, String password, HttpServletResponse httpServletResponse);
 
     UserVO register(String name, String password, String type);
 
@@ -16,4 +16,6 @@ public interface UserService {
     UserVO deleteUser(int uid);
 
     UserVO updateUser(UserVO userVO);
+
+    void logout(HttpServletRequest httpServletRequest);
 }

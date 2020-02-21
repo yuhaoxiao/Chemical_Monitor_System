@@ -5,6 +5,7 @@ import cn.nju.edu.chemical_monitor_system.constant.ExpressStatusEnum;
 import cn.nju.edu.chemical_monitor_system.dao.*;
 import cn.nju.edu.chemical_monitor_system.entity.*;
 import cn.nju.edu.chemical_monitor_system.service.ExpressService;
+import cn.nju.edu.chemical_monitor_system.utils.common.UserUtil;
 import cn.nju.edu.chemical_monitor_system.utils.encryption.EncryptionUtil;
 import cn.nju.edu.chemical_monitor_system.utils.kafka.KafkaProducer;
 import cn.nju.edu.chemical_monitor_system.utils.rfid.RfidUtil;
@@ -48,6 +49,9 @@ public class ExpressServiceImpl implements ExpressService {
 
     @Autowired
     private RfidUtil rfidUtil;
+
+    @Autowired
+    private UserUtil userUtil;
 
     @Autowired
     private KafkaProducer kafkaProducer;
@@ -108,19 +112,21 @@ public class ExpressServiceImpl implements ExpressService {
 
         expressEntity.setExpressProductEntities(expressProductEntities);
         expressDao.save(expressEntity);
-        kafkaProducer.sendExpress(new ExpressVO(expressEntity));
-        return new ExpressVO(expressEntity);
+        ExpressVO  expressVO=new ExpressVO(expressEntity);
+        kafkaProducer.sendExpress(expressVO);
+        return expressVO;
     }
 
-    private void inputExpress(ExpressEntity expressEntity, int userId) {
-        expressEntity.setInputUserId(userId);
+    private void inputExpress(ExpressEntity expressEntity) {
+
+        expressEntity.setInputUserId(userUtil.getUserId());
         expressEntity.setInputTime(new Timestamp(System.currentTimeMillis()));
         expressEntity.setStatus(ExpressStatusEnum.IN_INVENTORY.getCode());
         expressDao.save(expressEntity);
     }
 
-    private void outputExpress(ExpressEntity expressEntity, int userId) {
-        expressEntity.setOutputUserId(userId);
+    private void outputExpress(ExpressEntity expressEntity) {
+        expressEntity.setOutputUserId(userUtil.getUserId());
         expressEntity.setOutputTime(new Timestamp(System.currentTimeMillis()));
         expressEntity.setStatus(ExpressStatusEnum.OUT_INVENTORY.getCode());
         expressDao.save(expressEntity);
@@ -136,13 +142,34 @@ public class ExpressServiceImpl implements ExpressService {
     }
 
     @Override
+    public ExpressVO reverseExpress(int expressId) {
+        ExpressEntity expressEntity=expressDao.findFirstByExpressId(expressId);
+        ExpressEntity reverseExpress=new ExpressEntity();
+        reverseExpress.setInputStoreId(expressEntity.getOutputStoreId());
+        reverseExpress.setOutputStoreId(expressEntity.getInputStoreId());
+        reverseExpress.setStatus(ExpressStatusEnum.NOT_START.getCode());
+        reverseExpress.setExpressProductEntities(expressEntity.getExpressProductEntities().stream().map(e->{
+            ExpressProductEntity expressProductEntity=new ExpressProductEntity();
+            expressProductEntity.setProductId(e.getProductId());
+            expressProductEntity.setExpressEntity(reverseExpress);
+            expressProductEntity.setNumber(e.getNumber());
+            expressProductEntity.setStatus(ExpressProductStatusEnum.NOT_START.getCode());
+            return expressProductEntity;
+        }).collect(Collectors.toList()));
+        expressDao.save(expressEntity);
+        ExpressVO  expressVO=new ExpressVO(expressEntity);
+        kafkaProducer.sendExpress(expressVO);
+        return expressVO;
+    }
+
+    @Override
     public List<ExpressProductVO> getProductExpress(int productId) {
         return expressProductDao.findByProductId(productId).stream().map(ExpressProductVO::new)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public ProductVO outputProduct(int expressId, int userId) {
+    public ProductVO outputProduct(int expressId) {
         //查询物流单信息
         Optional<ExpressEntity> expressOpt = expressDao.findById(expressId);
         if (!expressOpt.isPresent()) {
@@ -206,14 +233,14 @@ public class ExpressServiceImpl implements ExpressService {
             }
             //全部出库
             if (temp == expressProductEntities.size()) {
-                outputExpress(expressEntity, userId);
+                outputExpress(expressEntity);
             }
         }
         return new ProductVO(productDao.findByProductId(productId));
     }
 
     @Override
-    public ProductVO inputProduct(int expressId, int userId) {
+    public ProductVO inputProduct(int expressId) {
         Optional<ExpressEntity> expressOpt = expressDao.findById(expressId);
 
         if (!expressOpt.isPresent()) {
@@ -264,7 +291,7 @@ public class ExpressServiceImpl implements ExpressService {
             }
             //全部入库
             if (temp == expressProductEntities.size()) {
-                inputExpress(expressEntity, userId);
+                inputExpress(expressEntity);
                 productVO.setCode(2);//这里设置为2的话代表该物流全部完成，为1的话代表该product扫描成功
                 return productVO;
             }
