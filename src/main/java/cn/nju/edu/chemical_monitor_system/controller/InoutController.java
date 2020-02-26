@@ -14,33 +14,17 @@ public class InoutController {
     @Autowired
     private InOutBatchService inoutService;
 
-    //需要添加实现
-    @PostMapping(value = "/input_production_batch/{batchId}/{storeId}")
-    @RequiresRoles(value={"operator"})
-    public BaseResponse inputProductionBatch(@PathVariable int batchId, @PathVariable int storeId) { // 原料出库
-        return new BaseResponse(200,"出库成功",new InOutBatchVO());
-    }
-
     @PostMapping(value = "/input_batch/{batchId}")
     @RequiresRoles(value={"operator"})
-    public BaseResponse inputBatch(@PathVariable int batchId) {
-        return new BaseResponse(200,"出库成功",inoutService.inputBatch(batchId));
+    public BaseResponse inputBatch(@PathVariable int batchId, @PathVariable int storeId) {
+        return new BaseResponse(200,"出库成功",inoutService.inputBatch(batchId, storeId));
     }
 
-    //这里好像有个参数没用到？
     @PostMapping(value = "/output_batch/{batchId}/{storeId}/{productId}/{number}")
     @RequiresRoles(value={"operator"})
     public BaseResponse outputBatch(@PathVariable int batchId, @PathVariable int storeId,
                                     @PathVariable int productId, @PathVariable double number) {
-        return new BaseResponse(200,"出库成功",inoutService.outputBatch(batchId, productId, number));
+        return new BaseResponse(200,"出库成功",inoutService.outputBatch(batchId, storeId, productId, number));
     }
 
-
-
-
-    //以下接口暂时不需要
-    @GetMapping(value = "/get_inout")
-    public InOutBatchVO getInout(int inoutId) {
-        return inoutService.getInout(inoutId);
-    }
 }

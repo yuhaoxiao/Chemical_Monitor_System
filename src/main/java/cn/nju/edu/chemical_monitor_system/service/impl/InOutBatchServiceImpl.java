@@ -38,18 +38,7 @@ public class InOutBatchServiceImpl implements InOutBatchService {
     private RfidUtil rfidUtil;
 
     @Override
-    public InOutBatchVO getInout(int ioId) {
-        Optional<InOutBatchEntity> inOutBatchOpt = inoutBatchDao.findById(ioId);
-
-        if (!inOutBatchOpt.isPresent()) {
-            return new InOutBatchVO("上下线id不存在");
-        }
-
-        return new InOutBatchVO(inOutBatchOpt.get());
-    }
-
-    @Override
-    public InOutBatchVO inputBatch(int batchId) {
+    public InOutBatchVO inputBatch(int batchId, int storeId) {
         Optional<BatchEntity> batchOpt = batchDao.findById(batchId);
 
         if (!batchOpt.isPresent()) {
@@ -68,7 +57,6 @@ public class InOutBatchServiceImpl implements InOutBatchService {
             return new InOutBatchVO("该批次没有原材料");
         }
 
-        int storeId = inOutBatchs.get(0).getStoreId();
         String port = storeDao.findById(storeId).get().getPort();
         String rfidInfo = rfidUtil.read(port);
         RfidInfoEntity rfidInfoEntity = new RfidInfoEntity(rfidInfo);
@@ -115,7 +103,7 @@ public class InOutBatchServiceImpl implements InOutBatchService {
     }
 
     @Override
-    public InOutBatchVO outputBatch(int batchId, int productId, double number) {
+    public InOutBatchVO outputBatch(int batchId, int storeId, int productId, double number) {
         Optional<BatchEntity> batchOpt = batchDao.findById(batchId);
         Optional<ProductEntity> productOpt = productDao.findById(productId);
 
@@ -139,7 +127,6 @@ public class InOutBatchServiceImpl implements InOutBatchService {
             return new InOutBatchVO("该批次没有产品");
         }
 
-        int storeId = inOutBatchs.get(0).getStoreId();
         String port = storeDao.findById(storeId).get().getPort();
 
         ProductEntity productEntity = productOpt.get();
