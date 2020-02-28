@@ -13,4 +13,5 @@ public interface BatchDao extends JpaRepository<BatchEntity, Serializable> {
 
     List<BatchEntity> findByUserEntity(UserEntity user);
 
+    BatchEntity findFirstByBatchId(int BatchId);
 }

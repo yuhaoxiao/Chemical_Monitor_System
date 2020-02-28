@@ -13,4 +13,6 @@ public interface StoreDao extends JpaRepository<StoreEntity, Serializable> {
 
     List<StoreEntity> findByNameLike(String s);
 
+    StoreEntity findFirstByStoreId(int storeId);
+
 }
