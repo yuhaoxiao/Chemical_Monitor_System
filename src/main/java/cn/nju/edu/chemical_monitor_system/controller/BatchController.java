@@ -22,48 +22,53 @@ public class BatchController {
     @Autowired
     private BatchService batchService;
 
-    @RequiresRoles(value={"operator"})
+    @RequiresRoles(value = {"operator"})
     @PostMapping(value = "/create_batch")
     public BatchVO createBatch(@RequestBody CreateBatchRequest createBatchRequest, HttpServletRequest httpServletRequest) {
         UserVO userVO = (UserVO) httpServletRequest.getSession().getAttribute("User");
         return batchService.createBatch(createBatchRequest.getProductionLineId(),
                 createBatchRequest.getType(), createBatchRequest.getRaws(), userVO.getUserId());
     }
-    @RequiresRoles(value={"operator"})
+
+    @RequiresRoles(value = {"operator"})
     @PostMapping(value = "/batch_out")
     public BatchVO batchOut(@RequestBody BatchOutRequest batchOutRequest) {
         return batchService.batchOut(batchOutRequest.getBatchId(), batchOutRequest.getProducts());
     }
-    @RequiresRoles(logical = Logical.OR,value={"operator","administrator"})
+
+    @RequiresRoles(logical = Logical.OR, value = {"operator", "administrator"})
     @GetMapping(value = "/get_batch/{batchId}")
     public BatchVO getBatch(@PathVariable int batchId) {
         return batchService.getBatch(batchId);
     }
 
-
-
-    //以下接口还没有实现
-    @RequiresRoles(logical = Logical.OR,value={"operator","administrator"})
+    @RequiresRoles(logical = Logical.OR, value = {"operator", "administrator"})
     @GetMapping("/get_batch_in_stores/{batchId}") // 查询该批次还需要出库原料的仓库
     public BaseResponse getBatchInStores(@PathVariable int batchId) {
-        return new BaseResponse(200,"success",new ArrayList<StoreVO>());
+        List<StoreVO> batchVOS = batchService.getBatchStores(batchId, 1);
+        if (batchVOS == null) {
+            return new BaseResponse(500, "fail", new ArrayList<StoreVO>());
+        }
+        return new BaseResponse(200, "success", batchVOS);
     }
-    @RequiresRoles(logical = Logical.OR,value={"operator","administrator"})
+
+    @RequiresRoles(logical = Logical.OR, value = {"operator", "administrator"})
     @GetMapping("/get_batch_out_stores/{batchId}") // 查询该批次还需要入库原料的仓库
     public BaseResponse getBatchOutStores(@PathVariable int batchId) {
-        return new BaseResponse(200,"success",new ArrayList<StoreVO>());
+        List<StoreVO> batchVOS = batchService.getBatchStores(batchId, 0);
+        if (batchVOS == null) {
+            return new BaseResponse(500, "fail", new ArrayList<StoreVO>());
+        }
+        return new BaseResponse(200, "success", batchVOS);
     }
 
-
-
-    //以下接口暂时不需要
-    @RequiresRoles(logical = Logical.OR,value={"operator","administrator"})
+    @RequiresRoles(logical = Logical.OR, value = {"operator", "administrator"})
     @GetMapping(value = "/get_batch_product")
     public List<ProductVO> getBatchProduct(int batchId) {
         return batchService.getBatchProduct(batchId);
     }
 
-    @RequiresRoles(logical = Logical.OR,value={"operator","administrator"})
+    @RequiresRoles(logical = Logical.OR, value = {"operator", "administrator"})
     @GetMapping(value = "/get_batch_inout")
     public List<InOutBatchVO> getBatchInout(int batchId, boolean isIn) {
         return batchService.getBatchInout(batchId, isIn);

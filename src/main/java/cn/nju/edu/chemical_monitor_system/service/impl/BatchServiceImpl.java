@@ -11,6 +11,7 @@ import cn.nju.edu.chemical_monitor_system.service.BatchService;
 import cn.nju.edu.chemical_monitor_system.vo.BatchVO;
 import cn.nju.edu.chemical_monitor_system.vo.InOutBatchVO;
 import cn.nju.edu.chemical_monitor_system.vo.ProductVO;
+import cn.nju.edu.chemical_monitor_system.vo.StoreVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -114,7 +115,7 @@ public class BatchServiceImpl implements BatchService {
                 return new BatchVO("CAS id " + casId + " 不存在");
             }
 
-            if(!storeOpt.isPresent()){
+            if (!storeOpt.isPresent()) {
                 return new BatchVO("仓库id " + storeId + " 不存在");
             }
 
@@ -157,6 +158,26 @@ public class BatchServiceImpl implements BatchService {
         }
 
         return new BatchVO(batchOpt.get());
+    }
+
+    @Override
+    public List<StoreVO> getBatchStores(int batchId, int isIn) {
+        Optional<BatchEntity> batchOpt = batchDao.findById(batchId);
+
+        if (!batchOpt.isPresent()) {
+            return null;
+        }
+
+        List<InOutBatchEntity> inOutBatchEntities = inoutBatchDao.findByBatchIdAndInout(batchId, isIn);
+        List<Integer> storeIds = inOutBatchEntities.stream().map(InOutBatchEntity::getStoreId).distinct().collect(Collectors.toList());
+        List<StoreVO> storeVOS = new ArrayList<>();
+        for (Integer storeId : storeIds) {
+            Optional<StoreEntity> storeOpt = storeDao.findById(storeId);
+            if(storeOpt.isPresent()){
+                storeVOS.add(new StoreVO(storeOpt.get()));
+            }
+        }
+        return storeVOS;
     }
 
     @Override

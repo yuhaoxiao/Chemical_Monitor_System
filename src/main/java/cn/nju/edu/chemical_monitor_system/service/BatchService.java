@@ -2,9 +2,11 @@ package cn.nju.edu.chemical_monitor_system.service;
 
 import cn.nju.edu.chemical_monitor_system.request.BatchOutRequest;
 import cn.nju.edu.chemical_monitor_system.request.CreateBatchRequest;
+import cn.nju.edu.chemical_monitor_system.response.BaseResponse;
 import cn.nju.edu.chemical_monitor_system.vo.BatchVO;
 import cn.nju.edu.chemical_monitor_system.vo.InOutBatchVO;
 import cn.nju.edu.chemical_monitor_system.vo.ProductVO;
+import cn.nju.edu.chemical_monitor_system.vo.StoreVO;
 
 import java.util.List;
 
@@ -15,6 +17,8 @@ public interface BatchService {
     BatchVO batchOut(int batchId, List<BatchOutRequest.ProductRequest> products);
 
     BatchVO getBatch(int batchId);
+
+    List<StoreVO> getBatchStores(int batchId, int isIn);
 
     List<ProductVO> getBatchProduct(int batchId);
 
