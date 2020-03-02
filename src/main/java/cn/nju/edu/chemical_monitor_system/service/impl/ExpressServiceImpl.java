@@ -112,7 +112,7 @@ public class ExpressServiceImpl implements ExpressService {
 
         expressEntity.setExpressProductEntities(expressProductEntities);
         expressDao.save(expressEntity);
-        ExpressVO  expressVO=new ExpressVO(expressEntity);
+        ExpressVO expressVO = new ExpressVO(expressEntity);
         kafkaProducer.sendExpress(expressVO);
         return expressVO;
     }
@@ -143,13 +143,13 @@ public class ExpressServiceImpl implements ExpressService {
 
     @Override
     public ExpressVO reverseExpress(int expressId) {
-        ExpressEntity expressEntity=expressDao.findFirstByExpressId(expressId);
-        ExpressEntity reverseExpress=new ExpressEntity();
+        ExpressEntity expressEntity = expressDao.findFirstByExpressId(expressId);
+        ExpressEntity reverseExpress = new ExpressEntity();
         reverseExpress.setInputStoreId(expressEntity.getOutputStoreId());
         reverseExpress.setOutputStoreId(expressEntity.getInputStoreId());
         reverseExpress.setStatus(ExpressStatusEnum.NOT_START.getCode());
-        reverseExpress.setExpressProductEntities(expressEntity.getExpressProductEntities().stream().map(e->{
-            ExpressProductEntity expressProductEntity=new ExpressProductEntity();
+        reverseExpress.setExpressProductEntities(expressEntity.getExpressProductEntities().stream().map(e -> {
+            ExpressProductEntity expressProductEntity = new ExpressProductEntity();
             expressProductEntity.setProductId(e.getProductId());
             expressProductEntity.setExpressEntity(reverseExpress);
             expressProductEntity.setNumber(e.getNumber());
@@ -157,7 +157,7 @@ public class ExpressServiceImpl implements ExpressService {
             return expressProductEntity;
         }).collect(Collectors.toList()));
         expressDao.save(expressEntity);
-        ExpressVO  expressVO=new ExpressVO(expressEntity);
+        ExpressVO expressVO = new ExpressVO(expressEntity);
         kafkaProducer.sendExpress(expressVO);
         return expressVO;
     }

@@ -84,6 +84,7 @@ public class BatchServiceImpl implements BatchService {
             inOutBatchEntity.setStatus(InOutBatchStatusEnum.NOT_START.getName());
             inOutBatchEntity.setFinishedNumber(0.0);
             inOutBatchEntity.setInout(1);
+            inOutBatchEntities.add(inOutBatchEntity);
         }
 
         inoutBatchDao.saveAll(inOutBatchEntities);
