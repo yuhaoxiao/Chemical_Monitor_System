@@ -10,11 +10,15 @@ import javax.websocket.OnOpen;
 import javax.websocket.Session;
 import javax.websocket.server.ServerEndpoint;
 
+import cn.nju.edu.chemical_monitor_system.utils.common.SpringContextUtil;
+import cn.nju.edu.chemical_monitor_system.utils.kafka.KafkaReceiver;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-@ServerEndpoint(value = "/websocket")
-@Component//这里比较特殊，不会变成单例，springboot默认给每个socket都创建一个新的连接
+@ServerEndpoint(value = "/websocket")//原型模式，不会变成单例，springboot默认给每个socket都创建一个新的连接
+@Component
 public class WebSocketUtil {
+
     //记录当前在线连接数。
     private static int onlineCount = 0;
 
@@ -28,6 +32,10 @@ public class WebSocketUtil {
      */
     @OnOpen
     public void onOpen(Session session) {
+        KafkaReceiver kafkaReceiver=(KafkaReceiver)SpringContextUtil.getBean("kafkaReceiver");
+        if(webSocketSet.size()==0){
+            kafkaReceiver.start();
+        }
         this.session = session;
         webSocketSet.add(this);     //加入set中
         addOnlineCount();           //在线数加1
@@ -43,7 +51,11 @@ public class WebSocketUtil {
      */
     @OnClose
     public void onClose() {
+        KafkaReceiver kafkaReceiver=(KafkaReceiver)SpringContextUtil.getBean("kafkaReceiver");
         webSocketSet.remove(this);
+        if(webSocketSet.size()==0){
+            kafkaReceiver.stop();
+        }
         subOnlineCount();
     }
 

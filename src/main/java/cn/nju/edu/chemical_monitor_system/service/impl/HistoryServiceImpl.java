@@ -1,9 +1,11 @@
-package cn.nju.edu.chemical_monitor_system.utils.history;
+package cn.nju.edu.chemical_monitor_system.service.impl;
 
 import cn.nju.edu.chemical_monitor_system.constant.HistoryEnum;
 import cn.nju.edu.chemical_monitor_system.dao.*;
 import cn.nju.edu.chemical_monitor_system.entity.ExpressProductEntity;
 import cn.nju.edu.chemical_monitor_system.entity.InOutBatchEntity;
+import cn.nju.edu.chemical_monitor_system.service.HistoryService;
+import cn.nju.edu.chemical_monitor_system.utils.history.HistoryNode;
 import cn.nju.edu.chemical_monitor_system.vo.LinkVO;
 import cn.nju.edu.chemical_monitor_system.vo.NodeVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,10 +16,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-
-
 @Service
-public class BatchHistoryUtil {
+public class HistoryServiceImpl implements HistoryService {
     @Autowired
     InoutBatchDao inoutBatchDao;
     @Autowired
@@ -39,12 +39,13 @@ public class BatchHistoryUtil {
     //struct为0表示原料历史，为1表示产品用途
     private int struct;
 
+    @Override
     public Map<String,Map> getHistory(int batchId){
         HistoryNode historyNode=getBeforeHistory(batchId,0);
         goHistory(historyNode);
         Map<String, List> data0 = new HashMap<>();
-        data0.put("nodes", new ArrayList(nodes));
-        data0.put("links", new ArrayList(links));
+        data0.put("nodes", new ArrayList<>(nodes));
+        data0.put("links", new ArrayList<>(links));
 
         nodes.clear();
         links.clear();
@@ -52,15 +53,15 @@ public class BatchHistoryUtil {
         historyNode=getBeforeHistory(batchId,1);
         goHistory(historyNode);
         Map<String, List> data1 = new HashMap<>();
-        data1.put("nodes", new ArrayList(nodes));
-        data1.put("links", new ArrayList(links));
+        data1.put("nodes", new ArrayList<>(nodes));
+        data1.put("links", new ArrayList<>(links));
 
         Map<String, Map> data = new HashMap<>();
         data.put("raws", data0);
         data.put("products", data1);
         return data;
     }
-    public void goHistory(HistoryNode historyNode){
+    private void goHistory(HistoryNode historyNode){
         int fromIndex=getIndex(historyNode);
         List<HistoryNode> historyNodes=historyNode.getHistoryNodes();
         if(historyNodes!=null) {
@@ -81,9 +82,9 @@ public class BatchHistoryUtil {
         }
         return index.get(nodeVO);
     }
-    public NodeVO historyNode2NodeVO(HistoryNode historyNode){
+    private NodeVO historyNode2NodeVO(HistoryNode historyNode){
         NodeVO nodeVO=new NodeVO();
-        nodeVO.setBatchId(historyNode.batchId);
+        nodeVO.setBatchId(historyNode.getBatchId());
         nodeVO.setType(historyNode.getType());
         nodeVO.setProductName(productDao.findByProductId(historyNode.getProductId()).getCasEntity().getName());
         nodeVO.setStoreName(storeDao.findFirstByStoreId(historyNode.getStoreId()).getName());
@@ -154,7 +155,7 @@ public class BatchHistoryUtil {
                 List<ExpressProductEntity> expressProductEntities;
                 //过滤，剩下那些仓库信息符合的物流
                 if(struct==0) {
-                     expressProductEntities= expressProductDao.findByProductId(temp.getProductId()).stream()
+                    expressProductEntities= expressProductDao.findByProductId(temp.getProductId()).stream()
                             .filter(e -> e.getExpressEntity().getInputStoreId() == temp.getStoreId()).collect(Collectors.toList());
                 }else{
                     expressProductEntities= expressProductDao.findByProductId(temp.getProductId()).stream()
@@ -203,6 +204,4 @@ public class BatchHistoryUtil {
         node.setStoreId(inOutBatchEntity.getStoreId());
         return node;
     }
-
 }
-
