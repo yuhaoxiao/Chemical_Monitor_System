@@ -1,14 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-    <data-source source="LOCAL" name="hibernate.cfg.xml/Hibernate" uuid="347f11e5-ebe2-4008-88b3-879b9ef30f3c">
-      <driver-ref>mysql</driver-ref>
+    <data-source source="LOCAL" name="mydb@localhost" uuid="10ffb694-3faa-4089-ad48-49a0b65d8274">
+      <driver-ref>mysql.8</driver-ref>
       <synchronize>true</synchronize>
-      <imported>true</imported>
-      <remarks>Hibernate
-
-D:/毕业设计相关/Chemical_Monitor_System/src/main/resources/hibernate.cfg.xml</remarks>
-      <jdbc-driver>com.mysql.jdbc.Driver</jdbc-driver>
+      <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
       <jdbc-url>jdbc:mysql://localhost:3306/mydb</jdbc-url>
     </data-source>
   </component>

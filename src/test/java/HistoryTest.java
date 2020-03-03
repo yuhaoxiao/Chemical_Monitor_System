@@ -1,15 +1,16 @@
-import cn.nju.edu.chemical_monitor_system.utils.history.BatchHistoryUtil;
-import cn.nju.edu.chemical_monitor_system.utils.history.HistoryNode;
+import cn.nju.edu.chemical_monitor_system.service.HistoryService;
 import com.alibaba.fastjson.JSON;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.Map;
+
 public class HistoryTest extends BaseTest{
     @Autowired
-    BatchHistoryUtil batchHistoryUtil;
+    private HistoryService historyService;
     @Test
     public void testSetAndGet() {
-        HistoryNode historyNode=batchHistoryUtil.getBeforeHistory(2);
-        System.out.println(JSON.toJSONString(historyNode));
+        Map<String, Map> result=historyService.getHistory(2);
+        System.out.println(JSON.toJSONString(result));
     }
 }
