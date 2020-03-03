@@ -75,8 +75,11 @@ public class ThroughputServiceImpl implements ThroughputService {
         for (CasEntity cas : casEntities) {
             CASThroughputVO casThroughputVO = new CASThroughputVO(cas.getCasId(), cas.getName());
             produce.add(casThroughputVO);
+            casThroughputVO = new CASThroughputVO(cas.getCasId(), cas.getName());
             consume.add(casThroughputVO);
+            casThroughputVO = new CASThroughputVO(cas.getCasId(), cas.getName());
             in.add(casThroughputVO);
+            casThroughputVO = new CASThroughputVO(cas.getCasId(), cas.getName());
             out.add(casThroughputVO);
         }
 
