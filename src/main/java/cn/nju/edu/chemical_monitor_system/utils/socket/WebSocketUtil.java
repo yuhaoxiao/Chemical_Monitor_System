@@ -11,8 +11,7 @@ import javax.websocket.Session;
 import javax.websocket.server.ServerEndpoint;
 
 import cn.nju.edu.chemical_monitor_system.utils.common.SpringContextUtil;
-import cn.nju.edu.chemical_monitor_system.utils.kafka.KafkaReceiver;
-import org.springframework.beans.factory.annotation.Autowired;
+import cn.nju.edu.chemical_monitor_system.utils.kafka.KafkaUtil;
 import org.springframework.stereotype.Component;
 
 @ServerEndpoint(value = "/websocket")//原型模式，不会变成单例，springboot默认给每个socket都创建一个新的连接
@@ -32,9 +31,9 @@ public class WebSocketUtil {
      */
     @OnOpen
     public void onOpen(Session session) {
-        KafkaReceiver kafkaReceiver=(KafkaReceiver)SpringContextUtil.getBean("kafkaReceiver");
+        KafkaUtil kafkaUtil =(KafkaUtil)SpringContextUtil.getBean("kafkaReceiver");
         if(webSocketSet.size()==0){
-            kafkaReceiver.start();
+            kafkaUtil.start();
         }
         this.session = session;
         webSocketSet.add(this);     //加入set中
@@ -51,10 +50,10 @@ public class WebSocketUtil {
      */
     @OnClose
     public void onClose() {
-        KafkaReceiver kafkaReceiver=(KafkaReceiver)SpringContextUtil.getBean("kafkaReceiver");
+        KafkaUtil kafkaUtil =(KafkaUtil)SpringContextUtil.getBean("kafkaReceiver");
         webSocketSet.remove(this);
         if(webSocketSet.size()==0){
-            kafkaReceiver.stop();
+            kafkaUtil.stop();
         }
         subOnlineCount();
     }

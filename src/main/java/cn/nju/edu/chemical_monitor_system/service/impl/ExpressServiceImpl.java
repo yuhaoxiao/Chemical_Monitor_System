@@ -7,7 +7,7 @@ import cn.nju.edu.chemical_monitor_system.entity.*;
 import cn.nju.edu.chemical_monitor_system.service.ExpressService;
 import cn.nju.edu.chemical_monitor_system.utils.common.UserUtil;
 import cn.nju.edu.chemical_monitor_system.utils.encryption.EncryptionUtil;
-import cn.nju.edu.chemical_monitor_system.utils.kafka.KafkaProducer;
+import cn.nju.edu.chemical_monitor_system.utils.kafka.KafkaUtil;
 import cn.nju.edu.chemical_monitor_system.utils.rfid.RfidUtil;
 import cn.nju.edu.chemical_monitor_system.utils.safe.SafeUtil;
 import cn.nju.edu.chemical_monitor_system.vo.ExpressProductVO;
@@ -54,7 +54,7 @@ public class ExpressServiceImpl implements ExpressService {
     private UserUtil userUtil;
 
     @Autowired
-    private KafkaProducer kafkaProducer;
+    private KafkaUtil kafkaUtil;
 
     @Override
     public ExpressVO createExpress(int inputStoreId, int outputStoreId, Map<Integer, Double> productNumberMap) {
@@ -69,7 +69,7 @@ public class ExpressServiceImpl implements ExpressService {
         if (!outputStoreOpt.isPresent()) {
             return new ExpressVO("出库仓库id不存在");
         }
-        /*
+
         List<Integer> notSafeProducts=new ArrayList<>();
         for(Integer productId:productNumberMap.keySet()){
             if(!safeUtil.isSafe(productId,inputStoreId)){
@@ -89,7 +89,7 @@ public class ExpressServiceImpl implements ExpressService {
             result.setMessage(s.toString());
             return result;
         }
-*/
+
 
         expressEntity.setInputStoreId(inputStoreId);
         expressEntity.setOutputStoreId(outputStoreId);
@@ -113,7 +113,7 @@ public class ExpressServiceImpl implements ExpressService {
         expressEntity.setExpressProductEntities(expressProductEntities);
         expressDao.save(expressEntity);
         ExpressVO expressVO = new ExpressVO(expressEntity);
-        kafkaProducer.sendExpress(expressVO);
+        kafkaUtil.sendExpress(expressVO);
         return expressVO;
     }
 
@@ -158,7 +158,7 @@ public class ExpressServiceImpl implements ExpressService {
         }).collect(Collectors.toList()));
         expressDao.save(expressEntity);
         ExpressVO expressVO = new ExpressVO(expressEntity);
-        kafkaProducer.sendExpress(expressVO);
+        kafkaUtil.sendExpress(expressVO);
         return expressVO;
     }
 

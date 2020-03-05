@@ -146,10 +146,7 @@
             <artifactId>spring-boot-test</artifactId>
             <version>2.2.2.RELEASE</version>
         </dependency>
-
     </dependencies>
-
-
     <build>
         <plugins>
             <plugin>

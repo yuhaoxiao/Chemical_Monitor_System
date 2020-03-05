@@ -16,7 +16,7 @@ public class ConstantVariables {
 
     //消息队列topic
     public final static String MANAGER_MESSAGE = "ManagerMessage";
-    public final static String KAFKA_LISTENER_ID="1";
+    public final static String KAFKA_ID="1";
 
     public final static String PREFIX_SHIRO_CACHE="shiro.cache";
     public static final String PREFIX_SHIRO_REFRESH_TOKEN = "shiro:refresh_token:";

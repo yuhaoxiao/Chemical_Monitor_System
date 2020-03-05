@@ -12,17 +12,25 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.config.KafkaListenerEndpointRegistry;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
 
-@Component(value = "kafkaReceiver")
-public class KafkaReceiver {
-
+@Component(value = "kafkaUtil")
+public class KafkaUtil {
     @Autowired
     WebSocketUtil webSocketUtil;
     @Autowired
     private KafkaListenerEndpointRegistry registry;
-    private static Logger logger = LoggerFactory.getLogger(KafkaReceiver.class);
-    static final String id=ConstantVariables.KAFKA_LISTENER_ID;
+    @Autowired
+    private KafkaTemplate<String, String> kafkaTemplate;
+
+    private static Logger logger = LoggerFactory.getLogger(KafkaUtil.class);
+    static final String id=ConstantVariables.KAFKA_ID;
+
+    public void sendExpress(ExpressVO expressVO) {
+        logger.info("发送消息 ----->>>>>  message = {}", expressVO);
+        kafkaTemplate.send(ConstantVariables.MANAGER_MESSAGE, JSON.toJSONString(expressVO));
+    }
 
     @KafkaListener(id = id,topics = {"ManagerMessage"})
     public void listen(ConsumerRecord<?, ?> record) {
