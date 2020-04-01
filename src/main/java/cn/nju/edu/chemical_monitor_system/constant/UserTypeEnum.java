@@ -1,8 +1,9 @@
 package cn.nju.edu.chemical_monitor_system.constant;
 
 public enum UserTypeEnum {
-    OPERATOR(0, "操作员"),
-    MANAGER(1, "管理员");
+    OPERATOR(1, "操作员"),
+    ADMINISTRATOR(2,"管理员"),
+    MONITOR(3,"监控员");
 
     private int code;
 

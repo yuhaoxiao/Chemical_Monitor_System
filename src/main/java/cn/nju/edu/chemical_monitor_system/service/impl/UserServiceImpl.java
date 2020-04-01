@@ -1,11 +1,14 @@
 package cn.nju.edu.chemical_monitor_system.service.impl;
 
 import cn.nju.edu.chemical_monitor_system.constant.ConstantVariables;
+import cn.nju.edu.chemical_monitor_system.constant.UserTypeEnum;
 import cn.nju.edu.chemical_monitor_system.dao.BatchDao;
 import cn.nju.edu.chemical_monitor_system.dao.ExpressDao;
+import cn.nju.edu.chemical_monitor_system.dao.RoleDao;
 import cn.nju.edu.chemical_monitor_system.dao.UserDao;
 import cn.nju.edu.chemical_monitor_system.entity.BatchEntity;
 import cn.nju.edu.chemical_monitor_system.entity.ExpressEntity;
+import cn.nju.edu.chemical_monitor_system.entity.RoleEntity;
 import cn.nju.edu.chemical_monitor_system.entity.UserEntity;
 import cn.nju.edu.chemical_monitor_system.service.UserService;
 import cn.nju.edu.chemical_monitor_system.utils.redis.RedisUtil;
@@ -20,8 +23,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -37,6 +39,10 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private RedisUtil redisUtil;
+
+    @Autowired
+    private RoleDao roleDao;
+
 
     public UserVO login(String name, String password, HttpServletResponse httpServletResponse) {
         UserEntity user = userDao.findFirstByName(name);
@@ -66,6 +72,8 @@ public class UserServiceImpl implements UserService {
         user.setName(name);
         user.setPassword(password);
         user.setType(type);
+        RoleEntity roleEntity=roleDao.findByRoleId(Integer.parseInt(type));
+        user.setRoleEntities(Collections.singletonList(roleEntity));
         userDao.saveAndFlush(user);
 
         return new UserVO(user);

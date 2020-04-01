@@ -10,7 +10,7 @@ public class UserVO {
 
     private int userId;
     private String password;
-    private String type;  // 想办法改成int类型  0：'操作员', 1：'管理员', 2：'监控员'
+    private String type;  // 0：'操作员', 1：'管理员', 2：'监控员'
     private String name;
     private int enable;
     private Timestamp lastOperationTime;
