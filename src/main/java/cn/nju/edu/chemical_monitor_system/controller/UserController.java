@@ -7,13 +7,11 @@ import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/user")
@@ -22,7 +20,9 @@ public class UserController {
     private UserService userService;
 
     @PostMapping(value = "/login")
-    public BaseResponse login(String name, String password, HttpServletResponse httpServletResponse)  {
+    public BaseResponse login(@RequestBody Map<String, String> map, HttpServletResponse httpServletResponse)  {
+        String name = map.get("name");
+        String password = map.get("password");
         return new BaseResponse(200,"登陆成功",userService.login(name,password,httpServletResponse));
     }
 
@@ -34,7 +34,10 @@ public class UserController {
 
     @RequiresRoles(value={"administrator"})
     @PostMapping(value = "/register")
-    public BaseResponse addUser(String name, String password, String type) {
+    public BaseResponse addUser(@RequestBody UserVO userVO) {
+        String name = userVO.getName();
+        String password = userVO.getPassword();
+        String type = userVO.getType(); // 改成 int
         return new BaseResponse(200,"注册成功",userService.register(name, password, type));
     }
 
