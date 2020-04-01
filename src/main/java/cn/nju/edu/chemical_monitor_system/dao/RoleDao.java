@@ -6,5 +6,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.io.Serializable;
 
 public interface RoleDao extends JpaRepository<RoleEntity, Serializable> {
-    RoleEntity findByRoleId(int id);
+    RoleEntity findById(int id);
 }
