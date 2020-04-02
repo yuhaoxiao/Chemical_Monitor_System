@@ -10,13 +10,20 @@ public class UserVO {
 
     private int userId;
     private String password;
-    private String type;  // 0：'操作员', 1：'管理员', 2：'监控员'
+    private String type;  // 1：'操作员', 2：'管理员', 3：'监控员'
     private String name;
     private int enable;
     private Timestamp lastOperationTime;
 
     private int code;
     private String message;
+
+    public UserVO(int userId, String password, String type, String name) {
+        this.userId = userId;
+        this.password = password;
+        this.type = type;
+        this.name = name;
+    }
 
     public UserVO(UserEntity u) {
         if (u == null) {

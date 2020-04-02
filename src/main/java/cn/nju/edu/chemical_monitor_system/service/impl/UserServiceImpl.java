@@ -72,6 +72,7 @@ public class UserServiceImpl implements UserService {
         user.setName(name);
         user.setPassword(password);
         user.setType(type);
+        user.setEnable(1);
         RoleEntity roleEntity=roleDao.findById(Integer.parseInt(type));
         user.setRoleEntities(Collections.singletonList(roleEntity));
         userDao.saveAndFlush(user);
@@ -147,10 +148,10 @@ public class UserServiceImpl implements UserService {
         }
 
         UserEntity userEntity = new UserEntity();
-        userEntity.setEnable(userVO.getEnable());
+        //userEntity.setEnable(userVO.getEnable());
         userEntity.setPassword(userVO.getPassword());
         userEntity.setType(userVO.getType());
-        userEntity.setUserId(userVO.getUserId());
+        //userEntity.setUserId(userVO.getUserId());
         userEntity.setName(userVO.getName());
         userDao.saveAndFlush(userEntity);
         return new UserVO(userEntity);
