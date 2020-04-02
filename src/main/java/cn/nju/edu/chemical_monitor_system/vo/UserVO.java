@@ -18,6 +18,9 @@ public class UserVO {
     private int code;
     private String message;
 
+    public UserVO(){
+
+    }
     public UserVO(int userId, String password, String type, String name) {
         this.userId = userId;
         this.password = password;

@@ -30,9 +30,7 @@ public class RoleEntity {
         this.roleName = roleName;
     }
 
-    @ManyToMany
-    @JoinTable(name = "user_role", joinColumns = { @JoinColumn(name = "rid") }, inverseJoinColumns = {
-            @JoinColumn(name = "uid") })
+    @ManyToMany(cascade = CascadeType.ALL,targetEntity=UserEntity.class,mappedBy="roleEntities")
     public List<UserEntity> getUserEntities() {
         return userEntities;
     }

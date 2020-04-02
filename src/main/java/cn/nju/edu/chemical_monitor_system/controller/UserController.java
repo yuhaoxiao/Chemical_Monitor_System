@@ -21,9 +21,9 @@ public class UserController {
     private UserService userService;
 
     @PostMapping(value = "/login")
-    public BaseResponse login(@RequestBody Map<String, String> map, HttpServletResponse httpServletResponse)  {
-        String name = map.get("name");
-        String password = map.get("password");
+    public BaseResponse login(@RequestBody UserVO userVO, HttpServletResponse httpServletResponse)  {
+        String name = userVO.getName();
+        String password = userVO.getPassword();
         return new BaseResponse(200,"登陆成功",userService.login(name,password,httpServletResponse));
     }
 
@@ -35,10 +35,10 @@ public class UserController {
 
     @RequiresRoles(value={"administrator"})
     @PostMapping(value = "/register")
-    public BaseResponse addUser(@RequestBody Map<String, Object> userVO) {
-        String name = (String) userVO.get("name");
-        String password = (String) userVO.get("password");
-        String type = "" + userVO.get("type");
+    public BaseResponse addUser(@RequestBody UserVO userVO) {
+        String name = userVO.getName();
+        String password = userVO.getPassword();
+        String type = userVO.getType();
         return new BaseResponse(200,"注册成功",userService.register(name, password, type));
     }
 

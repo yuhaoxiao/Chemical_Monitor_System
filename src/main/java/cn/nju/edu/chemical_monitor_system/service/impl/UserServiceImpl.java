@@ -75,9 +75,11 @@ public class UserServiceImpl implements UserService {
         user.setType(type);
         user.setEnable(1);
         RoleEntity roleEntity=roleDao.findById(Integer.parseInt(type));
-        user.setRoleEntities(Collections.singletonList(roleEntity));
+        roleEntity.getUserEntities().add(user);
+        roleDao.saveAndFlush(roleEntity);
+        user=userDao.findFirstByName(name);
+        user.getRoleEntities().add(roleEntity);
         userDao.saveAndFlush(user);
-
         return new UserVO(user);
     }
 

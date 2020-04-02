@@ -4,8 +4,10 @@ package cn.nju.edu.chemical_monitor_system.entity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Cascade;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -20,7 +22,7 @@ public class UserEntity {
     private String type;
     private int enable;
     private List<BatchEntity> batchEntities;
-    private List<RoleEntity> roleEntities;
+    private List<RoleEntity> roleEntities=new ArrayList<>();
 
     @Id
     @Column(name = "User_id")
@@ -82,9 +84,10 @@ public class UserEntity {
         this.batchEntities = batchEntities;
     }
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "user_role", joinColumns = {@JoinColumn(name = "uid")}, inverseJoinColumns = {
-            @JoinColumn(name = "rid")})
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "user_role",
+            joinColumns = {@JoinColumn(name = "uid")},
+            inverseJoinColumns = {@JoinColumn(name = "rid")})
     public List<RoleEntity> getRoleEntities() {
         return roleEntities;
     }
