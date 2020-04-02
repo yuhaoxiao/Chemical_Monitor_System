@@ -69,6 +69,6 @@ public class UserController {
     @RequiresRoles(value={"administrator"})
     @GetMapping
     public BaseResponse getAll() { // TODO
-        return new BaseResponse(200, "", new ArrayList<UserVO>());
+        return new BaseResponse(200, "", userService.getAll());
     }
 }
