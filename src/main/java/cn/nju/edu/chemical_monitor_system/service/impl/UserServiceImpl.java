@@ -24,6 +24,7 @@ import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -170,5 +171,10 @@ public class UserServiceImpl implements UserService {
         if(redisUtil.get(ConstantVariables.PREFIX_SHIRO_REFRESH_TOKEN_OLD + username)!=null){
             redisUtil.del(ConstantVariables.PREFIX_SHIRO_REFRESH_TOKEN_OLD + username);
         }
+    }
+
+    @Override
+    public List<UserVO> getAll() {
+        return userDao.findAll().stream().map(UserVO::new).collect(Collectors.toList());
     }
 }
