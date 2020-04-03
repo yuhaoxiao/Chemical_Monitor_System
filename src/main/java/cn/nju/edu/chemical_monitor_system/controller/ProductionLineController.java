@@ -4,13 +4,11 @@ import cn.nju.edu.chemical_monitor_system.response.BaseResponse;
 import cn.nju.edu.chemical_monitor_system.service.ProductionLineService;
 import cn.nju.edu.chemical_monitor_system.vo.BatchVO;
 import cn.nju.edu.chemical_monitor_system.vo.ProductionLineVO;
-import cn.nju.edu.chemical_monitor_system.vo.StoreVO;
 import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -47,25 +45,40 @@ public class ProductionLineController {
     }
 
 
-
-    //以下接口暂时没有用到
-    @PostMapping(value = "/productionline/add_productionline")
-    public ProductionLineVO addProductionLine(int eid) {
-        return productionLineService.addProductionLine(eid);
+    @RequiresRoles(value={"administrator"})
+    @PostMapping(value = "/add_production_line")
+    public BaseResponse addProductionLine(@RequestBody ProductionLineVO productionLineVO) {
+        int eid = productionLineVO.getEnterpriseId();
+        return new BaseResponse(200, "success", productionLineService.addProductionLine(eid));
     }
 
-    @PostMapping(value = "/productionline/delete_productionline")
-    public ProductionLineVO deleteProductionLine(int plId){
-        return productionLineService.deleteProductionLine(plId);
+    @RequiresRoles(value={"administrator"})
+    @PostMapping(value = "/delete_production_line/{plId}")
+    public BaseResponse deleteProductionLine(@PathVariable int plId){
+        return new BaseResponse(200, "success", productionLineService.deleteProductionLine(plId));
     }
 
-    @PostMapping(value = "/productionline/update_productionline")
-    public ProductionLineVO updateProductionLine(ProductionLineVO productionLineVO){
-        return productionLineService.updateProductionLine(productionLineVO);
+    @RequiresRoles(value={"administrator"})
+    @PostMapping(value = "/update_production_line")
+    public BaseResponse updateProductionLine(@RequestBody ProductionLineVO productionLineVO){
+        return new BaseResponse(200, "success", productionLineService.updateProductionLine(productionLineVO));
     }
 
-    @GetMapping(value = "/productionline/get_produtionline_batch")
-    public List<BatchVO> getProductionLineBatch(int plId){
-        return productionLineService.getProductionBatch(plId);
+    @RequiresRoles(value={"administrator"})
+    @GetMapping(value = "/get_production_line_batch")
+    public BaseResponse getProductionLineBatch(int plId){
+        return new BaseResponse(200, "success", productionLineService.getProductionBatch(plId));
+    }
+
+    @RequiresRoles(value={"administrator"})
+    @GetMapping(value = "/search_production_line/{eid}")
+    public BaseResponse searchProductionLine(@PathVariable int eid){
+        return new BaseResponse(200, "success", productionLineService.searchByEnterprise(eid));
+    }
+
+    @RequiresRoles(value={"administrator"})
+    @GetMapping
+    public BaseResponse getAll(){
+        return new BaseResponse(200, "success", productionLineService.getAll());
     }
 }

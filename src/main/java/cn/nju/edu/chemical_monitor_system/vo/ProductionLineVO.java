@@ -2,8 +2,10 @@ package cn.nju.edu.chemical_monitor_system.vo;
 
 import cn.nju.edu.chemical_monitor_system.entity.ProductionLineEntity;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
 public class ProductionLineVO {
 
     private int productionLineId;
@@ -12,9 +14,6 @@ public class ProductionLineVO {
     private int enable;
     private String message;
 
-    public ProductionLineVO(){
-
-    }
     public ProductionLineVO(ProductionLineEntity pl) {
         if (pl == null) {
             this.code = 0;

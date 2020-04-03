@@ -12,6 +12,7 @@ import cn.nju.edu.chemical_monitor_system.vo.ProductionLineVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -72,8 +73,8 @@ public class ProductionLineServiceImpl implements ProductionLineService {
 
         ProductionLineEntity productionLineEntity = new ProductionLineEntity();
         productionLineEntity.setEnterpriseEntity(enterpriseOpt.get());
-        productionLineEntity.setProductionLineId(productionLineVO.getProductionLineId());
-        productionLineEntity.setEnable(productionLineVO.getEnable());
+        //productionLineEntity.setProductionLineId(productionLineVO.getProductionLineId());
+        //productionLineEntity.setEnable(productionLineVO.getEnable());
         productionLineDao.saveAndFlush(productionLineEntity);
         return new ProductionLineVO(productionLineEntity);
     }
@@ -88,5 +89,17 @@ public class ProductionLineServiceImpl implements ProductionLineService {
 
         List<BatchEntity> batchEntities = batchDao.findByProductionLineId(plId);
         return batchEntities.stream().map(BatchVO::new).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ProductionLineVO> getAll() {
+        return productionLineDao.findAll().stream().map(ProductionLineVO::new).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ProductionLineVO> searchByEnterprise(int eid) {
+        Optional<EnterpriseEntity> enterpriseOpt = enterpriseDao.findById(eid);
+
+        return enterpriseOpt.map(enterpriseEntity -> productionLineDao.findByEnterpriseEntity(enterpriseEntity).stream().map(ProductionLineVO::new).collect(Collectors.toList())).orElseGet(ArrayList::new);
     }
 }
