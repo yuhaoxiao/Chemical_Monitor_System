@@ -21,12 +21,6 @@ public class UserVO {
     public UserVO(){
 
     }
-    public UserVO(int userId, String password, String type, String name) {
-        this.userId = userId;
-        this.password = password;
-        this.type = type;
-        this.name = name;
-    }
 
     public UserVO(UserEntity u) {
         if (u == null) {

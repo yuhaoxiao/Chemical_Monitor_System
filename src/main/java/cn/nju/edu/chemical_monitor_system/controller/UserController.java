@@ -57,18 +57,13 @@ public class UserController {
 
     @RequiresRoles(value={"administrator"})
     @PostMapping(value = "/update_user")
-    public BaseResponse updateUser(@RequestBody Map<String, Object> map){
-        int userId = (int) map.get("userId");
-        String name = (String) map.get("name");
-        String password = (String) map.get("password");
-        String type = "" + map.get("type");
-        UserVO userVO = new UserVO(userId, password, type, name);
+    public BaseResponse updateUser(@RequestBody UserVO userVO){
         return new BaseResponse(200,"成功",userService.updateUser(userVO));
     }
 
     @RequiresRoles(value={"administrator"})
     @GetMapping
-    public BaseResponse getAll() { // TODO
+    public BaseResponse getAll() {
         return new BaseResponse(200, "", userService.getAll());
     }
 }

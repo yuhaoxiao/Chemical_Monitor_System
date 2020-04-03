@@ -153,7 +153,7 @@ public class UserServiceImpl implements UserService {
         UserEntity userEntity = new UserEntity();
         //userEntity.setEnable(userVO.getEnable());
         userEntity.setPassword(userVO.getPassword());
-        userEntity.setType(userVO.getType());
+        userEntity.setType(userVO.getType());  // TODO: 修改权限
         //userEntity.setUserId(userVO.getUserId());
         userEntity.setName(userVO.getName());
         userDao.saveAndFlush(userEntity);
