@@ -22,7 +22,6 @@ public class UserEntity {
     private String type;
     private int enable;
     private List<BatchEntity> batchEntities;
-    private List<RoleEntity> roleEntities=new ArrayList<>();
 
     @Id
     @Column(name = "User_id")
@@ -84,17 +83,6 @@ public class UserEntity {
         this.batchEntities = batchEntities;
     }
 
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(name = "user_role",
-            joinColumns = {@JoinColumn(name = "uid")},
-            inverseJoinColumns = {@JoinColumn(name = "rid")})
-    public List<RoleEntity> getRoleEntities() {
-        return roleEntities;
-    }
-
-    public void setRoleEntities(List<RoleEntity> roleEntities) {
-        this.roleEntities = roleEntities;
-    }
 
 
     @Override

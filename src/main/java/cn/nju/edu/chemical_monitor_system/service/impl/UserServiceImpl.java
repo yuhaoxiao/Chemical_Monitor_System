@@ -1,14 +1,11 @@
 package cn.nju.edu.chemical_monitor_system.service.impl;
 
 import cn.nju.edu.chemical_monitor_system.constant.ConstantVariables;
-import cn.nju.edu.chemical_monitor_system.constant.UserTypeEnum;
 import cn.nju.edu.chemical_monitor_system.dao.BatchDao;
 import cn.nju.edu.chemical_monitor_system.dao.ExpressDao;
-import cn.nju.edu.chemical_monitor_system.dao.RoleDao;
 import cn.nju.edu.chemical_monitor_system.dao.UserDao;
 import cn.nju.edu.chemical_monitor_system.entity.BatchEntity;
 import cn.nju.edu.chemical_monitor_system.entity.ExpressEntity;
-import cn.nju.edu.chemical_monitor_system.entity.RoleEntity;
 import cn.nju.edu.chemical_monitor_system.entity.UserEntity;
 import cn.nju.edu.chemical_monitor_system.service.UserService;
 import cn.nju.edu.chemical_monitor_system.utils.redis.RedisUtil;
@@ -41,8 +38,6 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private RedisUtil redisUtil;
 
-    @Autowired
-    private RoleDao roleDao;
 
 
     public UserVO login(String name, String password, HttpServletResponse httpServletResponse) {
@@ -74,11 +69,6 @@ public class UserServiceImpl implements UserService {
         user.setPassword(password);
         user.setType(type);
         user.setEnable(1);
-        RoleEntity roleEntity=roleDao.findById(Integer.parseInt(type));
-        roleEntity.getUserEntities().add(user);
-        roleDao.saveAndFlush(roleEntity);
-        user=userDao.findFirstByName(name);
-        user.getRoleEntities().add(roleEntity);
         userDao.saveAndFlush(user);
         return new UserVO(user);
     }
@@ -123,6 +113,7 @@ public class UserServiceImpl implements UserService {
 
             userVO.setLastOperationTime(last);
         } catch (Exception e) {
+            e.printStackTrace();
         }
         return userVO;
 
@@ -133,7 +124,7 @@ public class UserServiceImpl implements UserService {
         Optional<UserEntity> user = userDao.findById(uid);
 
         if (!user.isPresent()) {
-            return new UserVO("用户id不存在");
+            throw new UnauthorizedException("用户不存在");
         }
 
         UserEntity userEntity = user.get();
@@ -144,17 +135,16 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserVO updateUser(UserVO userVO) {
-        Optional<UserEntity> user = userDao.findById(userVO.getUserId());
+       Optional<UserEntity> user = userDao.findById(userVO.getUserId());
 
         if (!user.isPresent()) {
-            return new UserVO("用户id不存在");
+            throw new UnauthorizedException("用户不存在");
         }
 
-        UserEntity userEntity = new UserEntity();
-        //userEntity.setEnable(userVO.getEnable());
+        UserEntity userEntity =user.get();
         userEntity.setPassword(userVO.getPassword());
-        userEntity.setType(userVO.getType());  // TODO: 修改权限
-        //userEntity.setUserId(userVO.getUserId());
+        userEntity.setType(userVO.getType());
+        userEntity.setUserId(userVO.getUserId());
         userEntity.setName(userVO.getName());
         userDao.saveAndFlush(userEntity);
         return new UserVO(userEntity);

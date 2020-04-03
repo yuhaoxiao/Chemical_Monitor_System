@@ -1,9 +1,8 @@
 package cn.nju.edu.chemical_monitor_system.utils.shiro;
 
 import cn.nju.edu.chemical_monitor_system.constant.ConstantVariables;
+import cn.nju.edu.chemical_monitor_system.constant.UserTypeEnum;
 import cn.nju.edu.chemical_monitor_system.dao.UserDao;
-import cn.nju.edu.chemical_monitor_system.entity.PermissionEntity;
-import cn.nju.edu.chemical_monitor_system.entity.RoleEntity;
 import cn.nju.edu.chemical_monitor_system.entity.UserEntity;
 import cn.nju.edu.chemical_monitor_system.utils.redis.RedisUtil;
 import cn.nju.edu.chemical_monitor_system.utils.shiro.jwt.JWTToken;
@@ -20,6 +19,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.Objects;
 
 
 @Service
@@ -49,12 +50,7 @@ public class MyRealm extends AuthorizingRealm {
         logger.info("调用授权接口,调用用户为{}",username);
         UserEntity userEntity = userDao.findFirstByName(username);
         SimpleAuthorizationInfo simpleAuthorizationInfo = new SimpleAuthorizationInfo();
-        for (RoleEntity role : userEntity.getRoleEntities()) {
-            simpleAuthorizationInfo.addRole(role.getRoleName());
-            for (PermissionEntity permission : role.getPermissionEntities()) {
-                simpleAuthorizationInfo.addStringPermission(permission.getPermissionName());
-            }
-        }
+        simpleAuthorizationInfo.addRole(UserTypeEnum.getRole(userEntity.getType()));
         return simpleAuthorizationInfo;
     }
 
@@ -69,14 +65,14 @@ public class MyRealm extends AuthorizingRealm {
             throw new AuthenticationException("Token格式出错");
         }
         UserEntity userEntity = userDao.findFirstByName(username);
-        if (userEntity == null) {
+        if (userEntity == null||userEntity.getEnable()==0) {
             throw new AuthenticationException("用户不存在!");
         }
         if (redisUtil.get(ConstantVariables.PREFIX_SHIRO_REFRESH_TOKEN_OLD + username)!=null) {
             String oldTime = redisUtil.get(ConstantVariables.PREFIX_SHIRO_REFRESH_TOKEN_OLD + username).toString();
             String time=JWTUtil.getClaim(token,ConstantVariables.CURRENT_TIME_MILLIS);
             // 判断旧Token是否一致
-            if (time.equals(oldTime)) {
+            if (Objects.equals(time,oldTime)) {
                 return new SimpleAuthenticationInfo(token, token, "userRealm");
             }
         }
