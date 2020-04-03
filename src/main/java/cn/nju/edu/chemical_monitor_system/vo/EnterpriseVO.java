@@ -2,8 +2,10 @@ package cn.nju.edu.chemical_monitor_system.vo;
 
 import cn.nju.edu.chemical_monitor_system.entity.EnterpriseEntity;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
 public class EnterpriseVO {
 
     private int enterpriseId;

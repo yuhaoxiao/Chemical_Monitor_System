@@ -2,10 +2,12 @@ package cn.nju.edu.chemical_monitor_system.vo;
 
 import cn.nju.edu.chemical_monitor_system.entity.UserEntity;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.sql.Timestamp;
 
 @Data
+@NoArgsConstructor
 public class UserVO {
 
     private int userId;
@@ -17,10 +19,6 @@ public class UserVO {
 
     private int code;
     private String message;
-
-    public UserVO(){
-
-    }
 
     public UserVO(UserEntity u) {
         if (u == null) {

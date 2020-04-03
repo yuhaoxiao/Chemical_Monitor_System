@@ -56,8 +56,8 @@ public class EnterpriseServiceImpl implements EnterpriseService {
 
         EnterpriseEntity enterpriseEntity = new EnterpriseEntity();
         enterpriseEntity.setName(enterpriseVO.getName());
-        enterpriseEntity.setEnterpriseId(enterpriseVO.getEnterpriseId());
-        enterpriseEntity.setEnable(enterpriseVO.getEnterpriseId());
+        //enterpriseEntity.setEnterpriseId(enterpriseVO.getEnterpriseId());
+        //enterpriseEntity.setEnable(enterpriseVO.getEnterpriseId());
         enterpriseDao.saveAndFlush(enterpriseEntity);
         return new EnterpriseVO(enterpriseEntity);
     }
@@ -71,6 +71,7 @@ public class EnterpriseServiceImpl implements EnterpriseService {
             Optional<EnterpriseEntity> enterpriseOpt = enterpriseDao.findById(eid);
 
             if (enterpriseOpt.isPresent()) {
+                enterpriseEntities.clear();
                 enterpriseEntities.add(enterpriseOpt.get());
             }
         } catch (Exception e) {
@@ -78,5 +79,10 @@ public class EnterpriseServiceImpl implements EnterpriseService {
         }
 
         return enterpriseEntities.stream().map(EnterpriseVO::new).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<EnterpriseVO> getAll() {
+        return enterpriseDao.findAll().stream().map(EnterpriseVO::new).collect(Collectors.toList());
     }
 }
