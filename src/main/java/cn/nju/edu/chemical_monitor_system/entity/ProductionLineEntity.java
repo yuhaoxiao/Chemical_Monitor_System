@@ -5,14 +5,14 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "ProductionLine", schema = "mydb")
+@Table(name = "productionline", schema = "mydb")
 public class ProductionLineEntity {
     private int productionLineId;
     private EnterpriseEntity enterpriseEntity;
     private int enable;
 
     @Id
-    @Column(name = "ProductionLine_id")
+    @Column(name = "Productionline_id")
     public int getProductionLineId() {
         return productionLineId;
     }
