@@ -10,6 +10,7 @@ public class EnterpriseVO {
 
     private int enterpriseId;
     private String name;
+    private int enable;
     private int code;
     private String message;
 
@@ -21,6 +22,7 @@ public class EnterpriseVO {
 
         this.enterpriseId = e.getEnterpriseId();
         this.name = e.getName();
+        this.enable = e.getEnable();
         this.code = 1;
     }
 
