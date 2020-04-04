@@ -43,6 +43,9 @@ public class ExpressServiceImpl implements ExpressService {
     private UserDao userDao;
 
     @Autowired
+    private StoreProductDao storeProductDao;
+
+    @Autowired
     private SafeUtil safeUtil;
 
     @Autowired
@@ -249,6 +252,19 @@ public class ExpressServiceImpl implements ExpressService {
         if (temp == expressProductEntities.size()) {
             outputExpress(expressEntity);
         }
+
+        storeEntity.getStoreProductEntities().forEach(x->{
+            if(x.getProductEntity().getProductId()==productId){
+                double number=x.getNumber()-outputNumber;
+                if(number==0){
+                    storeProductDao.delete(x);
+                }
+                else {
+                    x.setNumber(number);
+                    storeProductDao.saveAndFlush(x);
+                }
+            }
+        });
         return new ExpressProductVO(result);
     }
 
@@ -262,7 +278,7 @@ public class ExpressServiceImpl implements ExpressService {
         ExpressEntity expressEntity = expressOpt.get();
         int outputStoreId = expressEntity.getOutputStoreId();
         int inputStoreId = expressEntity.getInputStoreId();
-        StoreEntity storeEntity = storeDao.findById(outputStoreId).get();
+        StoreEntity storeEntity = storeDao.findById(inputStoreId).get();
         String port = storeEntity.getPort();
         String rfid = rfidUtil.read(port);
         //如果没有读到结果
@@ -309,6 +325,22 @@ public class ExpressServiceImpl implements ExpressService {
         if (temp == expressProductEntities.size()) {
             inputExpress(expressEntity);
             result.setCode(2);//这里设置为2的话代表该物流全部完成，为1的话代表该product扫描成功
+        }
+        boolean exist=false;
+        for (StoreProductEntity storeProductEntity : storeEntity.getStoreProductEntities()) {
+            if(storeProductEntity.getProductEntity().getProductId()==productId){
+                exist=true;
+                double number=storeProductEntity.getNumber()+inputNumber;
+                storeProductEntity.setNumber(number);
+                storeProductDao.saveAndFlush(storeProductEntity);
+            }
+        }
+        if(!exist){
+            StoreProductEntity storeProductEntity=new StoreProductEntity();
+            storeProductEntity.setNumber(inputNumber);
+            storeProductEntity.setProductEntity(productDao.findByProductId(productId));
+            storeProductEntity.setStoreEntity(storeEntity);
+            storeProductDao.saveAndFlush(storeProductEntity);
         }
         return result;
     }
