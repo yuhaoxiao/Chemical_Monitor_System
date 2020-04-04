@@ -66,18 +66,18 @@ public class InOutBatchServiceImpl implements InOutBatchService {
             if (inOutBatchEntity.getProductId() != productId) {
                 continue;
             }
-
-            Double finishedNumber = inOutBatchEntity.getFinishedNumber() + rfidInfoEntity.getNumber();
+            Double thisNumber = rfidInfoEntity.getNumber();
+            Double finishedNumber = inOutBatchEntity.getFinishedNumber() + thisNumber;
 
             if (finishedNumber > inOutBatchEntity.getNumber()) {
                 return new InOutBatchVO("上线了数量为" + rfidInfoEntity.getNumber() + "的产品id为" + productId +
                         "的产品，超出了所需的" + (inOutBatchEntity.getNumber() - finishedNumber) + "的数量");
             } else {
                 inOutBatchEntity.setFinishedNumber(finishedNumber);
-
+                ProductEntity productEntity = productDao.findById(productId).get();
                 if (finishedNumber < inOutBatchEntity.getNumber()) {
                     inoutBatchDao.saveAndFlush(inOutBatchEntity);
-                    return new InOutBatchVO(inOutBatchEntity);
+                    return new InOutBatchVO(inOutBatchEntity, productEntity, thisNumber);
                 }
 
                 inOutBatchEntity.setStatus(InOutBatchStatusEnum.COMPLETED.getName());
@@ -86,11 +86,11 @@ public class InOutBatchServiceImpl implements InOutBatchService {
 
                 for (InOutBatchEntity newInoutBatch : newInOutBatchs) {
                     if (!newInoutBatch.getStatus().equals(InOutBatchStatusEnum.COMPLETED.getName())) {
-                        return new InOutBatchVO(inOutBatchEntity);
+                        return new InOutBatchVO(inOutBatchEntity, productEntity, thisNumber);
                     }
                 }
 
-                InOutBatchVO inOutBatchVO = new InOutBatchVO(inOutBatchEntity);
+                InOutBatchVO inOutBatchVO = new InOutBatchVO(inOutBatchEntity, productEntity, thisNumber);
                 inOutBatchVO.setCode(2);
                 BatchEntity batch = batchDao.findById(batchId).get();
                 batch.setStatus(BatchStatusEnum.IN_PROCESS.getName());
@@ -142,7 +142,8 @@ public class InOutBatchServiceImpl implements InOutBatchService {
                 continue;
             }
 
-            Double finishedNumber = inOutBatchEntity.getFinishedNumber() + rfidInfoEntity.getNumber();
+            Double thisNumber = rfidInfoEntity.getNumber();
+            Double finishedNumber = inOutBatchEntity.getFinishedNumber() + thisNumber;
 
             if (finishedNumber > inOutBatchEntity.getNumber()) {
                 return new InOutBatchVO("下线了数量为" + rfidInfoEntity.getNumber() + "的产品id为" + productId +
@@ -153,7 +154,7 @@ public class InOutBatchServiceImpl implements InOutBatchService {
                 if (finishedNumber < inOutBatchEntity.getNumber()) {
                     inoutBatchDao.saveAndFlush(inOutBatchEntity);
                     rfidUtil.write(rfidInfoEntity.toString(), port);
-                    return new InOutBatchVO(inOutBatchEntity);
+                    return new InOutBatchVO(inOutBatchEntity, productEntity, thisNumber);
                 }
 
                 inOutBatchEntity.setStatus(InOutBatchStatusEnum.COMPLETED.getName());
@@ -162,11 +163,11 @@ public class InOutBatchServiceImpl implements InOutBatchService {
 
                 for (InOutBatchEntity newInoutBatch : newInOutBatchs) {
                     if (!newInoutBatch.getStatus().equals(InOutBatchStatusEnum.COMPLETED.getName())) {
-                        return new InOutBatchVO(inOutBatchEntity);
+                        return new InOutBatchVO(inOutBatchEntity, productEntity, thisNumber);
                     }
                 }
 
-                InOutBatchVO inOutBatchVO = new InOutBatchVO(inOutBatchEntity);
+                InOutBatchVO inOutBatchVO = new InOutBatchVO(inOutBatchEntity, productEntity, thisNumber);
                 inOutBatchVO.setCode(2);
                 BatchEntity batch = batchDao.findById(batchId).get();
                 batch.setStatus(BatchStatusEnum.COMPLETE.getName());

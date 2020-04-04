@@ -2,14 +2,11 @@ package cn.nju.edu.chemical_monitor_system.controller;
 
 import cn.nju.edu.chemical_monitor_system.response.BaseResponse;
 import cn.nju.edu.chemical_monitor_system.service.ProductionLineService;
-import cn.nju.edu.chemical_monitor_system.vo.BatchVO;
 import cn.nju.edu.chemical_monitor_system.vo.ProductionLineVO;
 import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/production_line")
@@ -18,29 +15,27 @@ public class ProductionLineController {
     @Autowired
     private ProductionLineService productionLineService;
 
+    @GetMapping("/get_production_line/{plId}")
+    @RequiresRoles(logical = Logical.OR, value={"operator", "administrator"})
+    public BaseResponse getProductionLine(@PathVariable int plId) {
+        return new BaseResponse(200,"success", productionLineService.getProductionLine(plId));
+    }
 
-    //需要实现
-    @GetMapping("/get_production_line/{productionLineId}")
-    @RequiresRoles(logical = Logical.OR,value={"operator","administrator"})
-    public BaseResponse getProductionLine(@PathVariable int productionLineId) {
+    @GetMapping("/get_in_park_by_eid/{eid}")
+    @RequiresRoles(logical = Logical.OR, value={"operator", "administrator"})
+    public BaseResponse getInParkProductionLineByEnterpriseId(@PathVariable int eid) {  // TODO: 根据企业id获取该企业的入园生产线
         return new BaseResponse(200,"success",new ProductionLineVO());
     }
 
-    @GetMapping("/get_in_park_by_eid/{enterpriseId}")
-    @RequiresRoles(logical = Logical.OR,value={"operator","administrator"})
-    public BaseResponse getInParkProductionLineByEnterpriseId(@PathVariable int enterpriseId) {
+    @GetMapping("/get_out_park_by_eid/{eid}")
+    @RequiresRoles(logical = Logical.OR, value={"operator", "administrator"})
+    public BaseResponse getOutParkProductionLineByEnterpriseId(@PathVariable int eid) {  // TODO: 根据企业id获取该企业的出园生产线
         return new BaseResponse(200,"success",new ProductionLineVO());
     }
 
-    @GetMapping("/get_out_park_by_eid/{enterpriseId}")
-    @RequiresRoles(logical = Logical.OR,value={"operator","administrator"})
-    public BaseResponse getOutParkProductionLineByEnterpriseId(@PathVariable int enterpriseId) {
-        return new BaseResponse(200,"success",new ProductionLineVO());
-    }
-
-    @GetMapping("/get_destroy_by_eid/{enterpriseId}")
-    @RequiresRoles(logical = Logical.OR,value={"operator","administrator"})
-    public BaseResponse getDestroyProductionLineByEnterpriseId(@PathVariable int enterpriseId) {
+    @GetMapping("/get_destroy_by_eid/{eid}")
+    @RequiresRoles(logical = Logical.OR, value={"operator", "administrator"})
+    public BaseResponse getDestroyProductionLineByEnterpriseId(@PathVariable int eid) {  // TODO: 根据企业id获取该企业的销毁生产线
         return new BaseResponse(200,"success",new ProductionLineVO());
     }
 
@@ -66,7 +61,7 @@ public class ProductionLineController {
 
     @RequiresRoles(value={"administrator"})
     @GetMapping(value = "/get_production_line_batch")
-    public BaseResponse getProductionLineBatch(int plId){
+    public BaseResponse getProductionLineBatch(int plId){  //  暂时没用到
         return new BaseResponse(200, "success", productionLineService.getProductionBatch(plId));
     }
 

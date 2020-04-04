@@ -26,41 +26,39 @@ public class StoreController {
         return new BaseResponse(200,"成功", storeService.getAll());
     }
 
-    @GetMapping("/{storeId}/products") // 获取目前在这个仓库的所有产品
+    @GetMapping("/{storeId}/products")
     @RequiresRoles(logical = Logical.OR,value={"operator","administrator"})
-    public BaseResponse getAllProducts(@PathVariable int storeId) {
+    public BaseResponse getAllProducts(@PathVariable int storeId) {  // TODO: 获取目前在这个仓库的所有产品；产品数量为仓库中的数量
         List<ProductVO> list = new ArrayList<>();
         return new BaseResponse(200,"success",list);
     }
 
-    @GetMapping("/search_by_cas/{casId}") // 查询目前有这个化学品的仓库
+    @GetMapping("/search_by_cas/{casId}")
     @RequiresRoles(logical = Logical.OR,value={"operator","administrator"})
-    public BaseResponse searchStoresByCAS(@PathVariable int casId) {  // 化学品casId
+    public BaseResponse searchStoresByCAS(@PathVariable int casId) {  // TODO: 查询目前有这个化学品的仓库
         List<StoreVO> list = new ArrayList<>();
         return new BaseResponse(200,"success",list);
     }
 
-    @GetMapping("/{storeId}/search_by_cas/{casId}") // 获取目前在这个仓库该化学品的所有批次产品
+    @GetMapping("/{storeId}/search_by_cas/{casId}")
     @RequiresRoles(logical = Logical.OR,value={"operator","administrator"})
-    public BaseResponse searchProductsByStoreAndCAS(@PathVariable int storeId, @PathVariable int casId) {
+    public BaseResponse searchProductsByStoreAndCAS(@PathVariable int storeId, @PathVariable int casId) {  // TODO: 获取目前在这个仓库该化学品的所有批次产品；产品数量为仓库中的数量
         List<ProductVO> list = new ArrayList<>();
         return new BaseResponse(200,"success",list);
     }
 
-
-
     @GetMapping("/get_all_storeId")
-    public List<Integer> getAllStoreId() {
+    public List<Integer> getAllStoreId() {  //  暂时没用到
         return storeService.getAllStoreId();
     }
 
     @GetMapping("/get_store_byId")
-    public StoreVO getStoreById(int sid) {
+    public StoreVO getStoreById(int sid) {  //  暂时没用到
         return storeService.getStoreById(sid);
     }
 
     @GetMapping("/store/get_store_products")
-    public Map<Integer, Double> getStoreProducts(int sid) {
+    public Map<Integer, Double> getStoreProducts(int sid) {  //  暂时没用到
         if (storeService.getStoreById(sid).getCode() == 0) {
             return null;
         }

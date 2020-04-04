@@ -154,11 +154,8 @@ public class BatchServiceImpl implements BatchService {
     public BatchVO getBatch(int batchId) {
         Optional<BatchEntity> batchOpt = batchDao.findById(batchId);
 
-        if (!batchOpt.isPresent()) {
-            return new BatchVO("批次id不存在");
-        }
+        return batchOpt.map(BatchVO::new).orElseGet(() -> new BatchVO("批次id不存在"));
 
-        return new BatchVO(batchOpt.get());
     }
 
     @Override

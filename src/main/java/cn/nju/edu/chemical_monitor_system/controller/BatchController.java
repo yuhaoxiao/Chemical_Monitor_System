@@ -24,22 +24,24 @@ public class BatchController {
 
     @RequiresRoles(value = {"operator"})
     @PostMapping(value = "/create_batch")
-    public BatchVO createBatch(@RequestBody CreateBatchRequest createBatchRequest, HttpServletRequest httpServletRequest) {
+    public BaseResponse createBatch(@RequestBody CreateBatchRequest createBatchRequest, HttpServletRequest httpServletRequest) {
         UserVO userVO = (UserVO) httpServletRequest.getSession().getAttribute("User");
-        return batchService.createBatch(createBatchRequest.getProductionLineId(),
-                createBatchRequest.getType(), createBatchRequest.getRaws(), userVO.getUserId());
+        return new BaseResponse(200, "success",
+                batchService.createBatch(createBatchRequest.getProductionLineId(),
+                createBatchRequest.getType(), createBatchRequest.getRaws(), userVO.getUserId()));
     }
 
     @RequiresRoles(value = {"operator"})
     @PostMapping(value = "/batch_out")
-    public BatchVO batchOut(@RequestBody BatchOutRequest batchOutRequest) {
-        return batchService.batchOut(batchOutRequest.getBatchId(), batchOutRequest.getProducts());
+    public BaseResponse batchOut(@RequestBody BatchOutRequest batchOutRequest) {
+        return new BaseResponse(200, "success",
+                batchService.batchOut(batchOutRequest.getBatchId(), batchOutRequest.getProducts()));
     }
 
     @RequiresRoles(logical = Logical.OR, value = {"operator", "administrator"})
     @GetMapping(value = "/get_batch/{batchId}")
-    public BatchVO getBatch(@PathVariable int batchId) {
-        return batchService.getBatch(batchId);
+    public BaseResponse getBatch(@PathVariable int batchId) {
+        return new BaseResponse(200, "success", batchService.getBatch(batchId));
     }
 
     @RequiresRoles(logical = Logical.OR, value = {"operator", "administrator"})
@@ -53,7 +55,7 @@ public class BatchController {
     }
 
     @RequiresRoles(logical = Logical.OR, value = {"operator", "administrator"})
-    @GetMapping("/get_batch_out_stores/{batchId}") // 查询该批次还需要入库原料的仓库
+    @GetMapping("/get_batch_out_stores/{batchId}") // 查询该批次还需要入库产品的仓库
     public BaseResponse getBatchOutStores(@PathVariable int batchId) {
         List<StoreVO> batchVOS = batchService.getBatchStores(batchId, 0);
         if (batchVOS == null) {
@@ -63,13 +65,13 @@ public class BatchController {
     }
 
     @RequiresRoles(logical = Logical.OR, value = {"operator", "administrator"})
-    @GetMapping(value = "/get_batch_product")
+    @GetMapping(value = "/get_batch_product")  //  暂时没用到
     public List<ProductVO> getBatchProduct(int batchId) {
         return batchService.getBatchProduct(batchId);
     }
 
     @RequiresRoles(logical = Logical.OR, value = {"operator", "administrator"})
-    @GetMapping(value = "/get_batch_inout")
+    @GetMapping(value = "/get_batch_inout")  //  暂时没用到
     public List<InOutBatchVO> getBatchInout(int batchId, boolean isIn) {
         return batchService.getBatchInout(batchId, isIn);
     }

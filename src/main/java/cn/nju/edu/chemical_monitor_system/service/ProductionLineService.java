@@ -18,4 +18,6 @@ public interface ProductionLineService {
     List<ProductionLineVO> getAll();
 
     List<ProductionLineVO> searchByEnterprise(int eid);
+
+    ProductionLineVO getProductionLine(int plId);
 }

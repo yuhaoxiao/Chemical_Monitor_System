@@ -102,4 +102,11 @@ public class ProductionLineServiceImpl implements ProductionLineService {
 
         return enterpriseOpt.map(enterpriseEntity -> productionLineDao.findByEnterpriseEntity(enterpriseEntity).stream().map(ProductionLineVO::new).collect(Collectors.toList())).orElseGet(ArrayList::new);
     }
+
+    @Override
+    public ProductionLineVO getProductionLine(int plId) {
+        Optional<ProductionLineEntity> productionLineOpt = productionLineDao.findById(plId);
+
+        return productionLineOpt.map(ProductionLineVO::new).orElseGet(() -> new ProductionLineVO("生产线不存在"));
+    }
 }
