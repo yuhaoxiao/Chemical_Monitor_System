@@ -75,7 +75,6 @@ public class EnterpriseServiceImpl implements EnterpriseService {
                 enterpriseEntities.add(enterpriseOpt.get());
             }
         } catch (Exception e) {
-
         }
 
         return enterpriseEntities.stream().map(EnterpriseVO::new).collect(Collectors.toList());

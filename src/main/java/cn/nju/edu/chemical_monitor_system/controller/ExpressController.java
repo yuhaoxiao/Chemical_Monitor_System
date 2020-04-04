@@ -30,13 +30,13 @@ public class ExpressController {
 
     @PostMapping(value = "/output_product/{expressId}")
     @RequiresRoles(value={"operator"})
-    public BaseResponse outputProduct(@PathVariable int expressId) {  // TODO: 修改为返回ExpressProductVO
+    public BaseResponse outputProduct(@PathVariable int expressId) {
         return new BaseResponse(200,"成功", expressService.outputProduct(expressId));
     }
 
     @PostMapping(value = "/input_product/{expressId}")
     @RequiresRoles(value={"operator"})
-    public BaseResponse inputProduct(@PathVariable int expressId) {  // TODO: 修改为返回ExpressProductVO
+    public BaseResponse inputProduct(@PathVariable int expressId) {
         return new BaseResponse(200,"成功", expressService.inputProduct(expressId));
     }
 
