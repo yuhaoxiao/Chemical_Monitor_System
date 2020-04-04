@@ -26,6 +26,21 @@ public class InOutBatchVO {
     public InOutBatchVO(){
 
     }
+    public InOutBatchVO(InOutBatchEntity io) {
+        if (io == null) {
+            this.code = 0;
+            return;
+        }
+        this.inOrOut = io.getInout();
+        this.productId = io.getProductId();
+        this.storeId = io.getStoreId();
+        this.batchId = io.getBatchId();
+        this.inOrOut = io.getInout();
+        this.number = io.getNumber();
+        this.status = InOutBatchStatusEnum.NOT_START.getName();
+        this.finishedNumber = io.getFinishedNumber();
+        this.code = 1;
+    }
     public InOutBatchVO(InOutBatchEntity io, ProductEntity p, Double thisNumber) {
         if (io == null) {
             this.code = 0;
