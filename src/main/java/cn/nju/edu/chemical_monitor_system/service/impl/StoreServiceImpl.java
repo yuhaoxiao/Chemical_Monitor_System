@@ -1,22 +1,17 @@
 package cn.nju.edu.chemical_monitor_system.service.impl;
 
 import cn.nju.edu.chemical_monitor_system.constant.InOutBatchStatusEnum;
+import cn.nju.edu.chemical_monitor_system.dao.EnterpriseDao;
 import cn.nju.edu.chemical_monitor_system.dao.ExpressDao;
 import cn.nju.edu.chemical_monitor_system.dao.InoutBatchDao;
 import cn.nju.edu.chemical_monitor_system.dao.StoreDao;
-import cn.nju.edu.chemical_monitor_system.entity.ExpressEntity;
-import cn.nju.edu.chemical_monitor_system.entity.ExpressProductEntity;
-import cn.nju.edu.chemical_monitor_system.entity.InOutBatchEntity;
-import cn.nju.edu.chemical_monitor_system.entity.StoreEntity;
+import cn.nju.edu.chemical_monitor_system.entity.*;
 import cn.nju.edu.chemical_monitor_system.service.StoreService;
 import cn.nju.edu.chemical_monitor_system.vo.StoreVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @RestController
@@ -30,6 +25,9 @@ public class StoreServiceImpl implements StoreService {
 
     @Autowired
     private ExpressDao expressDao;
+
+    @Autowired
+    private EnterpriseDao enterpriseDao;
 
     @Override
     public List<Integer> getAllStoreId() {
@@ -137,10 +135,10 @@ public class StoreServiceImpl implements StoreService {
             return new StoreVO("仓库id不存在");
         }
 
-        StoreEntity storeEntity = new StoreEntity();
+        StoreEntity storeEntity = storeOpt.get();
         storeEntity.setName(storeVO.getName());
         storeEntity.setEnterpriseId(storeVO.getEnterpriseId());
-        storeEntity.setEnable(storeVO.getEnable());
+        //storeEntity.setEnable(storeVO.getEnable());
         storeDao.saveAndFlush(storeEntity);
         return new StoreVO(storeEntity);
     }
@@ -154,6 +152,7 @@ public class StoreServiceImpl implements StoreService {
             Optional<StoreEntity> storeOpt = storeDao.findById(sid);
 
             if (storeOpt.isPresent()) {
+                storeEntities.clear();
                 storeEntities.add(storeOpt.get());
             }
         } catch (Exception e) {
@@ -161,6 +160,16 @@ public class StoreServiceImpl implements StoreService {
         }
 
         return storeEntities.stream().map(StoreVO::new).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<StoreVO> getAll() {
+        return storeDao.findAll().stream().map(StoreVO::new).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<StoreVO> searchByEnterprise(int eid) {
+        return storeDao.findByEnterpriseId(eid).stream().map(StoreVO::new).collect(Collectors.toList());
     }
 
 

@@ -20,4 +20,8 @@ public interface StoreService {
     StoreVO updateStore(StoreVO storeVO);
 
     List<StoreVO> searchStore(String s);
+
+    List<StoreVO> getAll();
+
+    List<StoreVO> searchByEnterprise(int eid);
 }

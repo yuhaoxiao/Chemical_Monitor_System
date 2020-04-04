@@ -144,7 +144,7 @@ public class UserServiceImpl implements UserService {
         UserEntity userEntity =user.get();
         userEntity.setPassword(userVO.getPassword());
         userEntity.setType(userVO.getType());
-        userEntity.setUserId(userVO.getUserId());
+        //userEntity.setUserId(userVO.getUserId());
         userEntity.setName(userVO.getName());
         userDao.saveAndFlush(userEntity);
         return new UserVO(userEntity);
