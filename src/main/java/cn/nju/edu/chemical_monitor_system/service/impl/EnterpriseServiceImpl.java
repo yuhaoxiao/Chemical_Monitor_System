@@ -54,7 +54,7 @@ public class EnterpriseServiceImpl implements EnterpriseService {
             return new EnterpriseVO("企业id不存在");
         }
 
-        EnterpriseEntity enterpriseEntity = new EnterpriseEntity();
+        EnterpriseEntity enterpriseEntity = enterpriseOpt.get();
         enterpriseEntity.setName(enterpriseVO.getName());
         //enterpriseEntity.setEnterpriseId(enterpriseVO.getEnterpriseId());
         //enterpriseEntity.setEnable(enterpriseVO.getEnterpriseId());

@@ -71,7 +71,7 @@ public class ProductionLineServiceImpl implements ProductionLineService {
             return new ProductionLineVO("企业id不存在");
         }
 
-        ProductionLineEntity productionLineEntity = new ProductionLineEntity();
+        ProductionLineEntity productionLineEntity = productionLineOpt.get();
         productionLineEntity.setEnterpriseEntity(enterpriseOpt.get());
         //productionLineEntity.setProductionLineId(productionLineVO.getProductionLineId());
         //productionLineEntity.setEnable(productionLineVO.getEnable());
