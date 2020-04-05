@@ -16,7 +16,7 @@ public class StoreEntity {
     private int enable;
     private List<StoreProductEntity> storeProductEntities;
     @Id
-    @Column(name = "Storeid")
+    @Column(name = "Store_id")
     public int getStoreId() {
         return storeId;
     }
@@ -26,7 +26,7 @@ public class StoreEntity {
     }
 
     @Basic
-    @Column(name = "Enterpriseid")
+    @Column(name = "Enterprise_id")
     public int getEnterpriseId() {
         return enterpriseId;
     }

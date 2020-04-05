@@ -7,8 +7,7 @@ import cn.nju.edu.chemical_monitor_system.vo.CasVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -39,6 +38,21 @@ public class CasServiceImpl implements CasService {
         } catch (Exception ignored) { }
 
         return casEntities.stream().map(CasVO::new).collect(Collectors.toList());
+    }
+
+    @Override
+    public void init() {
+        Map<Integer, String> map = new HashMap<>();
+        map.put(7722841, "过氧化氢"); map.put(7647145, "氯化钠");
+        map.put(108883, "甲苯"); map.put(7664393, "氢氟酸");
+        List<CasEntity> list = new ArrayList<>();
+        for (Map.Entry<Integer, String> entry: map.entrySet()) {
+            CasEntity casEntity = new CasEntity();
+            casEntity.setCasId(entry.getKey());
+            casEntity.setName(entry.getValue());
+            list.add(casEntity);
+        }
+        casDao.saveAll(list);
     }
 
 }
