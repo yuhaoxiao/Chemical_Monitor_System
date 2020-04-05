@@ -9,4 +9,6 @@ public interface CasService {
     CasVO getCas(int cid);
 
     List<CasVO> searchCas(String key);
+
+    void init();
 }
