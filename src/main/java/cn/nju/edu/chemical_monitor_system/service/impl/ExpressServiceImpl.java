@@ -67,11 +67,11 @@ public class ExpressServiceImpl implements ExpressService {
         Optional<StoreEntity> outputStoreOpt = storeDao.findById(outputStoreId);
 
         if (!inputStoreOpt.isPresent()) {
-            return new ExpressVO("入库仓库id不存在");
+            throw new ExpressException("入库仓库id不存在");
         }
 
         if (!outputStoreOpt.isPresent()) {
-            return new ExpressVO("出库仓库id不存在");
+            throw new ExpressException("出库仓库id不存在");
         }
 
         List<Integer> notSafeProducts=new ArrayList<>();
@@ -140,8 +140,10 @@ public class ExpressServiceImpl implements ExpressService {
     @Override
     public ExpressVO getExpress(int expressId) {
         Optional<ExpressEntity> expressOpt = expressDao.findById(expressId);
-
-        return expressOpt.map(ExpressVO::new).orElseGet(() -> new ExpressVO("物流id不存在"));
+        return expressOpt.map(e->{
+            return new ExpressVO(e,storeDao.findFirstByStoreId(e.getInputStoreId()).getName(),
+                    storeDao.findFirstByStoreId(e.getOutputStoreId()).getName());
+        }).orElseGet(() -> new ExpressVO("物流id不存在"));
 
     }
 

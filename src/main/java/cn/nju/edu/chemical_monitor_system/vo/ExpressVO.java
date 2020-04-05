@@ -18,8 +18,8 @@ public class ExpressVO {
     private int outputUserId;
     private int inputStoreId;
     private int outputStoreId;
-    private String inputStoreName; // TODO
-    private String outputStoreName;  // TODO
+    private String inputStoreName;
+    private String outputStoreName;
     private int code;
     private List<ExpressProductVO> expressProductVOS;
     private String message;
@@ -27,13 +27,25 @@ public class ExpressVO {
     public ExpressVO() {
 
     }
-
+    public ExpressVO(ExpressEntity e,String inputStoreName,String outputStoreName) {
+        if (e == null) {
+            this.code = 0;
+            return;
+        }
+        this.inputStoreName=inputStoreName;
+        this.outputStoreName=outputStoreName;
+        init(e);
+    }
     public ExpressVO(ExpressEntity e) {
         if (e == null) {
             this.code = 0;
             return;
         }
 
+       init(e);
+    }
+
+    private void init(ExpressEntity e){
         this.expressId = e.getExpressId();
         this.outputTime = e.getOutputTime();
         this.inputTime = e.getInputTime();
@@ -51,7 +63,6 @@ public class ExpressVO {
                 .map(ExpressProductVO::new)
                 .collect(Collectors.toList());
     }
-
     public ExpressVO(String message) {
         this.code = 0;
         this.message = message;
