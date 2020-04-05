@@ -175,9 +175,7 @@ public class ExpressServiceImpl implements ExpressService {
 
     @Override
     public List<ExpressProductVO> getProductExpress(int productId) {
-        return expressProductDao.findByProductId(productId).stream().map(ex -> {
-            return new ExpressProductVO(ex,new ProductVO(productDao.findByProductId(ex.getProductId())));
-        }).collect(Collectors.toList());
+        return expressProductDao.findByProductId(productId).stream().map(ex -> new ExpressProductVO(ex,new ProductVO(productDao.findByProductId(ex.getProductId())))).collect(Collectors.toList());
     }
 
     @Override

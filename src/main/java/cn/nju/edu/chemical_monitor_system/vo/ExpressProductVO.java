@@ -16,6 +16,13 @@ public class ExpressProductVO {
     private Double thisNumber;
     private ProductVO productVO;
 
+    public ExpressProductVO(ExpressProductEntity ep) {
+        if (ep == null) {
+            this.code = 0;
+            return;
+        }
+        init(ep,null);
+    }
     public ExpressProductVO(ExpressProductEntity ep, ProductVO productVO) {
         if (ep == null) {
             this.code = 0;
