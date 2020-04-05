@@ -175,8 +175,9 @@ public class ExpressServiceImpl implements ExpressService {
 
     @Override
     public List<ExpressProductVO> getProductExpress(int productId) {
-        return expressProductDao.findByProductId(productId).stream().map(ExpressProductVO::new)
-                .collect(Collectors.toList());
+        return expressProductDao.findByProductId(productId).stream().map(ex -> {
+            return new ExpressProductVO(ex,new ProductVO(productDao.findByProductId(ex.getProductId())));
+        }).collect(Collectors.toList());
     }
 
     @Override
@@ -240,6 +241,8 @@ public class ExpressServiceImpl implements ExpressService {
                 }
                 result=expressProductEntity;
                 expressProductDao.saveAndFlush(expressProductEntity);
+                expressEntity.setStatus(ExpressStatusEnum.OUT_INVENTORY_ING.getCode());
+                expressDao.saveAndFlush(expressEntity);
             }
             if (expressProductEntity.getStatus() == ExpressProductStatusEnum.OUT_INVENTORY.getCode()) {
                 temp++;
@@ -265,7 +268,7 @@ public class ExpressServiceImpl implements ExpressService {
                 }
             }
         });
-        return new ExpressProductVO(result);
+        return new ExpressProductVO(result,result.getOutputNumber(),outputNumber,new ProductVO(productDao.findByProductId(productId)));
     }
 
     @Override
@@ -303,7 +306,7 @@ public class ExpressServiceImpl implements ExpressService {
         List<ExpressProductEntity> expressProductEntities = expressEntity.getExpressProductEntities();
         for (ExpressProductEntity expressProductEntity : expressProductEntities) {
             if (expressProductEntity.getProductId() == productId) {
-                result=new ExpressProductVO(expressProductEntity);
+                result=new ExpressProductVO(expressProductEntity,expressProductEntity.getInputNumber(),inputNumber,new ProductVO(productDao.findByProductId(productId)));
                 double number = expressProductEntity.getNumber();
                 String writeRfid = rfidUtil.write(newRfid, port);
                 if (writeRfid.equals("-1")) {
