@@ -4,6 +4,7 @@ import cn.nju.edu.chemical_monitor_system.request.BatchOutRequest;
 import cn.nju.edu.chemical_monitor_system.request.CreateBatchRequest;
 import cn.nju.edu.chemical_monitor_system.response.BaseResponse;
 import cn.nju.edu.chemical_monitor_system.service.BatchService;
+import cn.nju.edu.chemical_monitor_system.utils.common.UserUtil;
 import cn.nju.edu.chemical_monitor_system.vo.*;
 import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresRoles;
@@ -22,10 +23,12 @@ public class BatchController {
     @Autowired
     private BatchService batchService;
 
+    @Autowired
+    private UserUtil userUtil;
     @RequiresRoles(value = {"operator"})
     @PostMapping(value = "/create_batch")
     public BaseResponse createBatch(@RequestBody CreateBatchRequest createBatchRequest, HttpServletRequest httpServletRequest) {
-        UserVO userVO = (UserVO) httpServletRequest.getSession().getAttribute("User");
+        UserVO userVO = userUtil.getUser();
         return new BaseResponse(200, "success",
                 batchService.createBatch(createBatchRequest.getProductionLineId(),
                 createBatchRequest.getType(), createBatchRequest.getRaws(), userVO.getUserId()));
