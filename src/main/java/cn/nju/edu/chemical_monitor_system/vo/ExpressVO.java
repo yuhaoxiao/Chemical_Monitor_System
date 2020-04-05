@@ -18,6 +18,8 @@ public class ExpressVO {
     private int outputUserId;
     private int inputStoreId;
     private int outputStoreId;
+    private String inputStoreName; // TODO
+    private String outputStoreName;  // TODO
     private int code;
     private List<ExpressProductVO> expressProductVOS;
     private String message;
