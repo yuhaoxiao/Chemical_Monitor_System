@@ -4,6 +4,7 @@ public enum ExpressStatusEnum {
     NOT_START(0, "未开始"),
     OUT_INVENTORY_ING(4,"出库中"),
     OUT_INVENTORY(1, "已出库"),
+    IN_INVENTORY_ING(5,"出库中"),
     IN_INVENTORY(2, "已入库"),
     ERROR(3, "出错");
 

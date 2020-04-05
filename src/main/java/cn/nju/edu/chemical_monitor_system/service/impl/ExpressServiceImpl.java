@@ -317,6 +317,8 @@ public class ExpressServiceImpl implements ExpressService {
                     expressProductEntity.setStatus(ExpressProductStatusEnum.IN_INVENTORY.getCode());//更新状态为已入库
                 }
                 expressProductDao.saveAndFlush(expressProductEntity);
+                expressEntity.setStatus(ExpressStatusEnum.IN_INVENTORY_ING.getCode());
+                expressDao.saveAndFlush(expressEntity);
             }
             if (expressProductEntity.getStatus() == ExpressProductStatusEnum.IN_INVENTORY.getCode()) {
                 temp++;
