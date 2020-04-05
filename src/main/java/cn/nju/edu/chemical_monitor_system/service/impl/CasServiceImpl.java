@@ -7,7 +7,9 @@ import cn.nju.edu.chemical_monitor_system.vo.CasVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class CasServiceImpl implements CasService {
@@ -24,6 +26,19 @@ public class CasServiceImpl implements CasService {
         }
 
         return new CasVO(cas.get());
+    }
+
+    @Override
+    public List<CasVO> searchCas(String key) {
+        List<CasEntity> casEntities = casDao.findByNameLike("%" + key + "%");
+
+        try {
+            int id = Integer.parseInt(key);
+            Optional<CasEntity> cas = casDao.findById(id);
+            cas.ifPresent(casEntities::add);
+        } catch (Exception ignored) { }
+
+        return casEntities.stream().map(CasVO::new).collect(Collectors.toList());
     }
 
 }

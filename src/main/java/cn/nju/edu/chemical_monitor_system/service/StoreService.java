@@ -1,5 +1,6 @@
 package cn.nju.edu.chemical_monitor_system.service;
 
+import cn.nju.edu.chemical_monitor_system.vo.ProductVO;
 import cn.nju.edu.chemical_monitor_system.vo.StoreVO;
 
 import java.util.List;
@@ -24,4 +25,10 @@ public interface StoreService {
     List<StoreVO> getAll();
 
     List<StoreVO> searchByEnterprise(int eid);
+
+    List<ProductVO> getAllStoreProducts(int storeId);
+
+    List<StoreVO> searchStoresByCAS(int casId);
+
+    List<ProductVO> searchProductsByStoreAndCAS(int storeId, int casId);
 }
