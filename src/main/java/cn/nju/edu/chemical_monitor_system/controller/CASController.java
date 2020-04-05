@@ -28,8 +28,7 @@ public class CASController {
 
     @GetMapping(value = "/search_cas/{key}")
     @RequiresRoles(logical = Logical.OR, value = {"operator", "administrator", "monitor"})
-    public BaseResponse searchCas(@PathVariable String key) {  // TODO: 根据关键词查询化学品（或直接是casId）
-        List<CasVO> data = new ArrayList<>();
-        return new BaseResponse(200, "success", data);
+    public BaseResponse searchCas(@PathVariable String key) {  // 根据关键词查询化学品（或直接是casId）
+        return new BaseResponse(200, "success", casService.searchCas(key));
     }
 }

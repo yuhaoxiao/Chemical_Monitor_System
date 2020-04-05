@@ -1,12 +1,10 @@
 package cn.nju.edu.chemical_monitor_system.service.impl;
 
 import cn.nju.edu.chemical_monitor_system.constant.InOutBatchStatusEnum;
-import cn.nju.edu.chemical_monitor_system.dao.EnterpriseDao;
-import cn.nju.edu.chemical_monitor_system.dao.ExpressDao;
-import cn.nju.edu.chemical_monitor_system.dao.InoutBatchDao;
-import cn.nju.edu.chemical_monitor_system.dao.StoreDao;
+import cn.nju.edu.chemical_monitor_system.dao.*;
 import cn.nju.edu.chemical_monitor_system.entity.*;
 import cn.nju.edu.chemical_monitor_system.service.StoreService;
+import cn.nju.edu.chemical_monitor_system.vo.ProductVO;
 import cn.nju.edu.chemical_monitor_system.vo.StoreVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
@@ -27,7 +25,10 @@ public class StoreServiceImpl implements StoreService {
     private ExpressDao expressDao;
 
     @Autowired
-    private EnterpriseDao enterpriseDao;
+    private StoreProductDao storeProductDao;
+
+    @Autowired
+    private CasDao casDao;
 
     @Override
     public List<Integer> getAllStoreId() {
@@ -170,6 +171,40 @@ public class StoreServiceImpl implements StoreService {
     @Override
     public List<StoreVO> searchByEnterprise(int eid) {
         return storeDao.findByEnterpriseId(eid).stream().map(StoreVO::new).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ProductVO> getAllStoreProducts(int storeId) {
+        Optional<StoreEntity> storeOpt = storeDao.findById(storeId);
+        return storeOpt.map(storeEntity -> storeProductDao.findByStoreEntityAndNumberGreaterThan(storeEntity, 0).stream().map(ProductVO::new).collect(Collectors.toList())).orElseGet(ArrayList::new);
+    }
+
+    @Override
+    public List<StoreVO> searchStoresByCAS(int casId) {
+        Optional<CasEntity> casOpt = casDao.findById(casId);
+        if (!casOpt.isPresent())
+            return new ArrayList<>();
+        Set<StoreEntity> storeEntitySet = new HashSet<>();
+        for (ProductEntity productEntity: casOpt.get().getProductEntities()) {
+            for (StoreProductEntity storeProductEntity: productEntity.getStoreProductEntities()) {
+                if (storeProductEntity.getNumber() > 0)
+                    storeEntitySet.add(storeProductEntity.getStoreEntity());
+            }
+        }
+        return storeEntitySet.stream().map(StoreVO::new).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ProductVO> searchProductsByStoreAndCAS(int storeId, int casId) {
+        Optional<StoreEntity> storeOpt = storeDao.findById(storeId);
+        List<ProductVO> list = new ArrayList<>();
+        if (!storeOpt.isPresent())
+            return list;
+        for (StoreProductEntity storeProductEntity: storeProductDao.findByStoreEntityAndNumberGreaterThan(storeOpt.get(), 0)) {
+            if (storeProductEntity.getProductEntity().getCasEntity().getCasId() == casId)
+                list.add(new ProductVO(storeProductEntity));
+        }
+        return list;
     }
 
 

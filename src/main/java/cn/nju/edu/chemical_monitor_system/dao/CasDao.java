@@ -9,4 +9,6 @@ import java.util.List;
 public interface CasDao extends JpaRepository<CasEntity, Serializable> {
 
     List<CasEntity> findAllByOrderByCasId();
+
+    List<CasEntity> findByNameLike(String s);
 }
