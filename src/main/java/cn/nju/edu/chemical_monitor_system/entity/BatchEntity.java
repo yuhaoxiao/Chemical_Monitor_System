@@ -22,6 +22,7 @@ public class BatchEntity {
 
     @Id
     @Column(name = "Batch_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public int getBatchId() {
         return batchId;
     }

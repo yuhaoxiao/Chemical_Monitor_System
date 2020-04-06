@@ -5,13 +5,15 @@ import cn.nju.edu.chemical_monitor_system.request.CreateBatchRequest;
 import cn.nju.edu.chemical_monitor_system.response.BaseResponse;
 import cn.nju.edu.chemical_monitor_system.service.BatchService;
 import cn.nju.edu.chemical_monitor_system.utils.common.UserUtil;
-import cn.nju.edu.chemical_monitor_system.vo.*;
+import cn.nju.edu.chemical_monitor_system.vo.InOutBatchVO;
+import cn.nju.edu.chemical_monitor_system.vo.ProductVO;
+import cn.nju.edu.chemical_monitor_system.vo.StoreVO;
+import cn.nju.edu.chemical_monitor_system.vo.UserVO;
 import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,7 +29,7 @@ public class BatchController {
     private UserUtil userUtil;
     @RequiresRoles(value = {"operator"})
     @PostMapping(value = "/create_batch")
-    public BaseResponse createBatch(@RequestBody CreateBatchRequest createBatchRequest, HttpServletRequest httpServletRequest) {
+    public BaseResponse createBatch(@RequestBody CreateBatchRequest createBatchRequest) {
         UserVO userVO = userUtil.getUser();
         return new BaseResponse(200, "success",
                 batchService.createBatch(createBatchRequest.getProductionLineId(),
