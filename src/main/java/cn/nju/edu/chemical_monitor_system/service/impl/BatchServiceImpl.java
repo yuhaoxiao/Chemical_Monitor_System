@@ -133,7 +133,7 @@ public class BatchServiceImpl implements BatchService {
 
         for (ProductEntity productEntity : productEntities) {
             InOutBatchEntity inOutBatchEntity = new InOutBatchEntity();
-            inOutBatchEntity.setInout(1);
+            inOutBatchEntity.setInout(0);
             inOutBatchEntity.setFinishedNumber(0.0);
             inOutBatchEntity.setStatus(InOutBatchStatusEnum.NOT_START.getName());
             inOutBatchEntity.setNumber(productEntity.getNumber());
