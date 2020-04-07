@@ -11,7 +11,7 @@ public class BatchOutRequest {
     private List<ProductRequest> products;
 
     @Data
-    public class ProductRequest { // 新建product和outbatch
+    public static class ProductRequest { // 新建product和outbatch
         private int casId;
         private int storeId;
         private double number;

@@ -17,6 +17,7 @@ public class StoreEntity {
     private List<StoreProductEntity> storeProductEntities;
     @Id
     @Column(name = "Store_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public int getStoreId() {
         return storeId;
     }

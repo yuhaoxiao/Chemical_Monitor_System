@@ -32,6 +32,7 @@ public class InOutBatchEntity {
 
     @Id
     @Column(name = "Inout_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public int getInOutId() {
         return inOutId;
     }
