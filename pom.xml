@@ -146,6 +146,18 @@
             <artifactId>spring-boot-test</artifactId>
             <version>2.2.2.RELEASE</version>
         </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.4</version>
+        </dependency>
+        <dependency>
+            <groupId>com.rfid.util</groupId>
+            <artifactId>com.rfid.util</artifactId>
+            <version>1.0</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/RFID.jar</systemPath>
+        </dependency>
     </dependencies>
     <build>
         <plugins>
