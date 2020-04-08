@@ -333,7 +333,7 @@ public class ExpressServiceImpl implements ExpressService {
                 */
                 if(expressProductEntity.getStatus()==ExpressProductStatusEnum.IN_INVENTORY.getCode()){
                     throw new ExpressException("该产品已经入库");
-                }else if(expressProductEntity.getOutputNumber() + inputNumber>number){
+                }else if(expressProductEntity.getInputNumber() + inputNumber>number){
                     throw new ExpressException("本次出库将超过准入量");
                 }
                 expressProductEntity.setInputNumber(expressProductEntity.getInputNumber() + inputNumber);
