@@ -323,7 +323,6 @@ public class ExpressServiceImpl implements ExpressService {
         List<ExpressProductEntity> expressProductEntities = expressEntity.getExpressProductEntities();
         for (ExpressProductEntity expressProductEntity : expressProductEntities) {
             if (expressProductEntity.getProductId() == productId) {
-                result=new ExpressProductVO(expressProductEntity,expressProductEntity.getInputNumber(),inputNumber,new ProductVO(productDao.findByProductId(productId)));
                 double number = expressProductEntity.getNumber();
                 /*
                 String writeRfid = rfidUtil.write(newRfid, port);
@@ -334,12 +333,13 @@ public class ExpressServiceImpl implements ExpressService {
                 if(expressProductEntity.getStatus()==ExpressProductStatusEnum.IN_INVENTORY.getCode()){
                     throw new ExpressException("该产品已经入库");
                 }else if(expressProductEntity.getInputNumber() + inputNumber>number){
-                    throw new ExpressException("本次出库将超过准入量");
+                    throw new ExpressException("本次入库将超过准入量");
                 }
                 expressProductEntity.setInputNumber(expressProductEntity.getInputNumber() + inputNumber);
                 if (expressProductEntity.getInputNumber() == number) {
                     expressProductEntity.setStatus(ExpressProductStatusEnum.IN_INVENTORY.getCode());//更新状态为已入库
                 }
+                result=new ExpressProductVO(expressProductEntity,expressProductEntity.getInputNumber(),inputNumber,new ProductVO(productDao.findByProductId(productId)));
                 expressProductDao.saveAndFlush(expressProductEntity);
                 expressEntity.setStatus(ExpressStatusEnum.IN_INVENTORY_ING.getCode());
                 expressDao.saveAndFlush(expressEntity);
