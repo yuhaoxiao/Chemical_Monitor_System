@@ -177,22 +177,21 @@ public class StoreServiceImpl implements StoreService {
 
     @Override
     public List<ProductVO> getAllStoreProducts(int storeId) {
-        List<ProductEntity> productEntities = storeDao.findFirstByStoreId(storeId).getStoreProductEntities()
-                .stream().map(StoreProductEntity::getProductEntity).collect(Collectors.toList());
+        List<StoreProductEntity> storeProductEntities = storeDao.findFirstByStoreId(storeId).getStoreProductEntities();
         List<ExpressEntity> expressEntities=expressDao.findByOutputStoreId(storeId).stream()
                 .filter(e->e.getStatus()== ExpressStatusEnum.NOT_START.getCode()||e.getStatus()== ExpressStatusEnum.OUT_INVENTORY_ING.getCode()).collect(Collectors.toList());
         for(ExpressEntity expressEntity:expressEntities){
             List<ExpressProductEntity> expressProductEntities = expressEntity.getExpressProductEntities();
             for(ExpressProductEntity e1:expressProductEntities){
                 double number=e1.getNumber()-e1.getOutputNumber();
-                for(ProductEntity productEntity:productEntities){
-                    if(productEntity.getProductId()==e1.getProductId()){
-                        productEntity.setNumber(productEntity.getNumber()-number);
+                for(StoreProductEntity storeProductEntity:storeProductEntities){
+                    if(storeProductEntity.getProductEntity().getProductId()==e1.getProductId()){
+                        storeProductEntity.setNumber(storeProductEntity.getNumber()-number);
                     }
                 }
             }
         }
-        return productEntities.stream().map(ProductVO::new).collect(Collectors.toList());
+        return storeProductEntities.stream().map(ProductVO::new).collect(Collectors.toList());
     }
 
     @Override
