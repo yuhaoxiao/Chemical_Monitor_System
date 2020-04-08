@@ -1,5 +1,6 @@
 package cn.nju.edu.chemical_monitor_system.service.impl;
 
+import cn.nju.edu.chemical_monitor_system.constant.ExpressStatusEnum;
 import cn.nju.edu.chemical_monitor_system.constant.InOutBatchStatusEnum;
 import cn.nju.edu.chemical_monitor_system.dao.*;
 import cn.nju.edu.chemical_monitor_system.entity.*;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @RestController
 public class StoreServiceImpl implements StoreService {
@@ -175,8 +177,22 @@ public class StoreServiceImpl implements StoreService {
 
     @Override
     public List<ProductVO> getAllStoreProducts(int storeId) {
-        Optional<StoreEntity> storeOpt = storeDao.findById(storeId);
-        return storeOpt.map(storeEntity -> storeProductDao.findByStoreEntityAndNumberGreaterThan(storeEntity, 0).stream().map(ProductVO::new).collect(Collectors.toList())).orElseGet(ArrayList::new);
+        List<ProductEntity> productEntities = storeDao.findFirstByStoreId(storeId).getStoreProductEntities()
+                .stream().map(StoreProductEntity::getProductEntity).collect(Collectors.toList());
+        List<ExpressEntity> expressEntities=expressDao.findByOutputStoreId(storeId).stream()
+                .filter(e->e.getStatus()== ExpressStatusEnum.NOT_START.getCode()).collect(Collectors.toList());
+        for(ExpressEntity expressEntity:expressEntities){
+            List<ExpressProductEntity> expressProductEntities = expressEntity.getExpressProductEntities();
+            for(ExpressProductEntity e1:expressProductEntities){
+                double number=e1.getNumber()-e1.getOutputNumber();
+                for(ProductEntity productEntity:productEntities){
+                    if(productEntity.getProductId()==e1.getProductId()){
+                        productEntity.setNumber(productEntity.getNumber()-number);
+                    }
+                }
+            }
+        }
+        return productEntities.stream().map(ProductVO::new).collect(Collectors.toList());
     }
 
     @Override
