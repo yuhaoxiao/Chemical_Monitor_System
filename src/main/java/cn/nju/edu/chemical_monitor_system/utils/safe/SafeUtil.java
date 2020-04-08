@@ -36,13 +36,27 @@ public class SafeUtil {
         c1.setName("product0");
         ProductEntity p1 = new ProductEntity();
         p1.setCasEntity(c1);
-
+        c1.setBoilingPoint(new Random().nextDouble()*10);
+        c1.setExistType(new Random().nextInt()*10);
+        c1.setExplosion(new Random().nextInt()*10);
+        c1.setFusionPoint(new Random().nextDouble()*10);
+        c1.setInflammability(new Random().nextInt()*10);
+        c1.setIsOrganic(new Random().nextInt());
+        c1.setOxidation(new Random().nextInt());
+        c1.setReducibility(new Random().nextInt());
         p1.setProductId(0);
         for (int i = 1; i < 10; i++) {
             ProductEntity p = new ProductEntity();
             p.setProductId(i);
             CasEntity c = new CasEntity();
-
+            c.setBoilingPoint(new Random().nextDouble()*10);
+            c.setExistType(new Random().nextInt()*10);
+            c.setExplosion(new Random().nextInt()*10);
+            c.setFusionPoint(new Random().nextDouble()*10);
+            c.setInflammability(new Random().nextInt()*10);
+            c.setIsOrganic(new Random().nextInt());
+            c.setOxidation(new Random().nextInt());
+            c.setReducibility(new Random().nextInt());
             c.setName("product" + i);
             p.setCasEntity(c);
             productEntities.add(p);
