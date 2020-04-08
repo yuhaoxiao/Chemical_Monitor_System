@@ -85,7 +85,7 @@ public class ExpressServiceImpl implements ExpressService {
                 s.append(productId);
                 s.append(" ");
             }
-            s.append("的商品不能入库");
+            s.append("的商品不能在").append(inputStoreOpt.get().getName()).append("仓库存放");
             ExpressVO result=new ExpressVO();
             result.setCode(0);
             result.setMessage(s.toString());

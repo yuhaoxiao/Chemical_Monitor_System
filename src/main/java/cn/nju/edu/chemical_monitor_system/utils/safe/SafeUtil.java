@@ -99,6 +99,9 @@ public class SafeUtil {
         for (int i = 0; i < storeIds.size(); i++) {
             List<Product> products = storeDao.findFirstByStoreId(storeIds.get(i)).getStoreProductEntities()
                     .stream().map(StoreProductEntity::getProductEntity).map(Product::new).collect(Collectors.toList());
+            if(products.size()==0){
+                continue;
+            }
             Cluster cluster = new Cluster();
             cluster.addAll(products);
             cluster.updateCenter();
