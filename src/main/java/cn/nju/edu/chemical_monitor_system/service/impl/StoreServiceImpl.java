@@ -180,7 +180,7 @@ public class StoreServiceImpl implements StoreService {
         List<ProductEntity> productEntities = storeDao.findFirstByStoreId(storeId).getStoreProductEntities()
                 .stream().map(StoreProductEntity::getProductEntity).collect(Collectors.toList());
         List<ExpressEntity> expressEntities=expressDao.findByOutputStoreId(storeId).stream()
-                .filter(e->e.getStatus()== ExpressStatusEnum.NOT_START.getCode()).collect(Collectors.toList());
+                .filter(e->e.getStatus()== ExpressStatusEnum.NOT_START.getCode()||e.getStatus()== ExpressStatusEnum.OUT_INVENTORY_ING.getCode()).collect(Collectors.toList());
         for(ExpressEntity expressEntity:expressEntities){
             List<ExpressProductEntity> expressProductEntities = expressEntity.getExpressProductEntities();
             for(ExpressProductEntity e1:expressProductEntities){
