@@ -105,7 +105,7 @@ public class RfidUtil {
                 }
             }
             ExpressEntity express = expressDao.findFirstByExpressId(expressId);
-            List<ExpressProductEntity> expressProductEntities=null;
+            List<ExpressProductEntity> expressProductEntities;
             if(!in) {
                 expressProductEntities = express.getExpressProductEntities().stream().filter(e -> e.getStatus() == ExpressProductStatusEnum.NOT_START.getCode()).collect(Collectors.toList());
             }else{

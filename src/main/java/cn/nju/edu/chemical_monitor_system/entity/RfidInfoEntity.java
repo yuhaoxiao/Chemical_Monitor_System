@@ -38,11 +38,11 @@ public class RfidInfoEntity {
     }
 
     public RfidInfoEntity(ExpressProductEntity expressProductEntity) {
-        productId = expressProductEntity.getProductId();
-        expressId = expressProductEntity.getExpressEntity().getExpressId();
-        batchId = 0;
-        number = expressProductEntity.getNumber() / 2;
-        casId = 0;
+        this.productId = expressProductEntity.getProductId();
+        this.expressId = expressProductEntity.getExpressEntity().getExpressId();
+        this.batchId = 0;
+        this.number = expressProductEntity.getNumber() / 2;
+        this.casId = 0;
     }
 
 }

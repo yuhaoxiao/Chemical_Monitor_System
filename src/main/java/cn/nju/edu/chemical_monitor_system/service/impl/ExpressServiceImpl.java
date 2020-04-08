@@ -261,9 +261,11 @@ public class ExpressServiceImpl implements ExpressService {
         if(result==null){
             throw new ExpressException("该商品不在该物流批次内，请重新扫描");
         }
+        ExpressProductVO ex=new ExpressProductVO(result,result.getOutputNumber(),outputNumber,new ProductVO(productDao.findByProductId(productId)));
         //全部出库
         if (temp == expressProductEntities.size()) {
             outputExpress(expressEntity);
+            ex.setCode(2);
         }
 
         storeEntity.getStoreProductEntities().forEach(x->{
@@ -278,7 +280,7 @@ public class ExpressServiceImpl implements ExpressService {
                 }
             }
         });
-        return new ExpressProductVO(result,result.getOutputNumber(),outputNumber,new ProductVO(productDao.findByProductId(productId)));
+        return ex;
     }
 
     @Override
