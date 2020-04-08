@@ -28,13 +28,13 @@ public class RfidInfoEntity {
         number = Double.parseDouble(s.substring(21, 28));
     }
 
-    public String ToString() {
+    @Override
+    public String toString() {
         return StringUtils.leftPad(productId + "", 3, "0")
                 + StringUtils.leftPad(batchId + "", 6, "0")
                 + StringUtils.leftPad(casId + "", 7, "0")
                 + StringUtils.leftPad(expressId + "", 5, "0")
                 + StringUtils.leftPad(number + "", 7, "0");
-
     }
 
     public RfidInfoEntity(ExpressProductEntity expressProductEntity) {
