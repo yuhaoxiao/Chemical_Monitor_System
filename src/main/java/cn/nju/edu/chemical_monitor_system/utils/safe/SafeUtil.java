@@ -2,8 +2,10 @@ package cn.nju.edu.chemical_monitor_system.utils.safe;
 
 import cn.nju.edu.chemical_monitor_system.constant.ConstantVariables;
 import cn.nju.edu.chemical_monitor_system.dao.ProductDao;
+import cn.nju.edu.chemical_monitor_system.dao.StoreDao;
 import cn.nju.edu.chemical_monitor_system.entity.CasEntity;
 import cn.nju.edu.chemical_monitor_system.entity.ProductEntity;
+import cn.nju.edu.chemical_monitor_system.entity.StoreProductEntity;
 import cn.nju.edu.chemical_monitor_system.service.ProductService;
 import cn.nju.edu.chemical_monitor_system.service.StoreService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 @Service
@@ -24,6 +27,8 @@ public class SafeUtil {
 
     @Autowired
     ProductDao productDao;
+    @Autowired
+    StoreDao storeDao;
 
     public static void main(String[] args) {
         List<ProductEntity> productEntities = new ArrayList<>();
@@ -31,11 +36,13 @@ public class SafeUtil {
         c1.setName("product0");
         ProductEntity p1 = new ProductEntity();
         p1.setCasEntity(c1);
+
         p1.setProductId(0);
         for (int i = 1; i < 10; i++) {
             ProductEntity p = new ProductEntity();
             p.setProductId(i);
             CasEntity c = new CasEntity();
+
             c.setName("product" + i);
             p.setCasEntity(c);
             productEntities.add(p);
@@ -76,9 +83,8 @@ public class SafeUtil {
         double min = Double.MAX_VALUE;
         double targetStoreDistance = 0;
         for (int i = 0; i < storeIds.size(); i++) {
-            List<Integer> productIds = new ArrayList<>(storeService.getStoreProduct(storeIds.get(i)).keySet());
-            List<Product> products = productIds.stream()
-                    .map(id -> new Product(productDao.findById(id).get())).collect(Collectors.toList());
+            List<Product> products = storeDao.findFirstByStoreId(storeIds.get(i)).getStoreProductEntities()
+                    .stream().map(StoreProductEntity::getProductEntity).map(Product::new).collect(Collectors.toList());
             Cluster cluster = new Cluster();
             cluster.addAll(products);
             cluster.updateCenter();
