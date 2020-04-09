@@ -161,12 +161,12 @@ public class HistoryServiceImpl implements HistoryService {
                 if(struct==0) {
                     expressProductEntities= expressProductDao.findByProductId(temp.getProductId()).stream()
                             .filter(e -> e.getExpressEntity().getInputStoreId() == temp.getStoreId()
-                                    &&(!expressIds.contains(e.getExpressEntity().getExpressId())))
+                                    &&expressIds.contains(e.getExpressEntity().getExpressId()))
                             .collect(Collectors.toList());
                 }else{
                     expressProductEntities= expressProductDao.findByProductId(temp.getProductId()).stream()
                             .filter(e -> e.getExpressEntity().getOutputStoreId() == temp.getStoreId()
-                                    &&(!expressIds.contains(e.getExpressEntity().getExpressId())))
+                                    &&expressIds.contains(e.getExpressEntity().getExpressId()))
                             .collect(Collectors.toList());
                 }
                 if (expressProductEntities.size() != 0) {
