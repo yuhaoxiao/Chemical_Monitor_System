@@ -11,10 +11,7 @@ import cn.nju.edu.chemical_monitor_system.vo.NodeVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 @Service
 public class HistoryServiceImpl implements HistoryService {
@@ -39,6 +36,8 @@ public class HistoryServiceImpl implements HistoryService {
     //struct为0表示原料历史，为1表示产品用途
     private int struct;
 
+    private static HashSet<Integer> expressIds=new HashSet<>();
+
     @Override
     public Map<String,Map> getHistory(int batchId){
         HistoryNode historyNode=getBeforeHistory(batchId,0);
@@ -49,6 +48,7 @@ public class HistoryServiceImpl implements HistoryService {
 
         nodes.clear();
         links.clear();
+        expressIds.clear();
 
         historyNode=getBeforeHistory(batchId,1);
         goHistory(historyNode);
@@ -160,16 +160,21 @@ public class HistoryServiceImpl implements HistoryService {
                 //过滤，剩下那些仓库信息符合的物流
                 if(struct==0) {
                     expressProductEntities= expressProductDao.findByProductId(temp.getProductId()).stream()
-                            .filter(e -> e.getExpressEntity().getInputStoreId() == temp.getStoreId()).collect(Collectors.toList());
+                            .filter(e -> e.getExpressEntity().getInputStoreId() == temp.getStoreId()
+                                    &&(!expressIds.contains(e.getExpressEntity().getExpressId())))
+                            .collect(Collectors.toList());
                 }else{
                     expressProductEntities= expressProductDao.findByProductId(temp.getProductId()).stream()
-                            .filter(e -> e.getExpressEntity().getOutputStoreId() == temp.getStoreId()).collect(Collectors.toList());
+                            .filter(e -> e.getExpressEntity().getOutputStoreId() == temp.getStoreId()
+                                    &&(!expressIds.contains(e.getExpressEntity().getExpressId())))
+                            .collect(Collectors.toList());
                 }
                 if (expressProductEntities.size() != 0) {
                     List<HistoryNode> historyNodes = new ArrayList<>();
                     List<Double> l=new ArrayList<>();
                     HistoryNode h = new HistoryNode();
                     ExpressProductEntity expressProductEntity = expressProductEntities.get(0);//原则上也就只能查出一个
+                    expressIds.add(expressProductEntity.getExpressEntity().getExpressId());
                     //更新storeId、batchId才能进一步递归查出新数据
                     h.setNumber(expressProductEntity.getNumber());
                     l.add(expressProductEntity.getNumber());
