@@ -86,9 +86,11 @@ public class HistoryServiceImpl implements HistoryService {
         NodeVO nodeVO=new NodeVO();
         nodeVO.setBatchId(historyNode.getBatchId());
         nodeVO.setType(historyNode.getType());
-        nodeVO.setProductName(productDao.findByProductId(historyNode.getProductId()).getCasEntity().getName());
-        nodeVO.setStoreName(storeDao.findFirstByStoreId(historyNode.getStoreId()).getName());
-        nodeVO.setBatchType(batchDao.findFirstByBatchId(historyNode.getBatchId()).getType());
+        if(historyNode.getType()!=2) {
+            nodeVO.setProductName(productDao.findByProductId(historyNode.getProductId()).getCasEntity().getName());
+            nodeVO.setStoreName(storeDao.findFirstByStoreId(historyNode.getStoreId()).getName());
+            nodeVO.setBatchType(batchDao.findFirstByBatchId(historyNode.getBatchId()).getType());
+        }
         return nodeVO;
     }
     public HistoryNode getBeforeHistory(int batchId,int struct) {
