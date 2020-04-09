@@ -52,9 +52,9 @@ public class ExpressController {
         return new BaseResponse(200,"成功",expressService.getExpress(expressId));
     }
 
-    @GetMapping(value = "/reverse_express/{expressId}")
+    @PostMapping(value = "/reverse_express/{expressId}")
     @RequiresRoles(logical = Logical.OR, value={"operator"})
-    public BaseResponse reverseExpress(@PathVariable int expressId) {  // TODO: 未开始物流单直接取消
+    public BaseResponse reverseExpress(@PathVariable int expressId) {
         return new BaseResponse(200,"成功",expressService.reverseExpress(expressId));
     }
 
