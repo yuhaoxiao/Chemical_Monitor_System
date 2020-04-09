@@ -170,26 +170,27 @@ public class HistoryServiceImpl implements HistoryService {
                             .collect(Collectors.toList());
                 }
                 if (expressProductEntities.size() != 0) {
-                    List<HistoryNode> historyNodes = new ArrayList<>();
-                    List<Double> l=new ArrayList<>();
-                    HistoryNode h = new HistoryNode();
-                    ExpressProductEntity expressProductEntity = expressProductEntities.get(0);//原则上也就只能查出一个
-                    expressIds.add(expressProductEntity.getExpressEntity().getExpressId());
-                    //更新storeId、batchId才能进一步递归查出新数据
-                    h.setNumber(expressProductEntity.getNumber());
-                    l.add(expressProductEntity.getNumber());
-                    if(struct==0) {
-                        h.setStoreId(expressProductEntity.getExpressEntity().getOutputStoreId());
-                    }else{
-                        h.setStoreId(expressProductEntity.getExpressEntity().getInputStoreId());
+                    expressIds.addAll(expressProductEntities.stream().map(e->e.getExpressEntity().getExpressId()).collect(Collectors.toList()));
+                    for(ExpressProductEntity expressProductEntity:expressProductEntities) {
+                        List<HistoryNode> historyNodes = new ArrayList<>();
+                        List<Double> l = new ArrayList<>();
+                        HistoryNode h = new HistoryNode();
+                        //更新storeId、batchId才能进一步递归查出新数据
+                        h.setNumber(expressProductEntity.getNumber());
+                        l.add(expressProductEntity.getNumber());
+                        if (struct == 0) {
+                            h.setStoreId(expressProductEntity.getExpressEntity().getOutputStoreId());
+                        } else {
+                            h.setStoreId(expressProductEntity.getExpressEntity().getInputStoreId());
+                        }
+                        h.setBatchId(temp.getBatchId());
+                        h.setProductId(temp.getProductId());
+                        h.setType(HistoryEnum.PRODUCT.getCode());
+                        historyNodes.add(h);
+                        temp.setHistoryNodes(historyNodes);
+                        temp.setNums(l);
+                        goBeforeHistory(temp);
                     }
-                    h.setBatchId(temp.getBatchId());
-                    h.setProductId(temp.getProductId());
-                    h.setType(HistoryEnum.PRODUCT.getCode());
-                    historyNodes.add(h);
-                    temp.setHistoryNodes(historyNodes);
-                    temp.setNums(l);
-                    goBeforeHistory(temp);
                 }
             }
         }
