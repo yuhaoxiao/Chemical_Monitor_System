@@ -89,6 +89,8 @@ public class HistoryServiceImpl implements HistoryService {
         if(historyNode.getType()!=2) {
             nodeVO.setProductName(productDao.findByProductId(historyNode.getProductId()).getCasEntity().getName());
             nodeVO.setStoreName(storeDao.findFirstByStoreId(historyNode.getStoreId()).getName());
+        }
+        else{
             nodeVO.setBatchType(batchDao.findFirstByBatchId(historyNode.getBatchId()).getType());
         }
         return nodeVO;
