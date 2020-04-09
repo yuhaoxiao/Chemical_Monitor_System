@@ -170,14 +170,12 @@ public class HistoryServiceImpl implements HistoryService {
                             .collect(Collectors.toList());
                 }
                 if (expressProductEntities.size() != 0) {
-                    expressIds.addAll(expressProductEntities.stream().map(e->e.getExpressEntity().getExpressId()).collect(Collectors.toList()));
+                    List<HistoryNode> historyNodes = new ArrayList<>();
+                    List<Double> l = new ArrayList<>();
                     for(ExpressProductEntity expressProductEntity:expressProductEntities) {
-                        List<HistoryNode> historyNodes = new ArrayList<>();
-                        List<Double> l = new ArrayList<>();
                         HistoryNode h = new HistoryNode();
                         //更新storeId、batchId才能进一步递归查出新数据
                         h.setNumber(expressProductEntity.getNumber());
-                        l.add(expressProductEntity.getNumber());
                         if (struct == 0) {
                             h.setStoreId(expressProductEntity.getExpressEntity().getOutputStoreId());
                         } else {
@@ -187,10 +185,12 @@ public class HistoryServiceImpl implements HistoryService {
                         h.setProductId(temp.getProductId());
                         h.setType(HistoryEnum.PRODUCT.getCode());
                         historyNodes.add(h);
-                        temp.setHistoryNodes(historyNodes);
-                        temp.setNums(l);
-                        goBeforeHistory(temp);
+                        l.add(expressProductEntity.getNumber());
+                        expressIds.add(expressProductEntity.getExpressEntity().getExpressId());
                     }
+                    temp.setHistoryNodes(historyNodes);
+                    temp.setNums(l);
+                    goBeforeHistory(temp);
                 }
             }
         }
