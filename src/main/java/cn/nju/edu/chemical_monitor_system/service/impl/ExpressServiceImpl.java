@@ -18,7 +18,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -153,6 +156,7 @@ public class ExpressServiceImpl implements ExpressService {
         }
         if(expressEntity.getStatus()==ExpressStatusEnum.NOT_START.getCode()){
             expressEntity.setStatus(ExpressStatusEnum.ERROR.getCode());
+            expressDao.saveAndFlush(expressEntity);
             return new ExpressVO(expressEntity);
         }
         ExpressEntity reverseExpress = new ExpressEntity();
@@ -167,8 +171,8 @@ public class ExpressServiceImpl implements ExpressService {
             expressProductEntity.setStatus(ExpressProductStatusEnum.NOT_START.getCode());
             return expressProductEntity;
         }).collect(Collectors.toList()));
-        expressDao.save(expressEntity);
-        ExpressVO expressVO = new ExpressVO(expressEntity);
+        expressDao.saveAndFlush(reverseExpress);
+        ExpressVO expressVO = new ExpressVO(reverseExpress);
         kafkaUtil.sendExpress(expressVO);
         return expressVO;
     }
