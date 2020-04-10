@@ -4,6 +4,11 @@ spring:
     password: 123456
     url: jdbc:mysql://49.234.54.34:3306/mydb
     driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      minimum-idle: 3
+      max-lifetime: 30000
+      connection-test-query: SELECT 1
+      maximum-pool-size: 10
   jpa:
     hibernate:
       ddl-auto: none
