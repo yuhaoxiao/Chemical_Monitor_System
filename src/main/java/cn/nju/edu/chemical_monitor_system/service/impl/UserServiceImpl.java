@@ -39,7 +39,7 @@ public class UserServiceImpl implements UserService {
     private RedisUtil redisUtil;
 
 
-
+    @Override
     public UserVO login(String name, String password, HttpServletResponse httpServletResponse) {
         UserEntity user = userDao.findFirstByName(name);
         if (user.getPassword().equals(password)) {
@@ -56,7 +56,7 @@ public class UserServiceImpl implements UserService {
             throw new UnauthorizedException("密码错误");
         }
     }
-
+    @Override
     public UserVO register(String name, String password, String type) {
         UserEntity u = userDao.findFirstByName(name);
 
@@ -72,7 +72,7 @@ public class UserServiceImpl implements UserService {
         userDao.saveAndFlush(user);
         return new UserVO(user);
     }
-
+    @Override
     public UserVO getUser(int uid) {
         Optional<UserEntity> user = userDao.findById(uid);
 

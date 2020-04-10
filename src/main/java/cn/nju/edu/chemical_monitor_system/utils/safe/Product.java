@@ -76,4 +76,8 @@ public class Product {
         return Arrays.toString(nums);
     }
 
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
 }

@@ -14,9 +14,16 @@ public class NodeVO {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         NodeVO nodeVO = (NodeVO) o;
+        if(nodeVO.getType()==1){
+            return false;
+        }
         return batchId == nodeVO.batchId &&
                 type == nodeVO.type &&
                 Objects.equals(productName, nodeVO.productName) &&
