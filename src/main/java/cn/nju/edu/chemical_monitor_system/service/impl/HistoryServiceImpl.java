@@ -40,18 +40,16 @@ public class HistoryServiceImpl implements HistoryService {
 
     @Override
     public Map<String,Map> getHistory(int batchId){
+        clear();
         HistoryNode historyNode=getBeforeHistory(batchId,0);
-        goHistory(historyNode);
+        goHistory(historyNode,getIndex(historyNode));
         Map<String, List> data0 = new HashMap<>();
         data0.put("nodes", new ArrayList<>(nodes));
         data0.put("links", new ArrayList<>(links));
 
-        nodes.clear();
-        links.clear();
-        expressIds.clear();
-
+        clear();
         historyNode=getBeforeHistory(batchId,1);
-        goHistory(historyNode);
+        goHistory(historyNode,getIndex(historyNode));
         Map<String, List> data1 = new HashMap<>();
         data1.put("nodes", new ArrayList<>(nodes));
         data1.put("links", new ArrayList<>(links));
@@ -61,16 +59,15 @@ public class HistoryServiceImpl implements HistoryService {
         data.put("products", data1);
         return data;
     }
-    private void goHistory(HistoryNode historyNode){
-        int fromIndex=getIndex(historyNode);
+    private void goHistory(HistoryNode historyNode,int fromIndex){
         List<HistoryNode> historyNodes=historyNode.getHistoryNodes();
-        if(historyNodes!=null) {
+        if(historyNodes!=null&&historyNodes.size()!=0) {
             for (int i = 0; i < historyNodes.size(); i++) {
                 HistoryNode temp=historyNodes.get(i);
                 int toIndex=getIndex(temp);
                 LinkVO linkVO=new LinkVO(fromIndex,toIndex,historyNode.getNums().get(i));
                 links.add(linkVO);
-                goHistory(historyNode);
+                goHistory(temp,toIndex);
             }
         }
     }
@@ -213,5 +210,11 @@ public class HistoryServiceImpl implements HistoryService {
         node.setType(HistoryEnum.PRODUCT.getCode());//设置该节点是产品
         node.setStoreId(inOutBatchEntity.getStoreId());
         return node;
+    }
+    private void clear(){
+        nodes.clear();
+        links.clear();
+        expressIds.clear();
+        index.clear();
     }
 }
