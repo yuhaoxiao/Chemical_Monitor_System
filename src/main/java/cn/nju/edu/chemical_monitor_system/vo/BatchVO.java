@@ -19,7 +19,7 @@ public class BatchVO {
     private UserEntity userEntity;
     private List<InOutBatchVO> inOutBatchVOS;
 
-    private String type;
+    private int type;
     private String message;
 
     public BatchVO(BatchEntity b) {

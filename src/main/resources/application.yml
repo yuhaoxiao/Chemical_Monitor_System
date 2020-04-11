@@ -27,7 +27,7 @@ spring:
     #host: 127.0.0.1
     host: 49.234.54.34
     port: 6379
-    password: 123456
+    password: Nju123456
   kafka:
     consumer:
       group-id: foo

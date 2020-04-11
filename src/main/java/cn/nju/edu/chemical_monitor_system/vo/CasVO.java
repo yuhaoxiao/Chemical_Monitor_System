@@ -3,6 +3,8 @@ package cn.nju.edu.chemical_monitor_system.vo;
 import cn.nju.edu.chemical_monitor_system.entity.CasEntity;
 import lombok.Data;
 
+import java.util.Objects;
+
 @Data
 public class CasVO {
 
@@ -25,5 +27,28 @@ public class CasVO {
     public CasVO(String message) {
         this.code = 0;
         this.message = message;
+    }
+
+    public CasVO(int casId, String name) {
+        this.casId = casId;
+        this.name = name;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        CasVO casVO = (CasVO) o;
+        return casId == casVO.casId &&
+                Objects.equals(name, casVO.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(casId, name);
     }
 }

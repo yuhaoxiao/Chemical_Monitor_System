@@ -5,7 +5,6 @@ import cn.nju.edu.chemical_monitor_system.dao.ExpressDao;
 import cn.nju.edu.chemical_monitor_system.entity.ExpressEntity;
 import cn.nju.edu.chemical_monitor_system.entity.ExpressProductEntity;
 import cn.nju.edu.chemical_monitor_system.entity.RfidInfoEntity;
-import cn.nju.edu.chemical_monitor_system.exception.ExpressException;
 import cn.nju.edu.chemical_monitor_system.service.RfidService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

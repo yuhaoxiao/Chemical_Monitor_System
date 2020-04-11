@@ -30,4 +30,5 @@ public class ThroughputVO {
     public ThroughputVO(String message) {
         this.message = message;
     }
+
 }

@@ -17,7 +17,7 @@ public class InOutBatchVO {
     private int batchId;
     private Integer inOrOut;
     private Double number;
-    private String status;
+    private int status;
     private Double finishedNumber;
 
     private int code;
@@ -37,7 +37,7 @@ public class InOutBatchVO {
         this.batchId = io.getBatchId();
         this.inOrOut = io.getInout();
         this.number = io.getNumber();
-        this.status = InOutBatchStatusEnum.NOT_START.getName();
+        this.status = InOutBatchStatusEnum.NOT_START.getCode();
         this.finishedNumber = io.getFinishedNumber();
         this.code = 1;
     }
@@ -56,7 +56,7 @@ public class InOutBatchVO {
         this.batchId = io.getBatchId();
         this.inOrOut = io.getInout();
         this.number = io.getNumber();
-        this.status = InOutBatchStatusEnum.NOT_START.getName();
+        this.status = InOutBatchStatusEnum.NOT_START.getCode();
         this.finishedNumber = io.getFinishedNumber();
         this.code = 1;
     }

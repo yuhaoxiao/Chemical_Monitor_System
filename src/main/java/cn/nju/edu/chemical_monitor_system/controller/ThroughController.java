@@ -2,6 +2,7 @@ package cn.nju.edu.chemical_monitor_system.controller;
 
 import cn.nju.edu.chemical_monitor_system.request.GetThroughputRequest;
 import cn.nju.edu.chemical_monitor_system.response.BaseResponse;
+import cn.nju.edu.chemical_monitor_system.service.ThroughputCapacityService;
 import cn.nju.edu.chemical_monitor_system.service.ThroughputService;
 import cn.nju.edu.chemical_monitor_system.vo.ThroughputVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,9 +17,12 @@ public class ThroughController {
 
     @Autowired
     private ThroughputService throughputService;
+    @Autowired
+    private ThroughputCapacityService throughputCapacityService;
 
     @PostMapping
     public BaseResponse getThroughput(@RequestBody GetThroughputRequest request) {
+        /*
         ThroughputVO data;
         if (request.getCasId() == 0) {
             data = throughputService.getEntityThroughput(request.getEntityType(), request.getEntityId(),
@@ -28,6 +32,9 @@ public class ThroughController {
                     request.getTimeType(), request.getStart(), request.getEnd(), request.getCasId());
         }
         return new BaseResponse(200, "success", data);
+        */
+        return new BaseResponse(200, "success", throughputCapacityService.getThroughput(request));
+
     }
 
 }

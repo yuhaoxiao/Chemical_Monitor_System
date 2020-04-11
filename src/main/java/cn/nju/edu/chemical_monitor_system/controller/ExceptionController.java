@@ -1,6 +1,6 @@
 package cn.nju.edu.chemical_monitor_system.controller;
 
-import cn.nju.edu.chemical_monitor_system.exception.ExpressException;
+import cn.nju.edu.chemical_monitor_system.exception.MyException;
 import cn.nju.edu.chemical_monitor_system.response.BaseResponse;
 import cn.nju.edu.chemical_monitor_system.exception.UnauthorizedException;
 import org.apache.shiro.ShiroException;
@@ -38,8 +38,8 @@ public class ExceptionController {
 
     // 捕捉ExpressException
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
-    @ExceptionHandler(ExpressException.class)
-    public BaseResponse handle401(ExpressException e) {
+    @ExceptionHandler(MyException.class)
+    public BaseResponse handle401(MyException e) {
         return new BaseResponse(401, e.getMessage(), null);
     }
 

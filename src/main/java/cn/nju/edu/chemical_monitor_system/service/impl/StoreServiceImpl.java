@@ -84,7 +84,7 @@ public class StoreServiceImpl implements StoreService {
         }
 
         for (InOutBatchEntity inout : inoutBatchDao.findByStoreId(sid)) {
-            if (inout.getStatus() != InOutBatchStatusEnum.COMPLETED.getName()) {
+            if (inout.getStatus() != InOutBatchStatusEnum.COMPLETED.getCode()) {
                 continue;
             }
 

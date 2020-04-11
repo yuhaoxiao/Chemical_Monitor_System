@@ -16,9 +16,9 @@ public class BatchEntity {
     private int batchId;
     private int productionLineId;
     private Timestamp time;
-    private String status;
+    private int status;
     private UserEntity userEntity;
-    private String type;
+    private int type;
 
     @Id
     @Column(name = "Batch_id")
@@ -53,21 +53,21 @@ public class BatchEntity {
 
     @Basic
     @Column(name = "Status")
-    public String getStatus() {
+    public int getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(int status) {
         this.status = status;
     }
 
     @Basic
     @Column(name = "Type")
-    public String getType() {
+    public int getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(int type) {
         this.type = type;
     }
 
@@ -84,16 +84,30 @@ public class BatchEntity {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
         BatchEntity that = (BatchEntity) o;
 
-        if (batchId != that.batchId) return false;
-        if (productionLineId != that.productionLineId) return false;
-        if (userEntity.getUserId() != that.getUserEntity().getUserId()) return false;
-        if (!Objects.equals(time, that.time)) return false;
-        if (!Objects.equals(status, that.status)) return false;
+        if (batchId != that.batchId) {
+            return false;
+        }
+        if (productionLineId != that.productionLineId) {
+            return false;
+        }
+        if (userEntity.getUserId() != that.getUserEntity().getUserId()) {
+            return false;
+        }
+        if (!Objects.equals(time, that.time)) {
+            return false;
+        }
+        if (!Objects.equals(status, that.status)) {
+            return false;
+        }
 
         return true;
     }
@@ -104,7 +118,7 @@ public class BatchEntity {
         result = 31 * result + productionLineId;
         result = 31 * result + userEntity.getUserId();
         result = 31 * result + (time != null ? time.hashCode() : 0);
-        result = 31 * result + (status != null ? status.hashCode() : 0);
+        result = 31 * result + status;
         return result;
     }
 }

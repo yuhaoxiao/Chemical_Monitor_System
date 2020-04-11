@@ -11,5 +11,4 @@ public interface EnterpriseDao extends JpaRepository<EnterpriseEntity, Serializa
     List<EnterpriseEntity> findByName(String name);
 
     List<EnterpriseEntity> findByNameLike(String name);
-
 }

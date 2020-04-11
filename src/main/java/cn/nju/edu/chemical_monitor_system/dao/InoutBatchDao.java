@@ -18,6 +18,10 @@ public interface InoutBatchDao extends JpaRepository<InOutBatchEntity, Serializa
 
     List<InOutBatchEntity> findByBatchIdAndProductIdAndStoreIdAndInout(int batchId,int ProductId,int StoreId,int isIn);
 
+    List<InOutBatchEntity> findByBatchIdInAndInout(List<Integer> ids,int isIn);
+
+    List<InOutBatchEntity> findByBatchIdInAndInoutAndStoreId(List<Integer> ids,int isIn,int storeId);
+
     @Query(nativeQuery = true, value = "select c.CAS_id, c.Name, sum(iob.Number) from batch b, inoutbatch iob, product p, cas c " +
             "where iob.Batch_id = b.batch_id and iob.Product_id = p.Product_id and p.CAS_id = c.CAS_id" +
             " and b.Type = ?1 and b.Time > ?2 and b.Time < ?3 and iob.InOrOut = ?4" +

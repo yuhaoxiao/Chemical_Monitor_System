@@ -46,8 +46,8 @@ public class InOutBatchServiceImpl implements InOutBatchService {
         }
 
         BatchEntity batchEntity = batchOpt.get();
-        if (batchEntity.getStatus().equals(BatchStatusEnum.NOT_START.getName())) {
-            batchEntity.setStatus(BatchStatusEnum.IN_BATCH.getName());
+        if (batchEntity.getStatus()==BatchStatusEnum.NOT_START.getCode()) {
+            batchEntity.setStatus(BatchStatusEnum.IN_BATCH.getCode());
             batchDao.saveAndFlush(batchEntity);
         }
 
@@ -80,12 +80,12 @@ public class InOutBatchServiceImpl implements InOutBatchService {
                     return new InOutBatchVO(inOutBatchEntity, productEntity, thisNumber);
                 }
 
-                inOutBatchEntity.setStatus(InOutBatchStatusEnum.COMPLETED.getName());
+                inOutBatchEntity.setStatus(InOutBatchStatusEnum.COMPLETED.getCode());
                 inoutBatchDao.saveAndFlush(inOutBatchEntity);
                 List<InOutBatchEntity> newInOutBatchs = inoutBatchDao.findByBatchIdAndInout(batchId, 1);
 
                 for (InOutBatchEntity newInoutBatch : newInOutBatchs) {
-                    if (!newInoutBatch.getStatus().equals(InOutBatchStatusEnum.COMPLETED.getName())) {
+                    if (newInoutBatch.getStatus()!=InOutBatchStatusEnum.COMPLETED.getCode()) {
                         return new InOutBatchVO(inOutBatchEntity, productEntity, thisNumber);
                     }
                 }
@@ -93,7 +93,7 @@ public class InOutBatchServiceImpl implements InOutBatchService {
                 InOutBatchVO inOutBatchVO = new InOutBatchVO(inOutBatchEntity, productEntity, thisNumber);
                 inOutBatchVO.setCode(2);
                 BatchEntity batch = batchDao.findById(batchId).get();
-                batch.setStatus(BatchStatusEnum.IN_PROCESS.getName());
+                batch.setStatus(BatchStatusEnum.IN_PROCESS.getCode());
                 batchDao.saveAndFlush(batch);
                 return inOutBatchVO;
             }
@@ -112,8 +112,8 @@ public class InOutBatchServiceImpl implements InOutBatchService {
         }
 
         BatchEntity batchEntity = batchOpt.get();
-        if (batchEntity.getStatus().equals(BatchStatusEnum.IN_PROCESS.getName())) {
-            batchEntity.setStatus(BatchStatusEnum.OUT_BATCH.getName());
+        if (batchEntity.getStatus()==BatchStatusEnum.IN_PROCESS.getCode()) {
+            batchEntity.setStatus(BatchStatusEnum.OUT_BATCH.getCode());
             batchDao.saveAndFlush(batchEntity);
         }
 
@@ -157,12 +157,12 @@ public class InOutBatchServiceImpl implements InOutBatchService {
                     return new InOutBatchVO(inOutBatchEntity, productEntity, thisNumber);
                 }
 
-                inOutBatchEntity.setStatus(InOutBatchStatusEnum.COMPLETED.getName());
+                inOutBatchEntity.setStatus(InOutBatchStatusEnum.COMPLETED.getCode());
                 inoutBatchDao.saveAndFlush(inOutBatchEntity);
                 List<InOutBatchEntity> newInOutBatchs = inoutBatchDao.findByBatchIdAndInout(batchId, 0);
 
                 for (InOutBatchEntity newInoutBatch : newInOutBatchs) {
-                    if (!newInoutBatch.getStatus().equals(InOutBatchStatusEnum.COMPLETED.getName())) {
+                    if (newInoutBatch.getStatus()!=InOutBatchStatusEnum.COMPLETED.getCode()) {
                         return new InOutBatchVO(inOutBatchEntity, productEntity, thisNumber);
                     }
                 }
@@ -170,7 +170,7 @@ public class InOutBatchServiceImpl implements InOutBatchService {
                 InOutBatchVO inOutBatchVO = new InOutBatchVO(inOutBatchEntity, productEntity, thisNumber);
                 inOutBatchVO.setCode(2);
                 BatchEntity batch = batchDao.findById(batchId).get();
-                batch.setStatus(BatchStatusEnum.COMPLETE.getName());
+                batch.setStatus(BatchStatusEnum.COMPLETE.getCode());
                 batchDao.saveAndFlush(batch);
                 rfidUtil.write(rfidInfoEntity.toString(), port);
                 return inOutBatchVO;

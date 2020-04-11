@@ -63,8 +63,8 @@ public class BatchServiceImpl implements BatchService {
         BatchEntity batchEntity = new BatchEntity();
         batchEntity.setProductionLineId(productlineId);
         batchEntity.setTime(new Timestamp(System.currentTimeMillis()));
-        batchEntity.setStatus(BatchStatusEnum.NOT_START.getName());
-        batchEntity.setType(batchTypes[type]);
+        batchEntity.setStatus(BatchStatusEnum.NOT_START.getCode());
+        batchEntity.setType(type);
         batchEntity.setUserEntity(userDao.findById(userId).get());
         batchDao.saveAndFlush(batchEntity);
         BatchVO batchVO = new BatchVO(batchEntity);
@@ -81,7 +81,7 @@ public class BatchServiceImpl implements BatchService {
             inOutBatchEntity.setProductId(request.getProductId());
             inOutBatchEntity.setStoreId(request.getStoreId());
             inOutBatchEntity.setNumber(request.getNumber());
-            inOutBatchEntity.setStatus(InOutBatchStatusEnum.NOT_START.getName());
+            inOutBatchEntity.setStatus(InOutBatchStatusEnum.NOT_START.getCode());
             inOutBatchEntity.setFinishedNumber(0.0);
             inOutBatchEntity.setInout(1);
             inOutBatchEntities.add(inOutBatchEntity);
@@ -135,7 +135,7 @@ public class BatchServiceImpl implements BatchService {
             InOutBatchEntity inOutBatchEntity = new InOutBatchEntity();
             inOutBatchEntity.setInout(0);
             inOutBatchEntity.setFinishedNumber(0.0);
-            inOutBatchEntity.setStatus(InOutBatchStatusEnum.NOT_START.getName());
+            inOutBatchEntity.setStatus(InOutBatchStatusEnum.NOT_START.getCode());
             inOutBatchEntity.setNumber(productEntity.getNumber());
             inOutBatchEntity.setStoreId(casStoreMap.get(productEntity.getCasEntity().getCasId()));
             inOutBatchEntity.setProductId(productEntity.getProductId());
