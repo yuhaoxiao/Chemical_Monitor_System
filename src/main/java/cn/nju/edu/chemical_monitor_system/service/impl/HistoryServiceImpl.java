@@ -4,6 +4,7 @@ import cn.nju.edu.chemical_monitor_system.constant.HistoryEnum;
 import cn.nju.edu.chemical_monitor_system.dao.*;
 import cn.nju.edu.chemical_monitor_system.entity.ExpressProductEntity;
 import cn.nju.edu.chemical_monitor_system.entity.InOutBatchEntity;
+import cn.nju.edu.chemical_monitor_system.exception.MyException;
 import cn.nju.edu.chemical_monitor_system.service.HistoryService;
 import cn.nju.edu.chemical_monitor_system.utils.history.HistoryNode;
 import cn.nju.edu.chemical_monitor_system.vo.LinkVO;
@@ -40,6 +41,9 @@ public class HistoryServiceImpl implements HistoryService {
 
     @Override
     public Map<String,Map> getHistory(int batchId){
+        if(batchDao.findFirstByBatchId(batchId)==null){
+            throw new MyException("不存在该批次");
+        }
         clear();
         HistoryNode historyNode=getBeforeHistory(batchId,0);
         goHistory(historyNode,getIndex(historyNode),0);
