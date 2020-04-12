@@ -24,19 +24,19 @@ public class ProductionLineController {
     @GetMapping("/get_in_park_by_eid/{eid}")
     @RequiresRoles(logical = Logical.OR, value={"operator", "administrator"})
     public BaseResponse getInParkProductionLineByEnterpriseId(@PathVariable int eid) {  // TODO: 根据企业id获取该企业的入园生产线
-        return new BaseResponse(200,"success",new ProductionLineVO());
+        return new BaseResponse(200,"success", ProductionLineVO.getSpecific(eid, 0));
     }
 
     @GetMapping("/get_out_park_by_eid/{eid}")
     @RequiresRoles(logical = Logical.OR, value={"operator", "administrator"})
     public BaseResponse getOutParkProductionLineByEnterpriseId(@PathVariable int eid) {  // TODO: 根据企业id获取该企业的出园生产线
-        return new BaseResponse(200,"success",new ProductionLineVO());
+        return new BaseResponse(200,"success",ProductionLineVO.getSpecific(eid, 1));
     }
 
     @GetMapping("/get_destroy_by_eid/{eid}")
     @RequiresRoles(logical = Logical.OR, value={"operator", "administrator"})
     public BaseResponse getDestroyProductionLineByEnterpriseId(@PathVariable int eid) {  // TODO: 根据企业id获取该企业的销毁生产线
-        return new BaseResponse(200,"success",new ProductionLineVO());
+        return new BaseResponse(200,"success",ProductionLineVO.getSpecific(eid, 2));
     }
 
 
