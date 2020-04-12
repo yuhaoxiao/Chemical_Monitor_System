@@ -42,14 +42,14 @@ public class HistoryServiceImpl implements HistoryService {
     public Map<String,Map> getHistory(int batchId){
         clear();
         HistoryNode historyNode=getBeforeHistory(batchId,0);
-        goHistory(historyNode,getIndex(historyNode));
+        goHistory(historyNode,getIndex(historyNode),0);
         Map<String, List> data0 = new HashMap<>();
         data0.put("nodes", new ArrayList<>(nodes));
         data0.put("links", new ArrayList<>(links));
 
         clear();
         historyNode=getBeforeHistory(batchId,1);
-        goHistory(historyNode,getIndex(historyNode));
+        goHistory(historyNode,getIndex(historyNode),1);
         Map<String, List> data1 = new HashMap<>();
         data1.put("nodes", new ArrayList<>(nodes));
         data1.put("links", new ArrayList<>(links));
@@ -59,15 +59,21 @@ public class HistoryServiceImpl implements HistoryService {
         data.put("products", data1);
         return data;
     }
-    private void goHistory(HistoryNode historyNode,int fromIndex){
+    private void goHistory(HistoryNode historyNode,int fromIndex,int struct){
         List<HistoryNode> historyNodes=historyNode.getHistoryNodes();
         if(historyNodes!=null&&historyNodes.size()!=0) {
             for (int i = 0; i < historyNodes.size(); i++) {
                 HistoryNode temp=historyNodes.get(i);
                 int toIndex=getIndex(temp);
-                LinkVO linkVO=new LinkVO(fromIndex,toIndex,historyNode.getNums().get(i));
+                LinkVO linkVO ;
+                if(struct==0){
+                    linkVO = new LinkVO(toIndex, fromIndex, historyNode.getNums().get(i));
+                }else {
+                    linkVO = new LinkVO(fromIndex, toIndex, historyNode.getNums().get(i));
+                }
                 links.add(linkVO);
-                goHistory(temp,toIndex);
+                goHistory(temp,toIndex,struct);
+
             }
         }
     }
