@@ -111,13 +111,14 @@ public class ThroughputCapacityServiceImpl implements ThroughputCapacityService 
                 inoutBatchId2Time.put(batchEntity.getBatchId(), timestamp2String(batchEntity.getTime()));
             }
         }
-
+        List<String> times = getTimeList();
+        times.remove(times.size() - 1);
         if (entityType != 3) {
             List<InOutBatchEntity> consume = inoutBatchDao.findByBatchIdInAndInout(consumeAndProduceIds, 1);
             List<InOutBatchEntity> produce = inoutBatchDao.findByBatchIdInAndInout(consumeAndProduceIds, 0);
             List<InOutBatchEntity> in = inoutBatchDao.findByBatchIdInAndInout(inIds, 0);
             List<InOutBatchEntity> out = inoutBatchDao.findByBatchIdInAndInout(outIds, 1);
-            return new ThroughputVO(getTimeList(), transfer(consume), transfer(produce), transfer(in), transfer(out));
+            return new ThroughputVO(times, transfer(consume), transfer(produce), transfer(in), transfer(out));
         } else {
             List<InOutBatchEntity> consume = new ArrayList<>();
             List<InOutBatchEntity> produce = new ArrayList<>();
@@ -152,8 +153,6 @@ public class ThroughputCapacityServiceImpl implements ThroughputCapacityService 
                 return inOutBatchEntities;
             }).flatMap(Collection::stream).collect(Collectors.toList());
             out.addAll(out2);
-            List<String> times = getTimeList();
-            times.remove(times.size() - 1);
             return new ThroughputVO(times, transfer(consume), transfer(produce), transfer(in), transfer(out));
         }
     }
