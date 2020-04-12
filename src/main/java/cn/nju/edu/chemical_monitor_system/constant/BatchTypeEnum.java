@@ -3,8 +3,8 @@ package cn.nju.edu.chemical_monitor_system.constant;
 public enum BatchTypeEnum {
     PRODUCE(0, "生产"),
     IN_PARK(1,"入园"),
-    DESTROY(2, "销毁"),
-    OUT_PARK(3,"出园");
+    DESTROY(3, "销毁"),
+    OUT_PARK(2,"出园");
 
     private int code;
 
