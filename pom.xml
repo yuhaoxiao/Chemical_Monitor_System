@@ -163,7 +163,6 @@
                 <configuration>
                     <source>8</source>
                     <target>8</target>
-                    <includeSystemScope>true</includeSystemScope>
                 </configuration>
                 <version>3.6.0</version>
             </plugin>

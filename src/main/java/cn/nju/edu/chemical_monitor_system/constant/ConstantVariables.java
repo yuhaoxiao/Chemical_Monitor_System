@@ -27,8 +27,8 @@ public class ConstantVariables {
     public static final Integer REFRESH_TOKEN_EXPIRE_TIME=1800;
     //防止并发的临时refresh_token过期时间为15秒
     public static final Integer REFRESH_TOKEN_EXPIRE_TIME_OLD=30;
-    //token过期时间5分钟
-    public static final Integer EXPIRE_TIME = 4*60*1000;
+    //token过期时间1分钟
+    public static final Integer EXPIRE_TIME = 1*60*1000;
     //jwt秘钥
     public static final String ENCRYPT_JWT="U0JBUElKV1RkV2FuZzkyNjQ1NA==";
     public static final String USERNAME="USERNAME";

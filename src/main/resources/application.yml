@@ -9,6 +9,7 @@ spring:
       max-lifetime: 30000
       connection-test-query: SELECT 1
       maximum-pool-size: 10
+
   jpa:
     hibernate:
       ddl-auto: none
@@ -28,6 +29,10 @@ spring:
     host: 49.234.54.34
     port: 6379
     password: Nju123456
+    timeout: 60s
+
+
+
   kafka:
     consumer:
       group-id: foo
