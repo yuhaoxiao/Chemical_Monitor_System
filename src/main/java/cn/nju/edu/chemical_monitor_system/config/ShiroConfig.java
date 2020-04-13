@@ -42,6 +42,7 @@ public class ShiroConfig {
         factoryBean.setSecurityManager(securityManager);
         Map<String, String> filterRuleMap = new HashMap<>();
         filterRuleMap.put("/user/login", "anon");
+        filterRuleMap.put("/websocket", "anon");
         filterRuleMap.put("/**", "jwt");
         factoryBean.setFilterChainDefinitionMap(filterRuleMap);
         return factoryBean;

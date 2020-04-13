@@ -11,47 +11,47 @@ Class-Path: antlr-2.7.7.jar javax.activation-api-1.2.0.jar shiro-config-
  configure-2.2.2.RELEASE.jar commons-beanutils-1.9.3.jar log4j-1.2.14.ja
  r spring-orm-5.2.2.RELEASE.jar spring-boot-starter-2.2.2.RELEASE.jar ja
  vafx-graphics-11.jar spring-data-keyvalue-2.2.4.RELEASE.jar jakarta.per
- sistence-api-2.2.3.jar jackson-annotations-2.10.0.pr3.jar hibernate-cor
- e-5.3.7.Final.jar jackson-module-parameter-names-2.10.1.jar netty-commo
- n-4.1.43.Final.jar thymeleaf-extras-java8time-3.0.4.RELEASE.jar spring-
- oxm-5.2.3.RELEASE.jar classmate-1.3.4.jar spring-beans-5.2.2.RELEASE.ja
- r spring-boot-2.2.2.RELEASE.jar tomcat-embed-websocket-9.0.29.jar sprin
- g-websocket-5.2.3.RELEASE.jar zstd-jni-1.3.8-1.jar unbescape-1.1.6.RELE
- ASE.jar lz4-java-1.5.0.jar jul-to-slf4j-1.7.29.jar spring-messaging-5.2
- .3.RELEASE.jar spring-boot-starter-data-jpa-2.2.2.RELEASE.jar logback-c
- lassic-1.2.3.jar javafx-graphics-11-win.jar shiro-core-1.4.0.jar shiro-
- web-1.4.0.jar commons-lang3-3.4.jar spring-boot-starter-websocket-2.2.4
- .RELEASE.jar dom4j-2.1.1.jar shiro-cache-1.4.0.jar tomcat-embed-el-9.0.
- 29.jar spring-boot-starter-web-2.2.2.RELEASE.jar protobuf-java-3.6.1.ja
- r jboss-logging-3.3.2.Final.jar kafka-clients-2.2.0.jar jandex-2.0.5.Fi
- nal.jar shiro-crypto-cipher-1.4.0.jar spring-core-5.2.2.RELEASE.jar spr
- ing-data-redis-2.2.4.RELEASE.jar spring-boot-starter-logging-2.2.2.RELE
- ASE.jar lettuce-core-5.2.1.RELEASE.jar RFID.jar jedis-2.4.2.jar jakarta
- .annotation-api-1.3.5.jar spring-tx-5.2.2.RELEASE.jar snakeyaml-1.25.ja
- r spring-data-jpa-2.2.3.RELEASE.jar tomcat-embed-core-9.0.29.jar spring
- -boot-starter-data-redis-2.2.4.RELEASE.jar spring-boot-starter-jdbc-2.2
- .2.RELEASE.jar netty-handler-4.1.43.Final.jar shiro-redis-2.4.2.1-RELEA
- SE.jar jackson-core-2.10.0.pr3.jar spring-webmvc-5.2.2.RELEASE.jar byte
- -buddy-1.8.17.jar spring-expression-5.2.2.RELEASE.jar commons-collectio
- ns-3.2.2.jar spring-boot-starter-validation-2.2.2.RELEASE.jar jackson-d
- atabind-2.10.0.pr3.jar spring-web-5.2.2.RELEASE.jar log4j-api-2.12.1.ja
- r jxl-2.6.12.jar spring-jdbc-5.2.2.RELEASE.jar commons-codec-1.12.jar a
- spectjweaver-1.9.5.jar reactor-core-3.3.0.RELEASE.jar spring-aspects-5.
- 2.2.RELEASE.jar snappy-java-1.1.7.2.jar spring-kafka-2.4.1.RELEASE.jar 
- mysql-connector-java-8.0.18.jar jackson-datatype-jdk8-2.10.1.jar attopa
- rser-2.0.5.RELEASE.jar log4j-to-slf4j-2.12.1.jar spring-retry-1.2.4.REL
- EASE.jar shiro-event-1.4.0.jar spring-context-support-5.2.3.RELEASE.jar
-  spring-context-5.2.2.RELEASE.jar spring-boot-starter-aop-2.2.2.RELEASE
- .jar jakarta.activation-api-1.2.1.jar thymeleaf-spring5-3.0.11.RELEASE.
- jar javafx-base-11.jar spring-boot-starter-json-2.2.2.RELEASE.jar shiro
- -crypto-hash-1.4.0.jar spring-boot-starter-thymeleaf-2.2.2.RELEASE.jar 
- netty-buffer-4.1.43.Final.jar javafx-controls-11-win.jar javafx-control
- s-11.jar spring-jcl-5.2.2.RELEASE.jar shiro-crypto-core-1.4.0.jar javaf
- x-fxml-11-win.jar shiro-spring-1.4.0.jar spring-data-commons-2.2.3.RELE
- ASE.jar spring-boot-starter-tomcat-2.2.2.RELEASE.jar spring-boot-test-2
- .2.2.RELEASE.jar commons-pool2-2.0.jar hibernate-commons-annotations-5.
- 0.4.Final.jar hibernate-validator-6.0.18.Final.jar logback-core-1.2.3.j
- ar netty-codec-4.1.43.Final.jar javafx-fxml-11.jar java-jwt-3.9.0.jar j
+ sistence-api-2.2.3.jar jedis-2.4.2.jar hibernate-core-5.3.7.Final.jar j
+ ackson-module-parameter-names-2.10.1.jar netty-common-4.1.43.Final.jar 
+ thymeleaf-extras-java8time-3.0.4.RELEASE.jar spring-oxm-5.2.3.RELEASE.j
+ ar classmate-1.3.4.jar spring-beans-5.2.2.RELEASE.jar spring-boot-2.2.2
+ .RELEASE.jar tomcat-embed-websocket-9.0.29.jar spring-websocket-5.2.3.R
+ ELEASE.jar zstd-jni-1.3.8-1.jar unbescape-1.1.6.RELEASE.jar lz4-java-1.
+ 5.0.jar jul-to-slf4j-1.7.29.jar spring-messaging-5.2.3.RELEASE.jar spri
+ ng-boot-starter-data-jpa-2.2.2.RELEASE.jar logback-classic-1.2.3.jar ja
+ vafx-graphics-11-win.jar shiro-core-1.4.0.jar shiro-web-1.4.0.jar sprin
+ g-boot-starter-websocket-2.2.4.RELEASE.jar dom4j-2.1.1.jar shiro-cache-
+ 1.4.0.jar tomcat-embed-el-9.0.29.jar spring-boot-starter-web-2.2.2.RELE
+ ASE.jar protobuf-java-3.6.1.jar jboss-logging-3.3.2.Final.jar kafka-cli
+ ents-2.2.0.jar commons-lang3-3.4.jar jandex-2.0.5.Final.jar shiro-crypt
+ o-cipher-1.4.0.jar spring-core-5.2.2.RELEASE.jar spring-data-redis-2.2.
+ 4.RELEASE.jar spring-boot-starter-logging-2.2.2.RELEASE.jar lettuce-cor
+ e-5.2.1.RELEASE.jar RFID.jar java-jwt-3.9.0.jar jakarta.annotation-api-
+ 1.3.5.jar jackson-core-2.10.0.pr3.jar spring-tx-5.2.2.RELEASE.jar snake
+ yaml-1.25.jar spring-data-jpa-2.2.3.RELEASE.jar tomcat-embed-core-9.0.2
+ 9.jar spring-boot-starter-data-redis-2.2.4.RELEASE.jar spring-boot-star
+ ter-jdbc-2.2.2.RELEASE.jar netty-handler-4.1.43.Final.jar shiro-redis-2
+ .4.2.1-RELEASE.jar jackson-annotations-2.10.0.pr3.jar spring-webmvc-5.2
+ .2.RELEASE.jar byte-buddy-1.8.17.jar spring-expression-5.2.2.RELEASE.ja
+ r commons-collections-3.2.2.jar spring-boot-starter-validation-2.2.2.RE
+ LEASE.jar jackson-databind-2.10.0.pr3.jar spring-web-5.2.2.RELEASE.jar 
+ log4j-api-2.12.1.jar jxl-2.6.12.jar spring-jdbc-5.2.2.RELEASE.jar commo
+ ns-codec-1.12.jar aspectjweaver-1.9.5.jar reactor-core-3.3.0.RELEASE.ja
+ r spring-aspects-5.2.2.RELEASE.jar snappy-java-1.1.7.2.jar spring-kafka
+ -2.4.1.RELEASE.jar mysql-connector-java-8.0.18.jar jackson-datatype-jdk
+ 8-2.10.1.jar attoparser-2.0.5.RELEASE.jar log4j-to-slf4j-2.12.1.jar spr
+ ing-retry-1.2.4.RELEASE.jar shiro-event-1.4.0.jar spring-context-suppor
+ t-5.2.3.RELEASE.jar spring-context-5.2.2.RELEASE.jar spring-boot-starte
+ r-aop-2.2.2.RELEASE.jar jakarta.activation-api-1.2.1.jar thymeleaf-spri
+ ng5-3.0.11.RELEASE.jar javafx-base-11.jar spring-boot-starter-json-2.2.
+ 2.RELEASE.jar shiro-crypto-hash-1.4.0.jar spring-boot-starter-thymeleaf
+ -2.2.2.RELEASE.jar netty-buffer-4.1.43.Final.jar javafx-controls-11-win
+ .jar javafx-controls-11.jar spring-jcl-5.2.2.RELEASE.jar shiro-crypto-c
+ ore-1.4.0.jar javafx-fxml-11-win.jar shiro-spring-1.4.0.jar spring-data
+ -commons-2.2.3.RELEASE.jar spring-boot-starter-tomcat-2.2.2.RELEASE.jar
+  spring-boot-test-2.2.2.RELEASE.jar commons-pool2-2.0.jar hibernate-com
+ mons-annotations-5.0.4.Final.jar hibernate-validator-6.0.18.Final.jar l
+ ogback-core-1.2.3.jar netty-codec-4.1.43.Final.jar javafx-fxml-11.jar j
  akarta.validation-api-2.0.1.jar reactive-streams-1.0.3.jar javax.persis
  tence-api-2.2.jar
 
