@@ -24,4 +24,10 @@ public class CASThroughputVO {
         this.total = this.throughput.stream().reduce(Double::sum).orElse(0.0);
     }
 
+    public CASThroughputVO(int casId, String name, List<Double> throughput, double total) {
+        this.casId = casId;
+        this.name = name;
+        this.throughput = throughput;
+        this.total = total;
+    }
 }

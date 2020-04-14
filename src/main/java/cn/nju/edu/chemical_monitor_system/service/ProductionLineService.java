@@ -14,4 +14,10 @@ public interface ProductionLineService {
     ProductionLineVO updateProductionLine(ProductionLineVO productionLineVO);
 
     List<BatchVO> getProductionBatch(int plId);
+
+    List<ProductionLineVO> getAll();
+
+    List<ProductionLineVO> searchByEnterprise(int eid);
+
+    ProductionLineVO getProductionLine(int plId);
 }

@@ -2,15 +2,17 @@ package cn.nju.edu.chemical_monitor_system.vo;
 
 import cn.nju.edu.chemical_monitor_system.entity.UserEntity;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.sql.Timestamp;
 
 @Data
+@NoArgsConstructor
 public class UserVO {
 
     private int userId;
     private String password;
-    private String type;
+    private String type;  // 1：'操作员', 2：'管理员', 3：'监控员'
     private String name;
     private int enable;
     private Timestamp lastOperationTime;

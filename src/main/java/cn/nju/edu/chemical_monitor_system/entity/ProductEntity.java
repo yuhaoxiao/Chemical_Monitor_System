@@ -13,9 +13,11 @@ public class ProductEntity {
     private int batchId;
     private CasEntity casEntity;
     private Double number;
+    private List<StoreProductEntity> storeProductEntities;
 
     @Id
     @Column(name = "Product_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public int getProductId() {
         return productId;
     }
@@ -55,6 +57,14 @@ public class ProductEntity {
         this.number = number;
     }
 
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "productEntity", fetch = FetchType.LAZY)
+    @JsonBackReference(value = "storeProductEntities")
+    public List<StoreProductEntity> getStoreProductEntities() {
+        return storeProductEntities;
+    }
+    public void setStoreProductEntities(List<StoreProductEntity> storeProductEntities) {
+        this.storeProductEntities = storeProductEntities;
+    }
 
     @Override
     public boolean equals(Object o) {

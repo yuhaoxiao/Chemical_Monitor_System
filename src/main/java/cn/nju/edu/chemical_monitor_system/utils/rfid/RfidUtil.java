@@ -1,18 +1,28 @@
 package cn.nju.edu.chemical_monitor_system.utils.rfid;
 
+import cn.nju.edu.chemical_monitor_system.constant.ExpressProductStatusEnum;
+import cn.nju.edu.chemical_monitor_system.dao.ExpressDao;
+import cn.nju.edu.chemical_monitor_system.entity.ExpressEntity;
+import cn.nju.edu.chemical_monitor_system.entity.ExpressProductEntity;
+import cn.nju.edu.chemical_monitor_system.entity.RfidInfoEntity;
 import cn.nju.edu.chemical_monitor_system.service.RfidService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.*;
 import java.util.concurrent.Callable;
 import java.util.concurrent.FutureTask;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 @Component
 public class RfidUtil {
 
     @Autowired
     RfidService rfidService;
+
+    @Autowired
+    ExpressDao expressDao;
 
     class ReadRfidThread implements Callable<String> {
         String port;
@@ -74,7 +84,36 @@ public class RfidUtil {
     }
 
     public String read(String port) {
-        return limitTaskTime(new ReadRfidThread(port));
+        boolean in=false;
+        if(port.endsWith("i")){
+            in=true;
+        }
+        int expressId=Integer.parseInt(port.substring(0,port.length()-1));
+        String rfid="-1";
+        int randomInt=new Random().nextInt(10);
+        if(randomInt>=9){
+            return rfid;
+        }else{
+            //模拟不在物流单的情况
+            if(randomInt<=1){
+                List<ExpressEntity> expressEntities = expressDao.findAll().stream().filter(e -> e.getExpressId() != expressId).collect(Collectors.toList());
+                if(expressEntities.size()!=0){
+                    ExpressEntity e = expressEntities.get(0);
+                    RfidInfoEntity rfidInfoEntity = new RfidInfoEntity(e.getExpressProductEntities().get(0));
+                    return rfidInfoEntity.toString();
+                }
+            }
+            ExpressEntity express = expressDao.findFirstByExpressId(expressId);
+            List<ExpressProductEntity> expressProductEntities;
+            if(!in) {
+                expressProductEntities = express.getExpressProductEntities().stream().filter(e -> e.getStatus() == ExpressProductStatusEnum.NOT_START.getCode()).collect(Collectors.toList());
+            }else{
+                expressProductEntities = express.getExpressProductEntities().stream().filter(e -> e.getStatus() == ExpressProductStatusEnum.OUT_INVENTORY.getCode()).collect(Collectors.toList());
+            }
+            ExpressProductEntity expressProductEntity = expressProductEntities.get(0);
+            return new RfidInfoEntity(expressProductEntity).toString();
+        }
+        //return limitTaskTime(new ReadRfidThread(port));
     }
 
     public String write(String rfid, String port) {

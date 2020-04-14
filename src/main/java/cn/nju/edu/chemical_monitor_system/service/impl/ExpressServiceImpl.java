@@ -4,6 +4,7 @@ import cn.nju.edu.chemical_monitor_system.constant.ExpressProductStatusEnum;
 import cn.nju.edu.chemical_monitor_system.constant.ExpressStatusEnum;
 import cn.nju.edu.chemical_monitor_system.dao.*;
 import cn.nju.edu.chemical_monitor_system.entity.*;
+import cn.nju.edu.chemical_monitor_system.exception.MyException;
 import cn.nju.edu.chemical_monitor_system.service.ExpressService;
 import cn.nju.edu.chemical_monitor_system.utils.common.UserUtil;
 import cn.nju.edu.chemical_monitor_system.utils.encryption.EncryptionUtil;
@@ -42,6 +43,10 @@ public class ExpressServiceImpl implements ExpressService {
     private UserDao userDao;
 
     @Autowired
+    private StoreProductDao storeProductDao;
+
+
+    @Autowired
     private SafeUtil safeUtil;
 
     @Autowired
@@ -63,11 +68,11 @@ public class ExpressServiceImpl implements ExpressService {
         Optional<StoreEntity> outputStoreOpt = storeDao.findById(outputStoreId);
 
         if (!inputStoreOpt.isPresent()) {
-            return new ExpressVO("入库仓库id不存在");
+            throw new MyException("入库仓库id不存在");
         }
 
         if (!outputStoreOpt.isPresent()) {
-            return new ExpressVO("出库仓库id不存在");
+            throw new MyException("出库仓库id不存在");
         }
 
         List<Integer> notSafeProducts=new ArrayList<>();
@@ -83,7 +88,7 @@ public class ExpressServiceImpl implements ExpressService {
                 s.append(productId);
                 s.append(" ");
             }
-            s.append("的商品不能入库");
+            s.append("的商品不能在").append(inputStoreOpt.get().getName()).append("仓库存放");
             ExpressVO result=new ExpressVO();
             result.setCode(0);
             result.setMessage(s.toString());
@@ -136,14 +141,24 @@ public class ExpressServiceImpl implements ExpressService {
     @Override
     public ExpressVO getExpress(int expressId) {
         Optional<ExpressEntity> expressOpt = expressDao.findById(expressId);
-
-        return expressOpt.map(ExpressVO::new).orElseGet(() -> new ExpressVO("物流id不存在"));
+        return expressOpt.map(e->{
+            return new ExpressVO(e,storeDao.findFirstByStoreId(e.getInputStoreId()).getName(),
+                    storeDao.findFirstByStoreId(e.getOutputStoreId()).getName());
+        }).orElseGet(() -> new ExpressVO("物流id不存在"));
 
     }
 
     @Override
     public ExpressVO reverseExpress(int expressId) {
         ExpressEntity expressEntity = expressDao.findFirstByExpressId(expressId);
+        if(expressEntity.getStatus()==ExpressStatusEnum.ERROR.getCode()){
+            throw new MyException("该物流单已经取消");
+        }
+        if(expressEntity.getStatus()==ExpressStatusEnum.NOT_START.getCode()){
+            expressEntity.setStatus(ExpressStatusEnum.ERROR.getCode());
+            expressDao.saveAndFlush(expressEntity);
+            return new ExpressVO(expressEntity);
+        }
         ExpressEntity reverseExpress = new ExpressEntity();
         reverseExpress.setInputStoreId(expressEntity.getOutputStoreId());
         reverseExpress.setOutputStoreId(expressEntity.getInputStoreId());
@@ -156,24 +171,23 @@ public class ExpressServiceImpl implements ExpressService {
             expressProductEntity.setStatus(ExpressProductStatusEnum.NOT_START.getCode());
             return expressProductEntity;
         }).collect(Collectors.toList()));
-        expressDao.save(expressEntity);
-        ExpressVO expressVO = new ExpressVO(expressEntity);
+        expressDao.saveAndFlush(reverseExpress);
+        ExpressVO expressVO = new ExpressVO(reverseExpress);
         kafkaUtil.sendExpress(expressVO);
         return expressVO;
     }
 
     @Override
     public List<ExpressProductVO> getProductExpress(int productId) {
-        return expressProductDao.findByProductId(productId).stream().map(ExpressProductVO::new)
-                .collect(Collectors.toList());
+        return expressProductDao.findByProductId(productId).stream().map(ex -> new ExpressProductVO(ex,new ProductVO(productDao.findByProductId(ex.getProductId())))).collect(Collectors.toList());
     }
 
     @Override
-    public ProductVO outputProduct(int expressId) {
+    public ExpressProductVO outputProduct(int expressId) {
         //查询物流单信息
         Optional<ExpressEntity> expressOpt = expressDao.findById(expressId);
         if (!expressOpt.isPresent()) {
-            return new ProductVO("物流id不存在");
+            throw new MyException("物流id不存在");
         }
 
         ExpressEntity expressEntity = expressOpt.get();
@@ -182,35 +196,41 @@ public class ExpressServiceImpl implements ExpressService {
         int inputStoreId = expressEntity.getInputStoreId();
         StoreEntity storeEntity = storeDao.findById(outputStoreId).get();
         String port = storeEntity.getPort();
-        String rfid = rfidUtil.read(port);
+        //String rfid = rfidUtil.read(port);
+        String rfid = rfidUtil.read(expressId+"o");
+
         //如果没有读到结果
         if (rfid.equals("-1")) {
-            return new ProductVO("扫描超时请重试");
+            throw new MyException("扫描超时请重试");
         }
-        String newRfid = null;
+        String newRfid = rfid;
+        /*
         try {
             //进行解密,由于读出来的数据没有加密过，先模拟已经加密过
             newRfid = encryptionUtil.decrypt(rfid, inputStoreId, outputStoreId);
         } catch (Exception e) {
             e.printStackTrace();
         }
+        */
+
+
         RfidInfoEntity rfidInfoEntity = new RfidInfoEntity(newRfid);
         //拆解信息
         int productId = rfidInfoEntity.getProductId();
-        int expressIdOfProduct = rfidInfoEntity.getExpressId();
         double outputNumber = rfidInfoEntity.getNumber();
 
-        //如果扫描的货物不是当前物流单内的，返回报错
-        if (expressId != expressIdOfProduct) {
-            return new ProductVO("该商品不在该物流批次内，请重新扫描");
-        }
+
+
+
         rfidInfoEntity.setExpressId(expressId);//只需要更新expressId
 
+        ExpressProductEntity result=null;
         int temp = 0;//对已出库product计数
         List<ExpressProductEntity> expressProductEntities = expressEntity.getExpressProductEntities();
         for (ExpressProductEntity expressProductEntity : expressProductEntities) {
             if (expressProductEntity.getProductId() == productId) {
                 double number = expressProductEntity.getNumber();//该批次总共需要出库的量
+                /*
                 try {
                     //写之前加密
                     newRfid = encryptionUtil.encrypt(rfidInfoEntity.toString(), inputStoreId, outputStoreId);
@@ -218,44 +238,75 @@ public class ExpressServiceImpl implements ExpressService {
                     e.printStackTrace();
                 }
                 String writeRfid = rfidUtil.write(newRfid, port);
+                String writeRfid = "1";
                 if (writeRfid.equals("-1")) {
-                    return new ProductVO("写入失败");
+                   throw new ExpressException("写入失败");
+                }
+                */
+                if(expressProductEntity.getStatus()==ExpressProductStatusEnum.OUT_INVENTORY.getCode()){
+                    throw new MyException("该产品已经出库");
+                }else if(expressProductEntity.getOutputNumber() + outputNumber>number){
+                    throw new MyException("本次出库将超过准出量");
                 }
                 //写入成功之后才进行保存
                 expressProductEntity.setOutputNumber(expressProductEntity.getOutputNumber() + outputNumber);
                 if (expressProductEntity.getOutputNumber() == number) {
                     expressProductEntity.setStatus(ExpressProductStatusEnum.OUT_INVENTORY.getCode());//更新状态为已出库
                 }
+                result=expressProductEntity;
                 expressProductDao.saveAndFlush(expressProductEntity);
+                expressEntity.setStatus(ExpressStatusEnum.OUT_INVENTORY_ING.getCode());
+                expressDao.saveAndFlush(expressEntity);
             }
             if (expressProductEntity.getStatus() == ExpressProductStatusEnum.OUT_INVENTORY.getCode()) {
                 temp++;
             }
-            //全部出库
-            if (temp == expressProductEntities.size()) {
-                outputExpress(expressEntity);
-            }
         }
-        return new ProductVO(productDao.findByProductId(productId));
+        if(result==null){
+            throw new MyException("该商品不在该物流批次内，请重新扫描");
+        }
+        ExpressProductVO ex=new ExpressProductVO(result,result.getOutputNumber(),outputNumber,new ProductVO(productDao.findByProductId(productId)));
+        //全部出库
+        if (temp == expressProductEntities.size()) {
+            outputExpress(expressEntity);
+            ex.setCode(2);
+        }
+
+        storeEntity.getStoreProductEntities().forEach(x->{
+            if(x.getProductEntity().getProductId()==productId){
+                double number=x.getNumber()-outputNumber;
+                if(number==0){
+                    storeProductDao.delete(x);
+                }
+                else {
+                    x.setNumber(number);
+                    storeProductDao.saveAndFlush(x);
+                }
+            }
+        });
+        return ex;
     }
 
     @Override
-    public ProductVO inputProduct(int expressId) {
+    public ExpressProductVO inputProduct(int expressId) {
         Optional<ExpressEntity> expressOpt = expressDao.findById(expressId);
 
         if (!expressOpt.isPresent()) {
-            return new ProductVO("物流id不存在");
+            throw new MyException("物流id不存在");
         }
         ExpressEntity expressEntity = expressOpt.get();
         int outputStoreId = expressEntity.getOutputStoreId();
         int inputStoreId = expressEntity.getInputStoreId();
-        StoreEntity storeEntity = storeDao.findById(outputStoreId).get();
+        StoreEntity storeEntity = storeDao.findById(inputStoreId).get();
         String port = storeEntity.getPort();
-        String rfid = rfidUtil.read(port);
+        //String rfid = rfidUtil.read(port);
+        String rfid = rfidUtil.read(expressId+"i");
         //如果没有读到结果
         if (rfid.equals("-1")) {
-            return new ProductVO("扫描超时请重试");
+            throw new MyException("扫描超时请重试");
         }
+        String newRfid = rfid;
+        /*
         String newRfid = null;
         try {
             //进行解密
@@ -264,39 +315,67 @@ public class ExpressServiceImpl implements ExpressService {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        */
+
         //拆解信息
         RfidInfoEntity rfidInfoEntity = new RfidInfoEntity(newRfid);
         int productId = rfidInfoEntity.getProductId();
         double inputNumber = rfidInfoEntity.getNumber();
-
-        ProductVO productVO = new ProductVO(productDao.findByProductId(productId));
+        ExpressProductVO result=null;
         //更新expressProduct变为已入库并判断是否所有的expressProduct的状态都变成已入库
         int temp = 0;//对已入库product计数
         List<ExpressProductEntity> expressProductEntities = expressEntity.getExpressProductEntities();
         for (ExpressProductEntity expressProductEntity : expressProductEntities) {
             if (expressProductEntity.getProductId() == productId) {
                 double number = expressProductEntity.getNumber();
+                /*
                 String writeRfid = rfidUtil.write(newRfid, port);
                 if (writeRfid.equals("-1")) {
-                    return new ProductVO("写入失败");
+                    throw new ExpressException("写入失败");
+                }
+                */
+                if(expressProductEntity.getStatus()==ExpressProductStatusEnum.IN_INVENTORY.getCode()){
+                    throw new MyException("该产品已经入库");
+                }else if(expressProductEntity.getInputNumber() + inputNumber>number){
+                    throw new MyException("本次入库将超过准入量");
                 }
                 expressProductEntity.setInputNumber(expressProductEntity.getInputNumber() + inputNumber);
                 if (expressProductEntity.getInputNumber() == number) {
                     expressProductEntity.setStatus(ExpressProductStatusEnum.IN_INVENTORY.getCode());//更新状态为已入库
                 }
+                result=new ExpressProductVO(expressProductEntity,expressProductEntity.getInputNumber(),inputNumber,new ProductVO(productDao.findByProductId(productId)));
                 expressProductDao.saveAndFlush(expressProductEntity);
+                expressEntity.setStatus(ExpressStatusEnum.IN_INVENTORY_ING.getCode());
+                expressDao.saveAndFlush(expressEntity);
             }
             if (expressProductEntity.getStatus() == ExpressProductStatusEnum.IN_INVENTORY.getCode()) {
                 temp++;
             }
-            //全部入库
-            if (temp == expressProductEntities.size()) {
-                inputExpress(expressEntity);
-                productVO.setCode(2);//这里设置为2的话代表该物流全部完成，为1的话代表该product扫描成功
-                return productVO;
+        }
+        if(result==null){
+            throw new MyException("该商品不在该物流批次内，请重新扫描");
+        }
+        if (temp == expressProductEntities.size()) {
+            inputExpress(expressEntity);
+            result.setCode(2);//这里设置为2的话代表该物流全部完成，为1的话代表该product扫描成功
+        }
+        boolean exist=false;
+        for (StoreProductEntity storeProductEntity : storeEntity.getStoreProductEntities()) {
+            if(storeProductEntity.getProductEntity().getProductId()==productId){
+                exist=true;
+                double number=storeProductEntity.getNumber()+inputNumber;
+                storeProductEntity.setNumber(number);
+                storeProductDao.saveAndFlush(storeProductEntity);
             }
         }
-        return productVO;
+        if(!exist){
+            StoreProductEntity storeProductEntity=new StoreProductEntity();
+            storeProductEntity.setNumber(inputNumber);
+            storeProductEntity.setProductEntity(productDao.findByProductId(productId));
+            storeProductEntity.setStoreEntity(storeEntity);
+            storeProductDao.saveAndFlush(storeProductEntity);
+        }
+        return result;
     }
 
 }

@@ -22,6 +22,7 @@ public class ThroughputVO {
         this.times = times;
         this.consume = c;
         this.produce = p;
+        this.in = i;
         this.out = o;
         this.message = "";
     }
@@ -29,4 +30,5 @@ public class ThroughputVO {
     public ThroughputVO(String message) {
         this.message = message;
     }
+
 }

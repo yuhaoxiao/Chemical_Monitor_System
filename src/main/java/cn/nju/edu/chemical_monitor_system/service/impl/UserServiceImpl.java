@@ -20,8 +20,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -38,6 +38,8 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private RedisUtil redisUtil;
 
+
+    @Override
     public UserVO login(String name, String password, HttpServletResponse httpServletResponse) {
         UserEntity user = userDao.findFirstByName(name);
         if (user.getPassword().equals(password)) {
@@ -54,7 +56,7 @@ public class UserServiceImpl implements UserService {
             throw new UnauthorizedException("密码错误");
         }
     }
-
+    @Override
     public UserVO register(String name, String password, String type) {
         UserEntity u = userDao.findFirstByName(name);
 
@@ -66,11 +68,11 @@ public class UserServiceImpl implements UserService {
         user.setName(name);
         user.setPassword(password);
         user.setType(type);
+        user.setEnable(1);
         userDao.saveAndFlush(user);
-
         return new UserVO(user);
     }
-
+    @Override
     public UserVO getUser(int uid) {
         Optional<UserEntity> user = userDao.findById(uid);
 
@@ -111,6 +113,7 @@ public class UserServiceImpl implements UserService {
 
             userVO.setLastOperationTime(last);
         } catch (Exception e) {
+            e.printStackTrace();
         }
         return userVO;
 
@@ -121,7 +124,7 @@ public class UserServiceImpl implements UserService {
         Optional<UserEntity> user = userDao.findById(uid);
 
         if (!user.isPresent()) {
-            return new UserVO("用户id不存在");
+            throw new UnauthorizedException("用户不存在");
         }
 
         UserEntity userEntity = user.get();
@@ -132,17 +135,16 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserVO updateUser(UserVO userVO) {
-        Optional<UserEntity> user = userDao.findById(userVO.getUserId());
+       Optional<UserEntity> user = userDao.findById(userVO.getUserId());
 
         if (!user.isPresent()) {
-            return new UserVO("用户id不存在");
+            throw new UnauthorizedException("用户不存在");
         }
 
-        UserEntity userEntity = new UserEntity();
-        userEntity.setEnable(userVO.getEnable());
+        UserEntity userEntity =user.get();
         userEntity.setPassword(userVO.getPassword());
         userEntity.setType(userVO.getType());
-        userEntity.setUserId(userVO.getUserId());
+        //userEntity.setUserId(userVO.getUserId());
         userEntity.setName(userVO.getName());
         userDao.saveAndFlush(userEntity);
         return new UserVO(userEntity);
@@ -161,5 +163,10 @@ public class UserServiceImpl implements UserService {
         if(redisUtil.get(ConstantVariables.PREFIX_SHIRO_REFRESH_TOKEN_OLD + username)!=null){
             redisUtil.del(ConstantVariables.PREFIX_SHIRO_REFRESH_TOKEN_OLD + username);
         }
+    }
+
+    @Override
+    public List<UserVO> getAll() {
+        return userDao.findAll().stream().map(UserVO::new).collect(Collectors.toList());
     }
 }

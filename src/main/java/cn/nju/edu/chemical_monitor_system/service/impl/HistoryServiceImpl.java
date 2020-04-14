@@ -4,6 +4,7 @@ import cn.nju.edu.chemical_monitor_system.constant.HistoryEnum;
 import cn.nju.edu.chemical_monitor_system.dao.*;
 import cn.nju.edu.chemical_monitor_system.entity.ExpressProductEntity;
 import cn.nju.edu.chemical_monitor_system.entity.InOutBatchEntity;
+import cn.nju.edu.chemical_monitor_system.exception.MyException;
 import cn.nju.edu.chemical_monitor_system.service.HistoryService;
 import cn.nju.edu.chemical_monitor_system.utils.history.HistoryNode;
 import cn.nju.edu.chemical_monitor_system.vo.LinkVO;
@@ -11,10 +12,7 @@ import cn.nju.edu.chemical_monitor_system.vo.NodeVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 @Service
 public class HistoryServiceImpl implements HistoryService {
@@ -39,19 +37,23 @@ public class HistoryServiceImpl implements HistoryService {
     //struct为0表示原料历史，为1表示产品用途
     private int struct;
 
+    private static HashSet<Integer> expressIds=new HashSet<>();
+
     @Override
     public Map<String,Map> getHistory(int batchId){
+        if(batchDao.findFirstByBatchId(batchId)==null){
+            throw new MyException("不存在该批次");
+        }
+        clear();
         HistoryNode historyNode=getBeforeHistory(batchId,0);
-        goHistory(historyNode);
+        goHistory(historyNode,getIndex(historyNode),0);
         Map<String, List> data0 = new HashMap<>();
         data0.put("nodes", new ArrayList<>(nodes));
         data0.put("links", new ArrayList<>(links));
 
-        nodes.clear();
-        links.clear();
-
+        clear();
         historyNode=getBeforeHistory(batchId,1);
-        goHistory(historyNode);
+        goHistory(historyNode,getIndex(historyNode),1);
         Map<String, List> data1 = new HashMap<>();
         data1.put("nodes", new ArrayList<>(nodes));
         data1.put("links", new ArrayList<>(links));
@@ -61,16 +63,21 @@ public class HistoryServiceImpl implements HistoryService {
         data.put("products", data1);
         return data;
     }
-    private void goHistory(HistoryNode historyNode){
-        int fromIndex=getIndex(historyNode);
+    private void goHistory(HistoryNode historyNode,int fromIndex,int struct){
         List<HistoryNode> historyNodes=historyNode.getHistoryNodes();
-        if(historyNodes!=null) {
+        if(historyNodes!=null&&historyNodes.size()!=0) {
             for (int i = 0; i < historyNodes.size(); i++) {
                 HistoryNode temp=historyNodes.get(i);
                 int toIndex=getIndex(temp);
-                LinkVO linkVO=new LinkVO(fromIndex,toIndex,historyNode.getNums().get(i));
+                LinkVO linkVO ;
+                if(struct==0){
+                    linkVO = new LinkVO(toIndex, fromIndex, historyNode.getNums().get(i));
+                }else {
+                    linkVO = new LinkVO(fromIndex, toIndex, historyNode.getNums().get(i));
+                }
                 links.add(linkVO);
-                goHistory(historyNode);
+                goHistory(temp,toIndex,struct);
+
             }
         }
     }
@@ -86,9 +93,13 @@ public class HistoryServiceImpl implements HistoryService {
         NodeVO nodeVO=new NodeVO();
         nodeVO.setBatchId(historyNode.getBatchId());
         nodeVO.setType(historyNode.getType());
-        nodeVO.setProductName(productDao.findByProductId(historyNode.getProductId()).getCasEntity().getName());
-        nodeVO.setStoreName(storeDao.findFirstByStoreId(historyNode.getStoreId()).getName());
-        nodeVO.setBatchType(batchDao.findFirstByBatchId(historyNode.getBatchId()).getType());
+        if(historyNode.getType()!=2) {
+            nodeVO.setProductName(productDao.findByProductId(historyNode.getProductId()).getCasEntity().getName());
+            nodeVO.setStoreName(storeDao.findFirstByStoreId(historyNode.getStoreId()).getName());
+        }
+        else{
+            nodeVO.setBatchType(batchDao.findFirstByBatchId(historyNode.getBatchId()).getType());
+        }
         return nodeVO;
     }
     public HistoryNode getBeforeHistory(int batchId,int struct) {
@@ -156,28 +167,34 @@ public class HistoryServiceImpl implements HistoryService {
                 //过滤，剩下那些仓库信息符合的物流
                 if(struct==0) {
                     expressProductEntities= expressProductDao.findByProductId(temp.getProductId()).stream()
-                            .filter(e -> e.getExpressEntity().getInputStoreId() == temp.getStoreId()).collect(Collectors.toList());
+                            .filter(e -> e.getExpressEntity().getInputStoreId() == temp.getStoreId()
+                                    &&(!expressIds.contains(e.getExpressEntity().getExpressId())))
+                            .collect(Collectors.toList());
                 }else{
                     expressProductEntities= expressProductDao.findByProductId(temp.getProductId()).stream()
-                            .filter(e -> e.getExpressEntity().getOutputStoreId() == temp.getStoreId()).collect(Collectors.toList());
+                            .filter(e -> e.getExpressEntity().getOutputStoreId() == temp.getStoreId()
+                                    &&(!expressIds.contains(e.getExpressEntity().getExpressId())))
+                            .collect(Collectors.toList());
                 }
                 if (expressProductEntities.size() != 0) {
                     List<HistoryNode> historyNodes = new ArrayList<>();
-                    List<Double> l=new ArrayList<>();
-                    HistoryNode h = new HistoryNode();
-                    ExpressProductEntity expressProductEntity = expressProductEntities.get(0);//原则上也就只能查出一个
-                    //更新storeId、batchId才能进一步递归查出新数据
-                    h.setNumber(expressProductEntity.getNumber());
-                    l.add(expressProductEntity.getNumber());
-                    if(struct==0) {
-                        h.setStoreId(expressProductEntity.getExpressEntity().getOutputStoreId());
-                    }else{
-                        h.setStoreId(expressProductEntity.getExpressEntity().getInputStoreId());
+                    List<Double> l = new ArrayList<>();
+                    for(ExpressProductEntity expressProductEntity:expressProductEntities) {
+                        HistoryNode h = new HistoryNode();
+                        //更新storeId、batchId才能进一步递归查出新数据
+                        h.setNumber(expressProductEntity.getNumber());
+                        if (struct == 0) {
+                            h.setStoreId(expressProductEntity.getExpressEntity().getOutputStoreId());
+                        } else {
+                            h.setStoreId(expressProductEntity.getExpressEntity().getInputStoreId());
+                        }
+                        h.setBatchId(temp.getBatchId());
+                        h.setProductId(temp.getProductId());
+                        h.setType(HistoryEnum.PRODUCT.getCode());
+                        historyNodes.add(h);
+                        l.add(expressProductEntity.getNumber());
+                        expressIds.add(expressProductEntity.getExpressEntity().getExpressId());
                     }
-                    h.setBatchId(temp.getBatchId());
-                    h.setProductId(temp.getProductId());
-                    h.setType(HistoryEnum.PRODUCT.getCode());
-                    historyNodes.add(h);
                     temp.setHistoryNodes(historyNodes);
                     temp.setNums(l);
                     goBeforeHistory(temp);
@@ -203,5 +220,11 @@ public class HistoryServiceImpl implements HistoryService {
         node.setType(HistoryEnum.PRODUCT.getCode());//设置该节点是产品
         node.setStoreId(inOutBatchEntity.getStoreId());
         return node;
+    }
+    private void clear(){
+        nodes.clear();
+        links.clear();
+        expressIds.clear();
+        index.clear();
     }
 }

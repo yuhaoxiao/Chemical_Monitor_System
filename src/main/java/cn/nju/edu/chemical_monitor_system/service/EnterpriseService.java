@@ -13,4 +13,6 @@ public interface EnterpriseService {
     EnterpriseVO updateEnterprise(EnterpriseVO enterpriseVO);
 
     List<EnterpriseVO> searchEnterprise(String s);
+
+    List<EnterpriseVO> getAll();
 }

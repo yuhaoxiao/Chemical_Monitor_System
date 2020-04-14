@@ -7,10 +7,7 @@ import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -22,7 +19,9 @@ public class UserController {
     private UserService userService;
 
     @PostMapping(value = "/login")
-    public BaseResponse login(String name, String password, HttpServletResponse httpServletResponse)  {
+    public BaseResponse login(@RequestBody UserVO userVO, HttpServletResponse httpServletResponse)  {
+        String name = userVO.getName();
+        String password = userVO.getPassword();
         return new BaseResponse(200,"登陆成功",userService.login(name,password,httpServletResponse));
     }
 
@@ -34,7 +33,10 @@ public class UserController {
 
     @RequiresRoles(value={"administrator"})
     @PostMapping(value = "/register")
-    public BaseResponse addUser(String name, String password, String type) {
+    public BaseResponse addUser(@RequestBody UserVO userVO) {
+        String name = userVO.getName();
+        String password = userVO.getPassword();
+        String type = userVO.getType();
         return new BaseResponse(200,"注册成功",userService.register(name, password, type));
     }
 
@@ -46,14 +48,20 @@ public class UserController {
     }
 
     @RequiresRoles(value={"administrator"})
-    @PostMapping(value = "/delete_user")
-    public BaseResponse deleteUser(int uid){
+    @PostMapping(value = "/delete_user/{uid}")
+    public BaseResponse deleteUser(@PathVariable int uid){
         return new BaseResponse(200,"成功",userService.deleteUser(uid));
     }
 
     @RequiresRoles(value={"administrator"})
     @PostMapping(value = "/update_user")
-    public BaseResponse updateUser(UserVO userVO){
+    public BaseResponse updateUser(@RequestBody UserVO userVO){
         return new BaseResponse(200,"成功",userService.updateUser(userVO));
+    }
+
+    @RequiresRoles(value={"administrator"})
+    @GetMapping
+    public BaseResponse getAll() {
+        return new BaseResponse(200, "", userService.getAll());
     }
 }

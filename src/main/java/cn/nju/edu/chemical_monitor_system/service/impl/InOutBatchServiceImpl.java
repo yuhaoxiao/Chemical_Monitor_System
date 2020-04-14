@@ -46,8 +46,8 @@ public class InOutBatchServiceImpl implements InOutBatchService {
         }
 
         BatchEntity batchEntity = batchOpt.get();
-        if (batchEntity.getStatus().equals(BatchStatusEnum.NOT_START.getName())) {
-            batchEntity.setStatus(BatchStatusEnum.IN_BATCH.getName());
+        if (batchEntity.getStatus()==BatchStatusEnum.NOT_START.getCode()) {
+            batchEntity.setStatus(BatchStatusEnum.IN_BATCH.getCode());
             batchDao.saveAndFlush(batchEntity);
         }
 
@@ -66,34 +66,34 @@ public class InOutBatchServiceImpl implements InOutBatchService {
             if (inOutBatchEntity.getProductId() != productId) {
                 continue;
             }
-
-            Double finishedNumber = inOutBatchEntity.getFinishedNumber() + rfidInfoEntity.getNumber();
+            Double thisNumber = rfidInfoEntity.getNumber();
+            Double finishedNumber = inOutBatchEntity.getFinishedNumber() + thisNumber;
 
             if (finishedNumber > inOutBatchEntity.getNumber()) {
                 return new InOutBatchVO("上线了数量为" + rfidInfoEntity.getNumber() + "的产品id为" + productId +
                         "的产品，超出了所需的" + (inOutBatchEntity.getNumber() - finishedNumber) + "的数量");
             } else {
                 inOutBatchEntity.setFinishedNumber(finishedNumber);
-
+                ProductEntity productEntity = productDao.findById(productId).get();
                 if (finishedNumber < inOutBatchEntity.getNumber()) {
                     inoutBatchDao.saveAndFlush(inOutBatchEntity);
-                    return new InOutBatchVO(inOutBatchEntity);
+                    return new InOutBatchVO(inOutBatchEntity, productEntity, thisNumber);
                 }
 
-                inOutBatchEntity.setStatus(InOutBatchStatusEnum.COMPLETED.getName());
+                inOutBatchEntity.setStatus(InOutBatchStatusEnum.COMPLETED.getCode());
                 inoutBatchDao.saveAndFlush(inOutBatchEntity);
                 List<InOutBatchEntity> newInOutBatchs = inoutBatchDao.findByBatchIdAndInout(batchId, 1);
 
                 for (InOutBatchEntity newInoutBatch : newInOutBatchs) {
-                    if (!newInoutBatch.getStatus().equals(InOutBatchStatusEnum.COMPLETED.getName())) {
-                        return new InOutBatchVO(inOutBatchEntity);
+                    if (newInoutBatch.getStatus()!=InOutBatchStatusEnum.COMPLETED.getCode()) {
+                        return new InOutBatchVO(inOutBatchEntity, productEntity, thisNumber);
                     }
                 }
 
-                InOutBatchVO inOutBatchVO = new InOutBatchVO(inOutBatchEntity);
+                InOutBatchVO inOutBatchVO = new InOutBatchVO(inOutBatchEntity, productEntity, thisNumber);
                 inOutBatchVO.setCode(2);
                 BatchEntity batch = batchDao.findById(batchId).get();
-                batch.setStatus(BatchStatusEnum.IN_PROCESS.getName());
+                batch.setStatus(BatchStatusEnum.IN_PROCESS.getCode());
                 batchDao.saveAndFlush(batch);
                 return inOutBatchVO;
             }
@@ -112,8 +112,8 @@ public class InOutBatchServiceImpl implements InOutBatchService {
         }
 
         BatchEntity batchEntity = batchOpt.get();
-        if (batchEntity.getStatus().equals(BatchStatusEnum.IN_PROCESS.getName())) {
-            batchEntity.setStatus(BatchStatusEnum.OUT_BATCH.getName());
+        if (batchEntity.getStatus()==BatchStatusEnum.IN_PROCESS.getCode()) {
+            batchEntity.setStatus(BatchStatusEnum.OUT_BATCH.getCode());
             batchDao.saveAndFlush(batchEntity);
         }
 
@@ -142,7 +142,8 @@ public class InOutBatchServiceImpl implements InOutBatchService {
                 continue;
             }
 
-            Double finishedNumber = inOutBatchEntity.getFinishedNumber() + rfidInfoEntity.getNumber();
+            Double thisNumber = rfidInfoEntity.getNumber();
+            Double finishedNumber = inOutBatchEntity.getFinishedNumber() + thisNumber;
 
             if (finishedNumber > inOutBatchEntity.getNumber()) {
                 return new InOutBatchVO("下线了数量为" + rfidInfoEntity.getNumber() + "的产品id为" + productId +
@@ -153,23 +154,23 @@ public class InOutBatchServiceImpl implements InOutBatchService {
                 if (finishedNumber < inOutBatchEntity.getNumber()) {
                     inoutBatchDao.saveAndFlush(inOutBatchEntity);
                     rfidUtil.write(rfidInfoEntity.toString(), port);
-                    return new InOutBatchVO(inOutBatchEntity);
+                    return new InOutBatchVO(inOutBatchEntity, productEntity, thisNumber);
                 }
 
-                inOutBatchEntity.setStatus(InOutBatchStatusEnum.COMPLETED.getName());
+                inOutBatchEntity.setStatus(InOutBatchStatusEnum.COMPLETED.getCode());
                 inoutBatchDao.saveAndFlush(inOutBatchEntity);
                 List<InOutBatchEntity> newInOutBatchs = inoutBatchDao.findByBatchIdAndInout(batchId, 0);
 
                 for (InOutBatchEntity newInoutBatch : newInOutBatchs) {
-                    if (!newInoutBatch.getStatus().equals(InOutBatchStatusEnum.COMPLETED.getName())) {
-                        return new InOutBatchVO(inOutBatchEntity);
+                    if (newInoutBatch.getStatus()!=InOutBatchStatusEnum.COMPLETED.getCode()) {
+                        return new InOutBatchVO(inOutBatchEntity, productEntity, thisNumber);
                     }
                 }
 
-                InOutBatchVO inOutBatchVO = new InOutBatchVO(inOutBatchEntity);
+                InOutBatchVO inOutBatchVO = new InOutBatchVO(inOutBatchEntity, productEntity, thisNumber);
                 inOutBatchVO.setCode(2);
                 BatchEntity batch = batchDao.findById(batchId).get();
-                batch.setStatus(BatchStatusEnum.COMPLETE.getName());
+                batch.setStatus(BatchStatusEnum.COMPLETE.getCode());
                 batchDao.saveAndFlush(batch);
                 rfidUtil.write(rfidInfoEntity.toString(), port);
                 return inOutBatchVO;

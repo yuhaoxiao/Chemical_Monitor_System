@@ -31,7 +31,7 @@ public class WebSocketUtil {
      */
     @OnOpen
     public void onOpen(Session session) {
-        KafkaUtil kafkaUtil =(KafkaUtil)SpringContextUtil.getBean("kafkaReceiver");
+        KafkaUtil kafkaUtil =(KafkaUtil)SpringContextUtil.getBean("kafkaUtil");
         if(webSocketSet.size()==0){
             kafkaUtil.start();
         }
@@ -50,7 +50,7 @@ public class WebSocketUtil {
      */
     @OnClose
     public void onClose() {
-        KafkaUtil kafkaUtil =(KafkaUtil)SpringContextUtil.getBean("kafkaReceiver");
+        KafkaUtil kafkaUtil =(KafkaUtil)SpringContextUtil.getBean("kafkaUtil");
         webSocketSet.remove(this);
         if(webSocketSet.size()==0){
             kafkaUtil.stop();

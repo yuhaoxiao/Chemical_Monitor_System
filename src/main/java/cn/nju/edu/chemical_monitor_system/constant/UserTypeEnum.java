@@ -1,8 +1,10 @@
 package cn.nju.edu.chemical_monitor_system.constant;
 
+
 public enum UserTypeEnum {
-    OPERATOR(0, "操作员"),
-    MANAGER(1, "管理员");
+    OPERATOR(1, "operator"),
+    ADMINISTRATOR(2,"administrator"),
+    MONITOR(3,"monitor");
 
     private int code;
 
@@ -21,6 +23,19 @@ public enum UserTypeEnum {
 
     public String getName() {
         return name;
+    }
+
+    public static String getRole(String type){
+        switch (type){
+            case "1":
+                return "operator";
+            case "2":
+                return "administrator";
+            case "3":
+                return "monitor";
+            default:
+                return "null";
+        }
     }
 
 }

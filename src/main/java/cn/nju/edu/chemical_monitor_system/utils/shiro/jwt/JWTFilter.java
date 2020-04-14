@@ -19,7 +19,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.PrintWriter;
 
 @Component
 public class JWTFilter extends BasicHttpAuthenticationFilter {
@@ -101,7 +100,7 @@ public class JWTFilter extends BasicHttpAuthenticationFilter {
      */
     private void response401(ServletResponse resp, String msg) {
         HttpServletResponse httpServletResponse = WebUtils.toHttp(resp);
-        httpServletResponse.setStatus(HttpStatus.UNAUTHORIZED.value());
+        httpServletResponse.setStatus(HttpStatus.OK.value());
         httpServletResponse.setCharacterEncoding("UTF-8");
         httpServletResponse.setContentType("application/json; charset=utf-8");
         try (OutputStream outputStream = httpServletResponse.getOutputStream()) {

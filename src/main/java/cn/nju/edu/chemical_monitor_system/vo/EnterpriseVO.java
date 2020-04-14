@@ -2,12 +2,15 @@ package cn.nju.edu.chemical_monitor_system.vo;
 
 import cn.nju.edu.chemical_monitor_system.entity.EnterpriseEntity;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
 public class EnterpriseVO {
 
     private int enterpriseId;
     private String name;
+    private int enable;
     private int code;
     private String message;
 
@@ -19,6 +22,7 @@ public class EnterpriseVO {
 
         this.enterpriseId = e.getEnterpriseId();
         this.name = e.getName();
+        this.enable = e.getEnable();
         this.code = 1;
     }
 

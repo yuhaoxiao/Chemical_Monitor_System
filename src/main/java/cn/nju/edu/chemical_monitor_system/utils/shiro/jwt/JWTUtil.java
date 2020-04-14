@@ -20,7 +20,7 @@ import java.util.Date;
 @Component
 public class JWTUtil {
     public static boolean verify(String token) {
-        String secret = null;
+        String secret ;
         try {
             secret = getClaim(token, ConstantVariables.USERNAME) + Base64ConvertUtil.decode(ConstantVariables.ENCRYPT_JWT);
             Algorithm algorithm = Algorithm.HMAC256(secret);

@@ -15,7 +15,7 @@ public class InOutBatchEntity {
     private Integer inout;
     private Double number;
     private Double finishedNumber;
-    private String status;
+    private int status;
 
     public InOutBatchEntity(){
     }
@@ -32,6 +32,7 @@ public class InOutBatchEntity {
 
     @Id
     @Column(name = "Inout_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public int getInOutId() {
         return inOutId;
     }
@@ -102,11 +103,11 @@ public class InOutBatchEntity {
 
     @Basic
     @Column(name = "Status")
-    public String getStatus() {
+    public int getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(int status) {
         this.status = status;
     }
 
@@ -138,7 +139,7 @@ public class InOutBatchEntity {
         result = 31 * result + (inout != null ? inout.hashCode() : 0);
         result = 31 * result + (number != null ? number.hashCode() : 0);
         result = 31 * result + (finishedNumber != null ? finishedNumber.hashCode() : 0);
-        result = 31 * result + (status != null ? status.hashCode() : 0);
+        result = 31 * result + status;
         return result;
     }
 }

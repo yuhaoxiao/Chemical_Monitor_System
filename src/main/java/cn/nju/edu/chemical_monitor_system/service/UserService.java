@@ -4,6 +4,7 @@ import cn.nju.edu.chemical_monitor_system.vo.UserVO;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 public interface UserService {
 
@@ -18,4 +19,6 @@ public interface UserService {
     UserVO updateUser(UserVO userVO);
 
     void logout(HttpServletRequest httpServletRequest);
+
+    List<UserVO> getAll();
 }

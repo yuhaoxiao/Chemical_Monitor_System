@@ -17,9 +17,9 @@ public interface ExpressService {
 
     List<ExpressProductVO> getProductExpress(int productId);
 
-    ProductVO outputProduct(int expressId);
+    ExpressProductVO outputProduct(int expressId);
 
-    ProductVO inputProduct(int expressId);
+    ExpressProductVO inputProduct(int expressId);
 
 
 }

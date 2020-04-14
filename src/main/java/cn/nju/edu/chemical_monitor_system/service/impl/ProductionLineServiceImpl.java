@@ -12,6 +12,7 @@ import cn.nju.edu.chemical_monitor_system.vo.ProductionLineVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -70,10 +71,10 @@ public class ProductionLineServiceImpl implements ProductionLineService {
             return new ProductionLineVO("企业id不存在");
         }
 
-        ProductionLineEntity productionLineEntity = new ProductionLineEntity();
+        ProductionLineEntity productionLineEntity = productionLineOpt.get();
         productionLineEntity.setEnterpriseEntity(enterpriseOpt.get());
-        productionLineEntity.setProductionLineId(productionLineVO.getProductionLineId());
-        productionLineEntity.setEnable(productionLineVO.getEnable());
+        //productionLineEntity.setProductionLineId(productionLineVO.getProductionLineId());
+        //productionLineEntity.setEnable(productionLineVO.getEnable());
         productionLineDao.saveAndFlush(productionLineEntity);
         return new ProductionLineVO(productionLineEntity);
     }
@@ -88,5 +89,24 @@ public class ProductionLineServiceImpl implements ProductionLineService {
 
         List<BatchEntity> batchEntities = batchDao.findByProductionLineId(plId);
         return batchEntities.stream().map(BatchVO::new).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ProductionLineVO> getAll() {
+        return productionLineDao.findAll().stream().map(ProductionLineVO::new).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ProductionLineVO> searchByEnterprise(int eid) {
+        Optional<EnterpriseEntity> enterpriseOpt = enterpriseDao.findById(eid);
+
+        return enterpriseOpt.map(enterpriseEntity -> productionLineDao.findByEnterpriseEntity(enterpriseEntity).stream().map(ProductionLineVO::new).collect(Collectors.toList())).orElseGet(ArrayList::new);
+    }
+
+    @Override
+    public ProductionLineVO getProductionLine(int plId) {
+        Optional<ProductionLineEntity> productionLineOpt = productionLineDao.findById(plId);
+
+        return productionLineOpt.map(ProductionLineVO::new).orElseGet(() -> new ProductionLineVO("生产线不存在"));
     }
 }

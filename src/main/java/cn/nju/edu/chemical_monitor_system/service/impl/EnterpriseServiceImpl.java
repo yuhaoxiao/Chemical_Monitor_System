@@ -54,10 +54,10 @@ public class EnterpriseServiceImpl implements EnterpriseService {
             return new EnterpriseVO("企业id不存在");
         }
 
-        EnterpriseEntity enterpriseEntity = new EnterpriseEntity();
+        EnterpriseEntity enterpriseEntity = enterpriseOpt.get();
         enterpriseEntity.setName(enterpriseVO.getName());
-        enterpriseEntity.setEnterpriseId(enterpriseVO.getEnterpriseId());
-        enterpriseEntity.setEnable(enterpriseVO.getEnterpriseId());
+        //enterpriseEntity.setEnterpriseId(enterpriseVO.getEnterpriseId());
+        //enterpriseEntity.setEnable(enterpriseVO.getEnterpriseId());
         enterpriseDao.saveAndFlush(enterpriseEntity);
         return new EnterpriseVO(enterpriseEntity);
     }
@@ -71,12 +71,17 @@ public class EnterpriseServiceImpl implements EnterpriseService {
             Optional<EnterpriseEntity> enterpriseOpt = enterpriseDao.findById(eid);
 
             if (enterpriseOpt.isPresent()) {
+                enterpriseEntities.clear();
                 enterpriseEntities.add(enterpriseOpt.get());
             }
         } catch (Exception e) {
-
         }
 
         return enterpriseEntities.stream().map(EnterpriseVO::new).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<EnterpriseVO> getAll() {
+        return enterpriseDao.findAll().stream().map(EnterpriseVO::new).collect(Collectors.toList());
     }
 }
