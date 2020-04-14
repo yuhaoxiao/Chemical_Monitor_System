@@ -12,7 +12,7 @@ public class UserVO {
 
     private int userId;
     private String password;
-    private String type;  // 1：'操作员', 2：'管理员', 3：'监控员'
+    private int type;  // 1：'操作员', 2：'管理员', 3：'监控员'
     private String name;
     private int enable;
     private Timestamp lastOperationTime;

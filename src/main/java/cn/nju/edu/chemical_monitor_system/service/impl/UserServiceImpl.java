@@ -57,7 +57,7 @@ public class UserServiceImpl implements UserService {
         }
     }
     @Override
-    public UserVO register(String name, String password, String type) {
+    public UserVO register(String name, String password, int type) {
         UserEntity u = userDao.findFirstByName(name);
 
         if (u != null) {

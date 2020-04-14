@@ -10,7 +10,7 @@ public interface UserService {
 
     UserVO login(String name, String password, HttpServletResponse httpServletResponse);
 
-    UserVO register(String name, String password, String type);
+    UserVO register(String name, String password, int type);
 
     UserVO getUser(int uid);
 
