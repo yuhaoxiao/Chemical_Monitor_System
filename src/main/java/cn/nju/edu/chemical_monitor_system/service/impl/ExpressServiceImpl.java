@@ -252,6 +252,8 @@ public class ExpressServiceImpl implements ExpressService {
                 expressProductEntity.setOutputNumber(expressProductEntity.getOutputNumber() + outputNumber);
                 if (expressProductEntity.getOutputNumber() == number) {
                     expressProductEntity.setStatus(ExpressProductStatusEnum.OUT_INVENTORY.getCode());//更新状态为已出库
+                }else{
+                    expressProductEntity.setStatus(ExpressProductStatusEnum.OUT_INVENTORY_ING.getCode());
                 }
                 result=expressProductEntity;
                 expressProductDao.saveAndFlush(expressProductEntity);
@@ -342,6 +344,8 @@ public class ExpressServiceImpl implements ExpressService {
                 expressProductEntity.setInputNumber(expressProductEntity.getInputNumber() + inputNumber);
                 if (expressProductEntity.getInputNumber() == number) {
                     expressProductEntity.setStatus(ExpressProductStatusEnum.IN_INVENTORY.getCode());//更新状态为已入库
+                }else{
+                    expressProductEntity.setStatus(ExpressProductStatusEnum.IN_INVENTORY_ING.getCode());
                 }
                 result=new ExpressProductVO(expressProductEntity,expressProductEntity.getInputNumber(),inputNumber,new ProductVO(productDao.findByProductId(productId)));
                 expressProductDao.saveAndFlush(expressProductEntity);

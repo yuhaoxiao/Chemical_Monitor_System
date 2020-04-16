@@ -50,7 +50,7 @@ public class MyRealm extends AuthorizingRealm {
         logger.info("调用授权接口,调用用户为{}",username);
         UserEntity userEntity = userDao.findFirstByName(username);
         SimpleAuthorizationInfo simpleAuthorizationInfo = new SimpleAuthorizationInfo();
-        simpleAuthorizationInfo.addRole(UserTypeEnum.getRole(userEntity.getType()));
+        simpleAuthorizationInfo.addRole(UserTypeEnum.getRole(userEntity.getType()+""));
         return simpleAuthorizationInfo;
     }
 

@@ -36,7 +36,7 @@ public class UserController {
     public BaseResponse addUser(@RequestBody UserVO userVO) {
         String name = userVO.getName();
         String password = userVO.getPassword();
-        String type = userVO.getType();
+        int type = userVO.getType();
         return new BaseResponse(200,"注册成功",userService.register(name, password, type));
     }
 

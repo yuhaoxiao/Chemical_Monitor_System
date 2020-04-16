@@ -19,7 +19,7 @@ public class UserEntity {
     private int userId;
     private String name;
     private String password;
-    private String type;
+    private int type;
     private int enable;
     private List<BatchEntity> batchEntities;
 
@@ -56,11 +56,11 @@ public class UserEntity {
 
     @Basic
     @Column(name = "Type")
-    public String getType() {
+    public int getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(int type) {
         this.type = type;
     }
 
@@ -104,7 +104,7 @@ public class UserEntity {
     public int hashCode() {
         int result = userId;
         result = 31 * result + (password != null ? password.hashCode() : 0);
-        result = 31 * result + (type != null ? type.hashCode() : 0);
+        result = 31 * result + type;
         return result;
     }
 }
