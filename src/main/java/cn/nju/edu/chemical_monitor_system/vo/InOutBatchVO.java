@@ -1,7 +1,6 @@
 package cn.nju.edu.chemical_monitor_system.vo;
 
 import cn.nju.edu.chemical_monitor_system.constant.InOutBatchStatusEnum;
-import cn.nju.edu.chemical_monitor_system.entity.CasEntity;
 import cn.nju.edu.chemical_monitor_system.entity.InOutBatchEntity;
 import cn.nju.edu.chemical_monitor_system.entity.ProductEntity;
 import lombok.Data;
@@ -23,9 +22,10 @@ public class InOutBatchVO {
     private int code;
     private String message;
 
-    public InOutBatchVO(){
+    public InOutBatchVO() {
 
     }
+
     public InOutBatchVO(InOutBatchEntity io) {
         if (io == null) {
             this.code = 0;
@@ -41,6 +41,7 @@ public class InOutBatchVO {
         this.finishedNumber = io.getFinishedNumber();
         this.code = 1;
     }
+
     public InOutBatchVO(InOutBatchEntity io, ProductEntity p, Double thisNumber) {
         if (io == null) {
             this.code = 0;

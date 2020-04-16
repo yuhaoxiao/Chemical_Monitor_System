@@ -1,7 +1,10 @@
 package cn.nju.edu.chemical_monitor_system.service.impl;
 
+import cn.nju.edu.chemical_monitor_system.constant.BatchTypeEnum;
 import cn.nju.edu.chemical_monitor_system.dao.EnterpriseDao;
+import cn.nju.edu.chemical_monitor_system.dao.ProductionLineDao;
 import cn.nju.edu.chemical_monitor_system.entity.EnterpriseEntity;
+import cn.nju.edu.chemical_monitor_system.entity.ProductionLineEntity;
 import cn.nju.edu.chemical_monitor_system.service.EnterpriseService;
 import cn.nju.edu.chemical_monitor_system.vo.EnterpriseVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +20,9 @@ public class EnterpriseServiceImpl implements EnterpriseService {
     @Autowired
     private EnterpriseDao enterpriseDao;
 
+    @Autowired
+    private ProductionLineDao productionLineDao;
+
     @Override
     public EnterpriseVO addEnterprise(String name) {
         List<EnterpriseEntity> existed = enterpriseDao.findByName(name);
@@ -29,6 +35,25 @@ public class EnterpriseServiceImpl implements EnterpriseService {
         enterpriseEntity.setName(name);
         enterpriseEntity.setEnable(1);
         enterpriseDao.saveAndFlush(enterpriseEntity);
+
+        ProductionLineEntity plInPark = new ProductionLineEntity();
+        plInPark.setEnable(1);
+        plInPark.setType(BatchTypeEnum.IN_PARK.getCode());
+        plInPark.setEnterpriseEntity(enterpriseEntity);
+        productionLineDao.saveAndFlush(plInPark);
+
+        ProductionLineEntity plOutPark = new ProductionLineEntity();
+        plOutPark.setEnable(1);
+        plOutPark.setType(BatchTypeEnum.OUT_PARK.getCode());
+        plOutPark.setEnterpriseEntity(enterpriseEntity);
+        productionLineDao.saveAndFlush(plOutPark);
+
+        ProductionLineEntity plDestory = new ProductionLineEntity();
+        plDestory.setEnable(1);
+        plDestory.setType(BatchTypeEnum.DESTROY.getCode());
+        plDestory.setEnterpriseEntity(enterpriseEntity);
+        productionLineDao.saveAndFlush(plDestory);
+
         return new EnterpriseVO(enterpriseEntity);
     }
 

@@ -109,4 +109,19 @@ public class ProductionLineServiceImpl implements ProductionLineService {
 
         return productionLineOpt.map(ProductionLineVO::new).orElseGet(() -> new ProductionLineVO("生产线不存在"));
     }
+
+    @Override
+    public ProductionLineVO getByEnterpriseAndType(int eid, int type) {
+        Optional<EnterpriseEntity> enterpriseOpt = enterpriseDao.findById(eid);
+
+        if (!enterpriseOpt.isPresent()) {
+            return new ProductionLineVO("企业id不存在");
+        }
+
+        ProductionLineEntity productionLineEntity = productionLineDao.findFirstByEnterpriseEntityAndType(enterpriseOpt.get(), type);
+        if (productionLineEntity == null) {
+            return new ProductionLineVO("该企业没有这种生产线");
+        }
+        return new ProductionLineVO(productionLineEntity);
+    }
 }

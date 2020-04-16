@@ -9,4 +9,6 @@ import java.util.List;
 
 public interface ProductionLineDao extends JpaRepository<ProductionLineEntity, Serializable> {
     List<ProductionLineEntity> findByEnterpriseEntity(EnterpriseEntity enterpriseEntity);
+
+    ProductionLineEntity findFirstByEnterpriseEntityAndType(EnterpriseEntity enterpriseEntity, int type);
 }

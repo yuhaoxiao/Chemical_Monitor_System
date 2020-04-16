@@ -21,30 +21,33 @@ public class ExpressProductVO {
             this.code = 0;
             return;
         }
-        init(ep,null);
+        init(ep, null);
     }
+
     public ExpressProductVO(ExpressProductEntity ep, ProductVO productVO) {
         if (ep == null) {
             this.code = 0;
             return;
         }
-        init(ep,productVO);
+        init(ep, productVO);
     }
+
     public ExpressProductVO(ExpressProductEntity ep, double finishedNumber, double thisNumber, ProductVO productVO) {
         if (ep == null) {
             this.code = 0;
             return;
         }
-        init(ep,productVO);
-        this.finishedNumber=finishedNumber;
-        this.thisNumber=thisNumber;
+        init(ep, productVO);
+        this.finishedNumber = finishedNumber;
+        this.thisNumber = thisNumber;
     }
-    private void init(ExpressProductEntity ep,ProductVO productVO){
+
+    private void init(ExpressProductEntity ep, ProductVO productVO) {
         this.expressProductId = ep.getExpressProductId();
         this.expressId = ep.getExpressEntity().getExpressId();
         this.number = ep.getNumber();
         this.code = 1;
-        this.productVO=productVO;
+        this.productVO = productVO;
     }
 
 }

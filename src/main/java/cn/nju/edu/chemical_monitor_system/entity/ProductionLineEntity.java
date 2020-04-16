@@ -9,6 +9,7 @@ import javax.persistence.*;
 public class ProductionLineEntity {
     private int productionLineId;
     private EnterpriseEntity enterpriseEntity;
+    private int type;
     private int enable;
 
     @Id
@@ -31,6 +32,16 @@ public class ProductionLineEntity {
 
     public void setEnterpriseEntity(EnterpriseEntity enterpriseEntity) {
         this.enterpriseEntity = enterpriseEntity;
+    }
+
+    @Basic
+    @Column(name = "Type")
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
     }
 
     @Basic
