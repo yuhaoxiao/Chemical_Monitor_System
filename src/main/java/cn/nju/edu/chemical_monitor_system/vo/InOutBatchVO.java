@@ -1,7 +1,6 @@
 package cn.nju.edu.chemical_monitor_system.vo;
 
 import cn.nju.edu.chemical_monitor_system.constant.InOutBatchStatusEnum;
-import cn.nju.edu.chemical_monitor_system.entity.CasEntity;
 import cn.nju.edu.chemical_monitor_system.entity.InOutBatchEntity;
 import cn.nju.edu.chemical_monitor_system.entity.ProductEntity;
 import lombok.Data;

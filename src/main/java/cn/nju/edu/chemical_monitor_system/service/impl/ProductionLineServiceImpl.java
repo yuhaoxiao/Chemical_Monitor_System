@@ -1,5 +1,6 @@
 package cn.nju.edu.chemical_monitor_system.service.impl;
 
+import cn.nju.edu.chemical_monitor_system.constant.BatchTypeEnum;
 import cn.nju.edu.chemical_monitor_system.dao.BatchDao;
 import cn.nju.edu.chemical_monitor_system.dao.EnterpriseDao;
 import cn.nju.edu.chemical_monitor_system.dao.ProductionLineDao;
@@ -40,6 +41,7 @@ public class ProductionLineServiceImpl implements ProductionLineService {
         ProductionLineEntity productionLineEntity = new ProductionLineEntity();
         productionLineEntity.setEnable(1);
         productionLineEntity.setEnterpriseEntity(enterpriseOpt.get());
+        productionLineEntity.setType(BatchTypeEnum.PRODUCE.getCode());
         productionLineDao.saveAndFlush(productionLineEntity);
         return new ProductionLineVO(productionLineEntity);
     }
@@ -108,5 +110,20 @@ public class ProductionLineServiceImpl implements ProductionLineService {
         Optional<ProductionLineEntity> productionLineOpt = productionLineDao.findById(plId);
 
         return productionLineOpt.map(ProductionLineVO::new).orElseGet(() -> new ProductionLineVO("生产线不存在"));
+    }
+
+    @Override
+    public ProductionLineVO getByEnterpriseAndType(int eid, int type) {
+        Optional<EnterpriseEntity> enterpriseOpt = enterpriseDao.findById(eid);
+
+        if (!enterpriseOpt.isPresent()) {
+            return new ProductionLineVO("企业id不存在");
+        }
+
+        ProductionLineEntity productionLineEntity = productionLineDao.findFirstByEnterpriseEntityAndType(enterpriseOpt.get(), type);
+        if (productionLineEntity == null) {
+            return new ProductionLineVO("该企业没有这种生产线");
+        }
+        return new ProductionLineVO(productionLineEntity);
     }
 }

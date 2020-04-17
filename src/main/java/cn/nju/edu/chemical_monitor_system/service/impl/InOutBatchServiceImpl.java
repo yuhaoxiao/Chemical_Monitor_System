@@ -10,11 +10,8 @@ import cn.nju.edu.chemical_monitor_system.vo.InOutBatchVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class InOutBatchServiceImpl implements InOutBatchService {
@@ -32,7 +29,7 @@ public class InOutBatchServiceImpl implements InOutBatchService {
     private ProductDao productDao;
 
     @Autowired
-    private CasDao casDao;
+    private StoreProductDao storeProductDao;
 
     @Autowired
     private RfidUtil rfidUtil;
@@ -40,9 +37,14 @@ public class InOutBatchServiceImpl implements InOutBatchService {
     @Override
     public InOutBatchVO inputBatch(int batchId, int storeId) {
         Optional<BatchEntity> batchOpt = batchDao.findById(batchId);
+        Optional<StoreEntity> storeOpt = storeDao.findById(storeId);
 
         if (!batchOpt.isPresent()) {
             return new InOutBatchVO("批次id不存在");
+        }
+
+        if (!storeOpt.isPresent()) {
+            return new InOutBatchVO("仓库id不存在");
         }
 
         BatchEntity batchEntity = batchOpt.get();
@@ -57,55 +59,83 @@ public class InOutBatchServiceImpl implements InOutBatchService {
             return new InOutBatchVO("该批次没有原材料");
         }
 
-        String port = storeDao.findById(storeId).get().getPort();
+        StoreEntity storeEntity = storeOpt.get();
+        String port = storeEntity.getPort();
         String rfidInfo = rfidUtil.read(port);
         RfidInfoEntity rfidInfoEntity = new RfidInfoEntity(rfidInfo);
         int productId = rfidInfoEntity.getProductId();
 
+        int finishCount = 0;
+        InOutBatchEntity iob = null;
+
         for (InOutBatchEntity inOutBatchEntity : inOutBatchs) {
-            if (inOutBatchEntity.getProductId() != productId) {
-                continue;
-            }
-            Double thisNumber = rfidInfoEntity.getNumber();
-            Double finishedNumber = inOutBatchEntity.getFinishedNumber() + thisNumber;
+            if (inOutBatchEntity.getProductId() == productId) {
+                iob = inOutBatchEntity;
+                Double thisNumber = rfidInfoEntity.getNumber();
+                Double finishedNumber = inOutBatchEntity.getFinishedNumber() + thisNumber;
 
-            if (finishedNumber > inOutBatchEntity.getNumber()) {
-                return new InOutBatchVO("上线了数量为" + rfidInfoEntity.getNumber() + "的产品id为" + productId +
-                        "的产品，超出了所需的" + (inOutBatchEntity.getNumber() - finishedNumber) + "的数量");
-            } else {
-                inOutBatchEntity.setFinishedNumber(finishedNumber);
-                ProductEntity productEntity = productDao.findById(productId).get();
-                if (finishedNumber < inOutBatchEntity.getNumber()) {
-                    inoutBatchDao.saveAndFlush(inOutBatchEntity);
-                    return new InOutBatchVO(inOutBatchEntity, productEntity, thisNumber);
-                }
+                if (finishedNumber > inOutBatchEntity.getNumber()) {
+                    return new InOutBatchVO("上线了数量为" + rfidInfoEntity.getNumber() + "的产品id为" + productId +
+                            "的产品，超出了所需的" + (inOutBatchEntity.getNumber() - finishedNumber) + "的数量");
+                } else {
+                    if (iob.getStatus() == InOutBatchStatusEnum.NOT_START.getCode()) {
+                        iob.setStatus(InOutBatchStatusEnum.ING.getCode());
+                    }
 
-                inOutBatchEntity.setStatus(InOutBatchStatusEnum.COMPLETED.getCode());
-                inoutBatchDao.saveAndFlush(inOutBatchEntity);
-                List<InOutBatchEntity> newInOutBatchs = inoutBatchDao.findByBatchIdAndInout(batchId, 1);
+                    iob.setFinishedNumber(finishedNumber);
+                    iob.setFinishedNumber(finishedNumber);
 
-                for (InOutBatchEntity newInoutBatch : newInOutBatchs) {
-                    if (newInoutBatch.getStatus() != InOutBatchStatusEnum.COMPLETED.getCode()) {
-                        return new InOutBatchVO(inOutBatchEntity, productEntity, thisNumber);
+                    if (finishedNumber == iob.getNumber()) {
+                        iob.setStatus(InOutBatchStatusEnum.COMPLETED.getCode());
                     }
                 }
+            }
 
-                InOutBatchVO inOutBatchVO = new InOutBatchVO(inOutBatchEntity, productEntity, thisNumber);
-                inOutBatchVO.setCode(2);
-                BatchEntity batch = batchDao.findById(batchId).get();
-                batch.setStatus(BatchStatusEnum.IN_PROCESS.getCode());
-                batchDao.saveAndFlush(batch);
-                return inOutBatchVO;
+            if (iob.getStatus() == InOutBatchStatusEnum.COMPLETED.getCode()) {
+                finishCount++;
             }
         }
 
-        return new InOutBatchVO("该批次没有产品id为" + productId + "的原材料");
+        if (iob == null) {
+            return new InOutBatchVO("该批次没有产品id为" + productId + "的原材料");
+        }
+
+        inoutBatchDao.saveAndFlush(iob);
+        InOutBatchVO inOutBatchVO = new InOutBatchVO(iob, productDao.findByProductId(iob.getProductId()), rfidInfoEntity.getNumber());
+        if (finishCount == inOutBatchs.size()) {
+            inOutBatchVO.setCode(2);
+            batchEntity.setStatus(BatchStatusEnum.IN_PROCESS.getCode());
+            batchDao.saveAndFlush(batchEntity);
+        }
+
+        List<StoreProductEntity> storeProductEntities = storeEntity.getStoreProductEntities();
+        for (StoreProductEntity storeProductEntity : storeProductEntities) {
+            if (storeProductEntity.getProductEntity().getProductId() == productId) {
+                double number = storeProductEntity.getNumber();
+                number -= rfidInfoEntity.getNumber();
+                if (number == 0) {
+                    storeProductDao.delete(storeProductEntity);
+                } else if (number < 0) {
+                    return new InOutBatchVO("系统出错，数据不一致");
+                } else {
+                    storeProductEntity.setNumber(number);
+                    storeProductDao.saveAndFlush(storeProductEntity);
+                }
+            }
+        }
+
+        return inOutBatchVO;
     }
 
     @Override
     public InOutBatchVO outputBatch(int batchId, int storeId, int productId, double number) {
+        if (number < 0) {
+            return new InOutBatchVO("数量不能为负数");
+        }
+
         Optional<BatchEntity> batchOpt = batchDao.findById(batchId);
         Optional<ProductEntity> productOpt = productDao.findById(productId);
+        Optional<StoreEntity> storeOpt = storeDao.findById(storeId);
 
         if (!batchOpt.isPresent()) {
             return new InOutBatchVO("批次id不存在");
@@ -121,13 +151,18 @@ public class InOutBatchServiceImpl implements InOutBatchService {
             return new InOutBatchVO("产品id不存在");
         }
 
+        if (!storeOpt.isPresent()) {
+            return new InOutBatchVO("仓库id不存在");
+        }
+
         List<InOutBatchEntity> inOutBatchs = inoutBatchDao.findByBatchIdAndInout(batchId, 0);
 
         if (inOutBatchs == null || inOutBatchs.size() == 0) {
             return new InOutBatchVO("该批次没有产品");
         }
 
-        String port = storeDao.findById(storeId).get().getPort();
+        StoreEntity storeEntity = storeOpt.get();
+        String port = storeEntity.getPort();
 
         ProductEntity productEntity = productOpt.get();
         RfidInfoEntity rfidInfoEntity = new RfidInfoEntity();
@@ -137,47 +172,72 @@ public class InOutBatchServiceImpl implements InOutBatchService {
         rfidInfoEntity.setExpressId(0);
         rfidInfoEntity.setNumber(number);
 
+        InOutBatchEntity iob = null;
+        int finishCount = 0;
+
         for (InOutBatchEntity inOutBatchEntity : inOutBatchs) {
-            if (inOutBatchEntity.getProductId() != productId) {
-                continue;
-            }
+            if (inOutBatchEntity.getProductId() == productId) {
+                iob = inOutBatchEntity;
+                Double thisNumber = rfidInfoEntity.getNumber();
+                Double finishedNumber = inOutBatchEntity.getFinishedNumber() + thisNumber;
 
-            Double thisNumber = rfidInfoEntity.getNumber();
-            Double finishedNumber = inOutBatchEntity.getFinishedNumber() + thisNumber;
-
-            if (finishedNumber > inOutBatchEntity.getNumber()) {
-                return new InOutBatchVO("下线了数量为" + rfidInfoEntity.getNumber() + "的产品id为" + productId +
-                        "的产品，超出了所需的" + (inOutBatchEntity.getNumber() - finishedNumber) + "的数量");
-            } else {
-                inOutBatchEntity.setFinishedNumber(finishedNumber);
-
-                if (finishedNumber < inOutBatchEntity.getNumber()) {
-                    inoutBatchDao.saveAndFlush(inOutBatchEntity);
-                    rfidUtil.write(rfidInfoEntity.toString(), port);
-                    return new InOutBatchVO(inOutBatchEntity, productEntity, thisNumber);
+                if (iob.getStatus() == InOutBatchStatusEnum.NOT_START.getCode()) {
+                    iob.setStatus(InOutBatchStatusEnum.ING.getCode());
                 }
 
-                inOutBatchEntity.setStatus(InOutBatchStatusEnum.COMPLETED.getCode());
-                inoutBatchDao.saveAndFlush(inOutBatchEntity);
-                List<InOutBatchEntity> newInOutBatchs = inoutBatchDao.findByBatchIdAndInout(batchId, 0);
-
-                for (InOutBatchEntity newInoutBatch : newInOutBatchs) {
-                    if (newInoutBatch.getStatus() != InOutBatchStatusEnum.COMPLETED.getCode()) {
-                        return new InOutBatchVO(inOutBatchEntity, productEntity, thisNumber);
+                if (finishedNumber > inOutBatchEntity.getNumber()) {
+                    return new InOutBatchVO("下线了数量为" + rfidInfoEntity.getNumber() + "的产品id为" + productId +
+                            "的产品，超出了所需的" + (inOutBatchEntity.getNumber() - finishedNumber) + "的数量");
+                } else {
+                    iob.setFinishedNumber(finishedNumber);
+                    String writeRfid = rfidUtil.write(rfidInfoEntity.toString(), port);
+                    if (writeRfid.equals("-1")) {
+                        return new InOutBatchVO("写入失败");
+                    }
+                    if (finishedNumber == inOutBatchEntity.getNumber()) {
+                        iob.setStatus(InOutBatchStatusEnum.COMPLETED.getCode());
                     }
                 }
+            }
 
-                InOutBatchVO inOutBatchVO = new InOutBatchVO(inOutBatchEntity, productEntity, thisNumber);
-                inOutBatchVO.setCode(2);
-                BatchEntity batch = batchDao.findById(batchId).get();
-                batch.setStatus(BatchStatusEnum.COMPLETE.getCode());
-                batchDao.saveAndFlush(batch);
-                rfidUtil.write(rfidInfoEntity.toString(), port);
-                return inOutBatchVO;
+            if (inOutBatchEntity.getStatus() == InOutBatchStatusEnum.COMPLETED.getCode()) {
+                finishCount++;
             }
         }
 
-        return new InOutBatchVO("该批次没有产品id为" + productId + "的产品");
+        if (iob == null) {
+            return new InOutBatchVO("该批次没有产品id为" + productId + "的产品");
+        }
+
+        inoutBatchDao.saveAndFlush(iob);
+        InOutBatchVO inOutBatchVO = new InOutBatchVO(iob, productDao.findByProductId(iob.getProductId()), rfidInfoEntity.getNumber());
+        if (finishCount == inOutBatchs.size()) {
+            inOutBatchVO.setCode(2);
+            batchEntity.setStatus(BatchStatusEnum.COMPLETE.getCode());
+            batchDao.saveAndFlush(batchEntity);
+        }
+
+        List<StoreProductEntity> storeProductEntities = storeEntity.getStoreProductEntities();
+        boolean exist = false;
+        for (StoreProductEntity storeProductEntity : storeProductEntities) {
+            if (storeProductEntity.getProductEntity().getProductId() == productId) {
+                exist = true;
+                double previousNumber = storeProductEntity.getNumber();
+                previousNumber += number;
+                storeProductEntity.setNumber(previousNumber);
+                storeProductDao.saveAndFlush(storeProductEntity);
+            }
+        }
+
+        if (!exist) {
+            StoreProductEntity storeProductEntity = new StoreProductEntity();
+            storeProductEntity.setProductEntity(productEntity);
+            storeProductEntity.setStoreEntity(storeEntity);
+            storeProductEntity.setNumber(number);
+            storeProductDao.saveAndFlush(storeProductEntity);
+        }
+
+        return inOutBatchVO;
     }
 
 }

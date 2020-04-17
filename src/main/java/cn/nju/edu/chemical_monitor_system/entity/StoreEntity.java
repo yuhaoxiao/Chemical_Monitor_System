@@ -67,7 +67,6 @@ public class StoreEntity {
         this.port = port;
     }
 
-
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "storeEntity", fetch = FetchType.LAZY)
     @JsonBackReference(value = "storeProductEntities")
     public List<StoreProductEntity> getStoreProductEntities() {
@@ -77,7 +76,6 @@ public class StoreEntity {
     public void setStoreProductEntities(List<StoreProductEntity> storeProductEntities) {
         this.storeProductEntities = storeProductEntities;
     }
-
 
     @Override
     public boolean equals(Object o) {

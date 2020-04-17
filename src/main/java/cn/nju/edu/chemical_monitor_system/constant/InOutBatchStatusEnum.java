@@ -2,8 +2,9 @@ package cn.nju.edu.chemical_monitor_system.constant;
 
 public enum InOutBatchStatusEnum {
     NOT_START(0, "未开始"),
-    COMPLETED(1, "已完成"),
-    ERROR(2, "出错");
+    ING(1, "进行中"),
+    COMPLETED(2, "已完成"),
+    ERROR(3, "出错");
 
     private int code;
 

@@ -1,5 +1,6 @@
 package cn.nju.edu.chemical_monitor_system.controller;
 
+import cn.nju.edu.chemical_monitor_system.constant.BatchTypeEnum;
 import cn.nju.edu.chemical_monitor_system.response.BaseResponse;
 import cn.nju.edu.chemical_monitor_system.service.ProductionLineService;
 import cn.nju.edu.chemical_monitor_system.vo.ProductionLineVO;
@@ -24,19 +25,19 @@ public class ProductionLineController {
     @GetMapping("/get_in_park_by_eid/{eid}")
     @RequiresRoles(logical = Logical.OR, value = {"operator", "administrator"})
     public BaseResponse getInParkProductionLineByEnterpriseId(@PathVariable int eid) {  // TODO: 根据企业id获取该企业的入园生产线
-        return new BaseResponse(200, "success", ProductionLineVO.getSpecific(eid, 0));
+        return new BaseResponse(200, "success", productionLineService.getByEnterpriseAndType(eid, BatchTypeEnum.IN_PARK.getCode()));
     }
 
     @GetMapping("/get_out_park_by_eid/{eid}")
     @RequiresRoles(logical = Logical.OR, value = {"operator", "administrator"})
     public BaseResponse getOutParkProductionLineByEnterpriseId(@PathVariable int eid) {  // TODO: 根据企业id获取该企业的出园生产线
-        return new BaseResponse(200, "success", ProductionLineVO.getSpecific(eid, 1));
+        return new BaseResponse(200, "success", productionLineService.getByEnterpriseAndType(eid, BatchTypeEnum.OUT_PARK.getCode()));
     }
 
     @GetMapping("/get_destroy_by_eid/{eid}")
     @RequiresRoles(logical = Logical.OR, value = {"operator", "administrator"})
     public BaseResponse getDestroyProductionLineByEnterpriseId(@PathVariable int eid) {  // TODO: 根据企业id获取该企业的销毁生产线
-        return new BaseResponse(200, "success", ProductionLineVO.getSpecific(eid, 2));
+        return new BaseResponse(200, "success", productionLineService.getByEnterpriseAndType(eid, BatchTypeEnum.DESTROY.getCode()));
     }
 
 

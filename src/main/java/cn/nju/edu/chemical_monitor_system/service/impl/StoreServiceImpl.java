@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @RestController
 public class StoreServiceImpl implements StoreService {
@@ -47,57 +46,6 @@ public class StoreServiceImpl implements StoreService {
         }
 
         return new StoreVO(storeOpt.get());
-    }
-
-    @Override
-    public Map<Integer, Double> getStoreProduct(int sid) {
-        Optional<StoreEntity> storeOpt = storeDao.findById(sid);
-
-        if (!storeOpt.isPresent()) {
-            return null;
-        }
-
-        Map<Integer, Double> productNumber = new HashMap<>();
-
-        for (ExpressEntity in : expressDao.findByInputStoreId(sid)) {
-            for (ExpressProductEntity inep : in.getExpressProductEntities()) {
-                int productId = inep.getProductId();
-                if (productNumber.containsKey(productId)) {
-                    Double number = productNumber.get(productId);
-                    productNumber.put(productId, number + inep.getNumber());
-                } else {
-                    productNumber.put(productId, inep.getNumber());
-                }
-            }
-        }
-
-        for (ExpressEntity out : expressDao.findByOutputStoreId(sid)) {
-            for (ExpressProductEntity outep : out.getExpressProductEntities()) {
-                int productId = outep.getProductId();
-                if (productNumber.containsKey(productId)) {
-                    Double number = productNumber.get(productId);
-                    productNumber.put(productId, number - outep.getNumber());
-                } else {
-                    productNumber.put(productId, -outep.getNumber());
-                }
-            }
-        }
-
-        for (InOutBatchEntity inout : inoutBatchDao.findByStoreId(sid)) {
-            if (inout.getStatus() != InOutBatchStatusEnum.COMPLETED.getCode()) {
-                continue;
-            }
-
-            int productId = inout.getProductId();
-            if (productNumber.containsKey(productId)) {
-                Double number = productNumber.get(productId);
-                productNumber.put(productId, number + inout.getNumber() * (inout.getInout() == 1 ? -1 : 1));
-            } else {
-                productNumber.put(productId, inout.getNumber() * (inout.getInout() == 1 ? -1 : 1));
-            }
-        }
-
-        return productNumber;
     }
 
     @Override
@@ -188,6 +136,18 @@ public class StoreServiceImpl implements StoreService {
                     if (storeProductEntity.getProductEntity().getProductId() == e1.getProductId()) {
                         storeProductEntity.setNumber(storeProductEntity.getNumber() - number);
                     }
+                }
+            }
+        }
+
+        List<InOutBatchEntity> inOutBatchEntities = inoutBatchDao.findByStoreId(storeId).stream()
+                .filter(e -> e.getInout() == 0 && (e.getStatus() == InOutBatchStatusEnum.NOT_START.getCode() ||
+                        e.getStatus() == InOutBatchStatusEnum.ING.getCode())).collect(Collectors.toList());
+        for (InOutBatchEntity inOutBatchEntity : inOutBatchEntities) {
+            double notFinished = inOutBatchEntity.getNumber() - inOutBatchEntity.getFinishedNumber();
+            for (StoreProductEntity storeProductEntity : storeProductEntities) {
+                if (storeProductEntity.getProductEntity().getProductId() == inOutBatchEntity.getProductId()) {
+                    storeProductEntity.setNumber(storeProductEntity.getNumber() - notFinished);
                 }
             }
         }

@@ -45,7 +45,6 @@ public class ExpressServiceImpl implements ExpressService {
     @Autowired
     private StoreProductDao storeProductDao;
 
-
     @Autowired
     private SafeUtil safeUtil;
 

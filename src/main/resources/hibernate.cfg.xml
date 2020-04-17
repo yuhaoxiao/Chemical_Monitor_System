@@ -5,7 +5,7 @@
 <hibernate-configuration>
     <session-factory>
         <!--数据库连接url配置-->
-        <property name="connection.url">jdbc:mysql://localhost:3306/mydb</property>
+        <property name="connection.url">jdbc:mysql://49.234.54.34:3306/mydb</property>
         <!--数据库驱动配置-->
         <property name="connection.driver_class">com.mysql.jdbc.Driver</property>
         <mapping class="cn.nju.edu.chemical_monitor_system.entity.UserEntity"/>
