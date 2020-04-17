@@ -52,14 +52,6 @@ public class StoreController {
         return storeService.getStoreById(sid);
     }
 
-    @GetMapping("/store/get_store_products")
-    public Map<Integer, Double> getStoreProducts(int sid) {  //  暂时没用到
-        if (storeService.getStoreById(sid).getCode() == 0) {
-            return null;
-        }
-        return storeService.getStoreProduct(sid);
-    }
-
     @RequiresRoles(value={"administrator"})
     @PostMapping("/add_store")
     public BaseResponse addStore(@RequestBody StoreVO storeVO) {
