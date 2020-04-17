@@ -27,13 +27,14 @@ public class BatchController {
 
     @Autowired
     private UserUtil userUtil;
+
     @RequiresRoles(value = {"operator"})
     @PostMapping(value = "/create_batch")
     public BaseResponse createBatch(@RequestBody CreateBatchRequest createBatchRequest) {
         UserVO userVO = userUtil.getUser();
         return new BaseResponse(200, "success",
                 batchService.createBatch(createBatchRequest.getProductionLineId(),
-                createBatchRequest.getType(), createBatchRequest.getRaws(), userVO.getUserId()));
+                        createBatchRequest.getType(), createBatchRequest.getRaws(), userVO.getUserId()));
     }
 
     @RequiresRoles(value = {"operator"})

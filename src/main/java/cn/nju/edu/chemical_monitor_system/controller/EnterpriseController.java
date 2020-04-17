@@ -14,34 +14,34 @@ public class EnterpriseController {
     @Autowired
     private EnterpriseService enterpriseService;
 
-    @RequiresRoles(value={"administrator"})
+    @RequiresRoles(value = {"administrator"})
     @PostMapping(value = "/add_enterprise")
-    public BaseResponse addEnterprise(@RequestBody EnterpriseVO enterpriseVO){
+    public BaseResponse addEnterprise(@RequestBody EnterpriseVO enterpriseVO) {
         String name = enterpriseVO.getName();
         return new BaseResponse(200, "success", enterpriseService.addEnterprise(name));
     }
 
-    @RequiresRoles(value={"administrator"})
+    @RequiresRoles(value = {"administrator"})
     @PostMapping(value = "/delete_enterprise/{eid}")
-    public BaseResponse deleteEnterprise(@PathVariable int eid){
+    public BaseResponse deleteEnterprise(@PathVariable int eid) {
         return new BaseResponse(200, "success", enterpriseService.deleteEnterprise(eid));
     }
 
-    @RequiresRoles(value={"administrator"})
+    @RequiresRoles(value = {"administrator"})
     @PostMapping(value = "/update_enterprise")
-    public BaseResponse updateEnterprise(@RequestBody EnterpriseVO enterpriseVO){
+    public BaseResponse updateEnterprise(@RequestBody EnterpriseVO enterpriseVO) {
         return new BaseResponse(200, "success", enterpriseService.updateEnterprise(enterpriseVO));
     }
 
-    @RequiresRoles(value={"administrator"})
+    @RequiresRoles(value = {"administrator"})
     @GetMapping(value = "/search_enterprise/{s}")
-    public BaseResponse searchEnterprise(@PathVariable String s){
+    public BaseResponse searchEnterprise(@PathVariable String s) {
         return new BaseResponse(200, "success", enterpriseService.searchEnterprise(s));
     }
 
-    @RequiresRoles(value={"administrator"})
+    @RequiresRoles(value = {"administrator"})
     @GetMapping
-    public BaseResponse getAll(){
+    public BaseResponse getAll() {
         return new BaseResponse(200, "success", enterpriseService.getAll());
     }
 

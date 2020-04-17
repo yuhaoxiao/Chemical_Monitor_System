@@ -3,8 +3,8 @@ package cn.nju.edu.chemical_monitor_system.constant;
 
 public enum UserTypeEnum {
     OPERATOR(1, "operator"),
-    ADMINISTRATOR(2,"administrator"),
-    MONITOR(3,"monitor");
+    ADMINISTRATOR(2, "administrator"),
+    MONITOR(3, "monitor");
 
     private int code;
 
@@ -25,8 +25,8 @@ public enum UserTypeEnum {
         return name;
     }
 
-    public static String getRole(String type){
-        switch (type){
+    public static String getRole(String type) {
+        switch (type) {
             case "1":
                 return "operator";
             case "2":

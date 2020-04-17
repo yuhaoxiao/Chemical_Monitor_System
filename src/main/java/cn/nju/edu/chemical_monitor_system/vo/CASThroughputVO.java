@@ -20,7 +20,7 @@ public class CASThroughputVO {
         this.total = 0.0;
     }
 
-    public void calculate(){
+    public void calculate() {
         this.total = this.throughput.stream().reduce(Double::sum).orElse(0.0);
     }
 

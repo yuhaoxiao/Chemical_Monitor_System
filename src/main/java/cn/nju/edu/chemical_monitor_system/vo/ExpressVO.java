@@ -27,25 +27,27 @@ public class ExpressVO {
     public ExpressVO() {
 
     }
-    public ExpressVO(ExpressEntity e,String inputStoreName,String outputStoreName) {
+
+    public ExpressVO(ExpressEntity e, String inputStoreName, String outputStoreName) {
         if (e == null) {
             this.code = 0;
             return;
         }
-        this.inputStoreName=inputStoreName;
-        this.outputStoreName=outputStoreName;
+        this.inputStoreName = inputStoreName;
+        this.outputStoreName = outputStoreName;
         init(e);
     }
+
     public ExpressVO(ExpressEntity e) {
         if (e == null) {
             this.code = 0;
             return;
         }
 
-       init(e);
+        init(e);
     }
 
-    private void init(ExpressEntity e){
+    private void init(ExpressEntity e) {
         this.expressId = e.getExpressId();
         this.outputTime = e.getOutputTime();
         this.inputTime = e.getInputTime();
@@ -63,6 +65,7 @@ public class ExpressVO {
                 .map(ExpressProductVO::new)
                 .collect(Collectors.toList());
     }
+
     public ExpressVO(String message) {
         this.code = 0;
         this.message = message;

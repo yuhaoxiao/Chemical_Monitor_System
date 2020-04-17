@@ -31,8 +31,8 @@ public class WebSocketUtil {
      */
     @OnOpen
     public void onOpen(Session session) {
-        KafkaUtil kafkaUtil =(KafkaUtil)SpringContextUtil.getBean("kafkaUtil");
-        if(webSocketSet.size()==0){
+        KafkaUtil kafkaUtil = (KafkaUtil) SpringContextUtil.getBean("kafkaUtil");
+        if (webSocketSet.size() == 0) {
             kafkaUtil.start();
         }
         this.session = session;
@@ -50,9 +50,9 @@ public class WebSocketUtil {
      */
     @OnClose
     public void onClose() {
-        KafkaUtil kafkaUtil =(KafkaUtil)SpringContextUtil.getBean("kafkaUtil");
+        KafkaUtil kafkaUtil = (KafkaUtil) SpringContextUtil.getBean("kafkaUtil");
         webSocketSet.remove(this);
-        if(webSocketSet.size()==0){
+        if (webSocketSet.size() == 0) {
             kafkaUtil.stop();
         }
         subOnlineCount();

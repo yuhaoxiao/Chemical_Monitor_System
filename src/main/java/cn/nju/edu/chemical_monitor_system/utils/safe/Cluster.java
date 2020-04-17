@@ -30,7 +30,7 @@ class Cluster {
 
     //更新质心节点
     void updateCenter() {
-        Product newCenter = new Product(center==null?0:center.getProductId());
+        Product newCenter = new Product(center == null ? 0 : center.getProductId());
         for (int i = 0; i < products.size(); i++) {
             newCenter.add(products.get(i));
         }

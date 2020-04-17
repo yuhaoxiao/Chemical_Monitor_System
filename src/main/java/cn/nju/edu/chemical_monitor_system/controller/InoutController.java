@@ -17,13 +17,13 @@ public class InoutController {
     private InOutBatchService inoutService;
 
     @PostMapping(value = "/input_batch/{batchId}/{storeId}")
-    @RequiresRoles(value={"operator"})
+    @RequiresRoles(value = {"operator"})
     public BaseResponse inputBatch(@PathVariable int batchId, @PathVariable int storeId) {
         return new BaseResponse(200, "出库成功", inoutService.inputBatch(batchId, storeId));
     }
 
     @PostMapping(value = "/output_batch/{batchId}/{storeId}/{productId}/{number}")
-    @RequiresRoles(value={"operator"})
+    @RequiresRoles(value = {"operator"})
     public BaseResponse outputBatch(@PathVariable int batchId, @PathVariable int storeId,
                                     @PathVariable int productId, @PathVariable double number) {
         return new BaseResponse(200, "入库成功", inoutService.outputBatch(batchId, storeId, productId, number));

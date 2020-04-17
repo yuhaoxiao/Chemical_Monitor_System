@@ -46,7 +46,7 @@ public class InOutBatchServiceImpl implements InOutBatchService {
         }
 
         BatchEntity batchEntity = batchOpt.get();
-        if (batchEntity.getStatus()==BatchStatusEnum.NOT_START.getCode()) {
+        if (batchEntity.getStatus() == BatchStatusEnum.NOT_START.getCode()) {
             batchEntity.setStatus(BatchStatusEnum.IN_BATCH.getCode());
             batchDao.saveAndFlush(batchEntity);
         }
@@ -85,7 +85,7 @@ public class InOutBatchServiceImpl implements InOutBatchService {
                 List<InOutBatchEntity> newInOutBatchs = inoutBatchDao.findByBatchIdAndInout(batchId, 1);
 
                 for (InOutBatchEntity newInoutBatch : newInOutBatchs) {
-                    if (newInoutBatch.getStatus()!=InOutBatchStatusEnum.COMPLETED.getCode()) {
+                    if (newInoutBatch.getStatus() != InOutBatchStatusEnum.COMPLETED.getCode()) {
                         return new InOutBatchVO(inOutBatchEntity, productEntity, thisNumber);
                     }
                 }
@@ -112,7 +112,7 @@ public class InOutBatchServiceImpl implements InOutBatchService {
         }
 
         BatchEntity batchEntity = batchOpt.get();
-        if (batchEntity.getStatus()==BatchStatusEnum.IN_PROCESS.getCode()) {
+        if (batchEntity.getStatus() == BatchStatusEnum.IN_PROCESS.getCode()) {
             batchEntity.setStatus(BatchStatusEnum.OUT_BATCH.getCode());
             batchDao.saveAndFlush(batchEntity);
         }
@@ -162,7 +162,7 @@ public class InOutBatchServiceImpl implements InOutBatchService {
                 List<InOutBatchEntity> newInOutBatchs = inoutBatchDao.findByBatchIdAndInout(batchId, 0);
 
                 for (InOutBatchEntity newInoutBatch : newInOutBatchs) {
-                    if (newInoutBatch.getStatus()!=InOutBatchStatusEnum.COMPLETED.getCode()) {
+                    if (newInoutBatch.getStatus() != InOutBatchStatusEnum.COMPLETED.getCode()) {
                         return new InOutBatchVO(inOutBatchEntity, productEntity, thisNumber);
                     }
                 }

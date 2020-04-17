@@ -47,10 +47,10 @@ public class MyRealm extends AuthorizingRealm {
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
         String username = JWTUtil.getClaim(principals.toString(), ConstantVariables.USERNAME);
-        logger.info("调用授权接口,调用用户为{}",username);
+        logger.info("调用授权接口,调用用户为{}", username);
         UserEntity userEntity = userDao.findFirstByName(username);
         SimpleAuthorizationInfo simpleAuthorizationInfo = new SimpleAuthorizationInfo();
-        simpleAuthorizationInfo.addRole(UserTypeEnum.getRole(userEntity.getType()+""));
+        simpleAuthorizationInfo.addRole(UserTypeEnum.getRole(userEntity.getType() + ""));
         return simpleAuthorizationInfo;
     }
 
@@ -65,14 +65,14 @@ public class MyRealm extends AuthorizingRealm {
             throw new AuthenticationException("Token格式出错");
         }
         UserEntity userEntity = userDao.findFirstByName(username);
-        if (userEntity == null||userEntity.getEnable()==0) {
+        if (userEntity == null || userEntity.getEnable() == 0) {
             throw new AuthenticationException("用户不存在!");
         }
-        if (redisUtil.get(ConstantVariables.PREFIX_SHIRO_REFRESH_TOKEN_OLD + username)!=null) {
+        if (redisUtil.get(ConstantVariables.PREFIX_SHIRO_REFRESH_TOKEN_OLD + username) != null) {
             String oldTime = redisUtil.get(ConstantVariables.PREFIX_SHIRO_REFRESH_TOKEN_OLD + username).toString();
-            String time=JWTUtil.getClaim(token,ConstantVariables.CURRENT_TIME_MILLIS);
+            String time = JWTUtil.getClaim(token, ConstantVariables.CURRENT_TIME_MILLIS);
             // 判断旧Token是否一致
-            if (Objects.equals(time,oldTime)) {
+            if (Objects.equals(time, oldTime)) {
                 return new SimpleAuthenticationInfo(token, token, "userRealm");
             }
         }

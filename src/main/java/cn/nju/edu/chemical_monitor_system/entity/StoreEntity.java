@@ -15,6 +15,7 @@ public class StoreEntity {
     private String port;
     private int enable;
     private List<StoreProductEntity> storeProductEntities;
+
     @Id
     @Column(name = "Store_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -72,10 +73,10 @@ public class StoreEntity {
     public List<StoreProductEntity> getStoreProductEntities() {
         return storeProductEntities;
     }
+
     public void setStoreProductEntities(List<StoreProductEntity> storeProductEntities) {
         this.storeProductEntities = storeProductEntities;
     }
-
 
 
     @Override

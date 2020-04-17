@@ -178,15 +178,15 @@ public class StoreServiceImpl implements StoreService {
     @Override
     public List<ProductVO> getAllStoreProducts(int storeId) {
         List<StoreProductEntity> storeProductEntities = storeDao.findFirstByStoreId(storeId).getStoreProductEntities();
-        List<ExpressEntity> expressEntities=expressDao.findByOutputStoreId(storeId).stream()
-                .filter(e->e.getStatus()== ExpressStatusEnum.NOT_START.getCode()||e.getStatus()== ExpressStatusEnum.OUT_INVENTORY_ING.getCode()).collect(Collectors.toList());
-        for(ExpressEntity expressEntity:expressEntities){
+        List<ExpressEntity> expressEntities = expressDao.findByOutputStoreId(storeId).stream()
+                .filter(e -> e.getStatus() == ExpressStatusEnum.NOT_START.getCode() || e.getStatus() == ExpressStatusEnum.OUT_INVENTORY_ING.getCode()).collect(Collectors.toList());
+        for (ExpressEntity expressEntity : expressEntities) {
             List<ExpressProductEntity> expressProductEntities = expressEntity.getExpressProductEntities();
-            for(ExpressProductEntity e1:expressProductEntities){
-                double number=e1.getNumber()-e1.getOutputNumber();
-                for(StoreProductEntity storeProductEntity:storeProductEntities){
-                    if(storeProductEntity.getProductEntity().getProductId()==e1.getProductId()){
-                        storeProductEntity.setNumber(storeProductEntity.getNumber()-number);
+            for (ExpressProductEntity e1 : expressProductEntities) {
+                double number = e1.getNumber() - e1.getOutputNumber();
+                for (StoreProductEntity storeProductEntity : storeProductEntities) {
+                    if (storeProductEntity.getProductEntity().getProductId() == e1.getProductId()) {
+                        storeProductEntity.setNumber(storeProductEntity.getNumber() - number);
                     }
                 }
             }
@@ -200,8 +200,8 @@ public class StoreServiceImpl implements StoreService {
         if (!casOpt.isPresent())
             return new ArrayList<>();
         Set<StoreEntity> storeEntitySet = new HashSet<>();
-        for (ProductEntity productEntity: casOpt.get().getProductEntities()) {
-            for (StoreProductEntity storeProductEntity: productEntity.getStoreProductEntities()) {
+        for (ProductEntity productEntity : casOpt.get().getProductEntities()) {
+            for (StoreProductEntity storeProductEntity : productEntity.getStoreProductEntities()) {
                 if (storeProductEntity.getNumber() > 0)
                     storeEntitySet.add(storeProductEntity.getStoreEntity());
             }
@@ -215,7 +215,7 @@ public class StoreServiceImpl implements StoreService {
         List<ProductVO> list = new ArrayList<>();
         if (!storeOpt.isPresent())
             return list;
-        for (StoreProductEntity storeProductEntity: storeProductDao.findByStoreEntityAndNumberGreaterThan(storeOpt.get(), 0)) {
+        for (StoreProductEntity storeProductEntity : storeProductDao.findByStoreEntityAndNumberGreaterThan(storeOpt.get(), 0)) {
             if (storeProductEntity.getProductEntity().getCasEntity().getCasId() == casId)
                 list.add(new ProductVO(storeProductEntity));
         }

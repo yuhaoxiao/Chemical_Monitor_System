@@ -16,7 +16,7 @@ public class CASController {
     private CasService casService;
 
     @GetMapping(value = "/get_cas")  //  暂时没用到
-    public CasVO getCAS(int casId){
+    public CasVO getCAS(int casId) {
         return casService.getCas(casId);
     }
 

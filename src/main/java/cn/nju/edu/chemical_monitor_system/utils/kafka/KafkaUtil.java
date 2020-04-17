@@ -25,14 +25,14 @@ public class KafkaUtil {
     private KafkaTemplate<String, String> kafkaTemplate;
 
     private static Logger logger = LoggerFactory.getLogger(KafkaUtil.class);
-    static final String id=ConstantVariables.KAFKA_ID;
+    static final String id = ConstantVariables.KAFKA_ID;
 
     public void sendExpress(ExpressVO expressVO) {
         logger.info("发送消息 ----->>>>>  message = {}", expressVO);
         kafkaTemplate.send(ConstantVariables.MANAGER_MESSAGE, JSON.toJSONString(expressVO));
     }
 
-    @KafkaListener(id = id,topics = {"ManagerMessage"})
+    @KafkaListener(id = id, topics = {"ManagerMessage"})
     public void listen(ConsumerRecord<?, ?> record) {
         Optional<?> kafkaMessage = Optional.ofNullable(record.value());
         if (kafkaMessage.isPresent()) {
@@ -43,6 +43,7 @@ public class KafkaUtil {
             logger.info("------------------ message =" + expressVO);
         }
     }
+
     public void stop() {
         logger.info("KafkaListener stop...");
         registry.getListenerContainer(id).stop();

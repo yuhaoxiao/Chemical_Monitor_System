@@ -46,6 +46,7 @@ public class ThroughputCapacityServiceImpl implements ThroughputCapacityService 
 
     private static Date start;
     private static Date end;
+
     @Override
     public ThroughputVO getThroughput(GetThroughputRequest getThroughputRequest) {
         entityType = getThroughputRequest.getEntityType();
@@ -123,10 +124,10 @@ public class ThroughputCapacityServiceImpl implements ThroughputCapacityService 
             List<InOutBatchEntity> consume = new ArrayList<>();
             List<InOutBatchEntity> produce = new ArrayList<>();
             List<InOutBatchEntity> in = inoutBatchDao.findByBatchIdInAndInoutAndStoreId(inIds, 0, entityId);
-            List<InOutBatchEntity> in2 = expressDao.findByInputTimeBetweenAndAndInputStoreId(start, end,entityId).stream().map(e -> {
+            List<InOutBatchEntity> in2 = expressDao.findByInputTimeBetweenAndAndInputStoreId(start, end, entityId).stream().map(e -> {
                 List<InOutBatchEntity> inOutBatchEntities = new ArrayList<>();
                 for (ExpressProductEntity expressProductEntity : e.getExpressProductEntities()) {
-                    expressProductId2Time.put(expressProductEntity.getExpressProductId(),timestamp2String(expressProductEntity.getExpressEntity().getInputTime()));
+                    expressProductId2Time.put(expressProductEntity.getExpressProductId(), timestamp2String(expressProductEntity.getExpressEntity().getInputTime()));
                     InOutBatchEntity inOutBatchEntity = new InOutBatchEntity();
                     inOutBatchEntity.setProductId(expressProductEntity.getProductId());
                     inOutBatchEntity.setNumber(expressProductEntity.getNumber());
@@ -138,12 +139,11 @@ public class ThroughputCapacityServiceImpl implements ThroughputCapacityService 
             in.addAll(in2);
 
 
-
             List<InOutBatchEntity> out = inoutBatchDao.findByBatchIdInAndInoutAndStoreId(outIds, 1, entityId);
-            List<InOutBatchEntity> out2 = expressDao.findByOutputTimeBetweenAndAndOutputStoreId(start, end,entityId).stream().map(e -> {
+            List<InOutBatchEntity> out2 = expressDao.findByOutputTimeBetweenAndAndOutputStoreId(start, end, entityId).stream().map(e -> {
                 List<InOutBatchEntity> inOutBatchEntities = new ArrayList<>();
                 for (ExpressProductEntity expressProductEntity : e.getExpressProductEntities()) {
-                    expressProductId2Time.put(expressProductEntity.getExpressProductId(),timestamp2String(expressProductEntity.getExpressEntity().getOutputTime()));
+                    expressProductId2Time.put(expressProductEntity.getExpressProductId(), timestamp2String(expressProductEntity.getExpressEntity().getOutputTime()));
                     InOutBatchEntity inOutBatchEntity = new InOutBatchEntity();
                     inOutBatchEntity.setProductId(expressProductEntity.getProductId());
                     inOutBatchEntity.setNumber(expressProductEntity.getNumber());
@@ -158,7 +158,7 @@ public class ThroughputCapacityServiceImpl implements ThroughputCapacityService 
     }
 
     private List<CASThroughputVO> transfer(List<InOutBatchEntity> l) {
-          Map<CasTimeVO, Double> map = new HashMap<>();
+        Map<CasTimeVO, Double> map = new HashMap<>();
         Set<CasVO> casSet = new HashSet<>();
         for (InOutBatchEntity inOutBatchEntity : l) {
             int productId = inOutBatchEntity.getProductId();
@@ -166,11 +166,11 @@ public class ThroughputCapacityServiceImpl implements ThroughputCapacityService 
             if (casId != 0 && casId != productEntity.getCasEntity().getCasId()) {
                 continue;
             }
-            String realTime="";
-            if(inOutBatchEntity.getStatus()==100){
-                realTime=expressProductId2Time.get(inOutBatchEntity.getBatchId());
-            }else{
-                realTime=inoutBatchId2Time.get(inOutBatchEntity.getBatchId());
+            String realTime = "";
+            if (inOutBatchEntity.getStatus() == 100) {
+                realTime = expressProductId2Time.get(inOutBatchEntity.getBatchId());
+            } else {
+                realTime = inoutBatchId2Time.get(inOutBatchEntity.getBatchId());
             }
             CasTimeVO casTimeVO = new CasTimeVO(productEntity.getCasEntity().getCasId(),
                     productEntity.getCasEntity().getName(),
@@ -186,7 +186,7 @@ public class ThroughputCapacityServiceImpl implements ThroughputCapacityService 
             List<Double> throughput = new ArrayList<>();
             for (String time : times) {
                 CasTimeVO casTimeVO = new CasTimeVO(casVO.getCasId(), casVO.getName(), time);
-                 throughput.add(map.getOrDefault(casTimeVO, 0.0));
+                throughput.add(map.getOrDefault(casTimeVO, 0.0));
             }
             CASThroughputVO casThroughputVO = new CASThroughputVO(casVO.getCasId(), casVO.getName(), throughput, throughput.stream().reduce(Double::sum).orElse(0.0));
             result.add(casThroughputVO);

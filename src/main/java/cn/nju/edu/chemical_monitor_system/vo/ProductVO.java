@@ -16,9 +16,10 @@ public class ProductVO {
 
     private int code;
 
-    public ProductVO(){
+    public ProductVO() {
 
     }
+
     public ProductVO(ProductEntity p) {
         if (p == null) {
             this.code = 0;

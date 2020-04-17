@@ -36,11 +36,11 @@ public class SafeUtil {
         c1.setName("product0");
         ProductEntity p1 = new ProductEntity();
         p1.setCasEntity(c1);
-        c1.setBoilingPoint(new Random().nextDouble()*10);
-        c1.setExistType(new Random().nextInt()*10);
-        c1.setExplosion(new Random().nextInt()*10);
-        c1.setFusionPoint(new Random().nextDouble()*10);
-        c1.setInflammability(new Random().nextInt()*10);
+        c1.setBoilingPoint(new Random().nextDouble() * 10);
+        c1.setExistType(new Random().nextInt() * 10);
+        c1.setExplosion(new Random().nextInt() * 10);
+        c1.setFusionPoint(new Random().nextDouble() * 10);
+        c1.setInflammability(new Random().nextInt() * 10);
         c1.setIsOrganic(new Random().nextInt());
         c1.setOxidation(new Random().nextInt());
         c1.setReducibility(new Random().nextInt());
@@ -49,11 +49,11 @@ public class SafeUtil {
             ProductEntity p = new ProductEntity();
             p.setProductId(i);
             CasEntity c = new CasEntity();
-            c.setBoilingPoint(new Random().nextDouble()*10);
-            c.setExistType(new Random().nextInt()*10);
-            c.setExplosion(new Random().nextInt()*10);
-            c.setFusionPoint(new Random().nextDouble()*10);
-            c.setInflammability(new Random().nextInt()*10);
+            c.setBoilingPoint(new Random().nextDouble() * 10);
+            c.setExistType(new Random().nextInt() * 10);
+            c.setExplosion(new Random().nextInt() * 10);
+            c.setFusionPoint(new Random().nextDouble() * 10);
+            c.setInflammability(new Random().nextInt() * 10);
             c.setIsOrganic(new Random().nextInt());
             c.setOxidation(new Random().nextInt());
             c.setReducibility(new Random().nextInt());
@@ -99,7 +99,7 @@ public class SafeUtil {
         for (int i = 0; i < storeIds.size(); i++) {
             List<Product> products = storeDao.findFirstByStoreId(storeIds.get(i)).getStoreProductEntities()
                     .stream().map(StoreProductEntity::getProductEntity).map(Product::new).collect(Collectors.toList());
-            if(products.size()==0){
+            if (products.size() == 0) {
                 continue;
             }
             Cluster cluster = new Cluster();

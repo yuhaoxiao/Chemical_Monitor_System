@@ -12,7 +12,7 @@ public interface StoreService {
 
     StoreVO getStoreById(int sid);
 
-    Map<Integer,Double> getStoreProduct(int sid);
+    Map<Integer, Double> getStoreProduct(int sid);
 
     StoreVO addStore(int eid, String name);
 
