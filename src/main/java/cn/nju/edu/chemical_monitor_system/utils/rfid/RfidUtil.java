@@ -1,15 +1,18 @@
 package cn.nju.edu.chemical_monitor_system.utils.rfid;
 
-import cn.nju.edu.chemical_monitor_system.constant.ExpressProductStatusEnum;
+import cn.nju.edu.chemical_monitor_system.constant.InOutBatchStatusEnum;
+import cn.nju.edu.chemical_monitor_system.dao.BatchDao;
 import cn.nju.edu.chemical_monitor_system.dao.ExpressDao;
-import cn.nju.edu.chemical_monitor_system.entity.ExpressEntity;
-import cn.nju.edu.chemical_monitor_system.entity.ExpressProductEntity;
+import cn.nju.edu.chemical_monitor_system.dao.InoutBatchDao;
+import cn.nju.edu.chemical_monitor_system.entity.BatchEntity;
+import cn.nju.edu.chemical_monitor_system.entity.InOutBatchEntity;
 import cn.nju.edu.chemical_monitor_system.entity.RfidInfoEntity;
 import cn.nju.edu.chemical_monitor_system.service.RfidService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.*;
+import java.util.List;
+import java.util.Random;
 import java.util.concurrent.Callable;
 import java.util.concurrent.FutureTask;
 import java.util.concurrent.TimeUnit;
@@ -23,6 +26,12 @@ public class RfidUtil {
 
     @Autowired
     ExpressDao expressDao;
+
+    @Autowired
+    BatchDao batchDao;
+
+    @Autowired
+    InoutBatchDao inoutBatchDao;
 
     class ReadRfidThread implements Callable<String> {
         String port;
@@ -84,36 +93,56 @@ public class RfidUtil {
     }
 
     public String read(String port) {
-        boolean in=false;
-        if(port.endsWith("i")){
-            in=true;
-        }
-        int expressId=Integer.parseInt(port.substring(0,port.length()-1));
-        String rfid="-1";
-        int randomInt=new Random().nextInt(10);
-        if(randomInt>=9){
+        // 真实代码
+//        return limitTaskTime(new ReadRfidThread(port));
+        // 物流测试
+//        boolean in = false;
+//        if (port.endsWith("i")) {
+//            in = true;
+//        }
+//        int expressId = Integer.parseInt(port.substring(0, port.length() - 1));
+//        String rfid = "-1";
+//        int randomInt = new Random().nextInt(10);
+//        if (randomInt >= 9) {
+//            return rfid;
+//        } else {
+//            //模拟不在物流单的情况
+//            if (randomInt <= 1) {
+//                List<ExpressEntity> expressEntities = expressDao.findAll().stream().filter(e -> e.getExpressId() != expressId).collect(Collectors.toList());
+//                if (expressEntities.size() != 0) {
+//                    ExpressEntity e = expressEntities.get(0);
+//                    RfidInfoEntity rfidInfoEntity = new RfidInfoEntity(e.getExpressProductEntities().get(0));
+//                    return rfidInfoEntity.toString();
+//                }
+//            }
+//            ExpressEntity express = expressDao.findFirstByExpressId(expressId);
+//            List<ExpressProductEntity> expressProductEntities;
+//            if (!in) {
+//                expressProductEntities = express.getExpressProductEntities().stream().filter(e -> e.getStatus() == ExpressProductStatusEnum.NOT_START.getCode()).collect(Collectors.toList());
+//            } else {
+//                expressProductEntities = express.getExpressProductEntities().stream().filter(e -> e.getStatus() == ExpressProductStatusEnum.OUT_INVENTORY.getCode()).collect(Collectors.toList());
+//            }
+//            ExpressProductEntity expressProductEntity = expressProductEntities.get(0);
+//            return new RfidInfoEntity(expressProductEntity).toString();
+//        }
+        // 批次测试 只有出库，没有入库
+        int batchId = Integer.parseInt(port);
+        int random = new Random().nextInt(10);
+        String rfid = "-1";
+        if (random >= 9) {
             return rfid;
-        }else{
-            //模拟不在物流单的情况
-            if(randomInt<=1){
-                List<ExpressEntity> expressEntities = expressDao.findAll().stream().filter(e -> e.getExpressId() != expressId).collect(Collectors.toList());
-                if(expressEntities.size()!=0){
-                    ExpressEntity e = expressEntities.get(0);
-                    RfidInfoEntity rfidInfoEntity = new RfidInfoEntity(e.getExpressProductEntities().get(0));
-                    return rfidInfoEntity.toString();
+        } else {
+            List<BatchEntity> batchEntities = batchDao.findAll().stream().filter(e -> e.getBatchId() != batchId).collect(Collectors.toList());
+            if (batchEntities.size() != 0) {
+                List<InOutBatchEntity> inOutBatchEntities = inoutBatchDao.findByBatchId(batchEntities.get(0).getBatchId());
+                if (inOutBatchEntities.size() != 0) {
+                    return new RfidInfoEntity(inOutBatchEntities.get(0)).toString();
                 }
             }
-            ExpressEntity express = expressDao.findFirstByExpressId(expressId);
-            List<ExpressProductEntity> expressProductEntities;
-            if(!in) {
-                expressProductEntities = express.getExpressProductEntities().stream().filter(e -> e.getStatus() == ExpressProductStatusEnum.NOT_START.getCode()).collect(Collectors.toList());
-            }else{
-                expressProductEntities = express.getExpressProductEntities().stream().filter(e -> e.getStatus() == ExpressProductStatusEnum.OUT_INVENTORY.getCode()).collect(Collectors.toList());
-            }
-            ExpressProductEntity expressProductEntity = expressProductEntities.get(0);
-            return new RfidInfoEntity(expressProductEntity).toString();
+
+            List<InOutBatchEntity> inOutBatchEntities = inoutBatchDao.findByBatchId(batchId).stream().filter(e -> e.getStatus() != InOutBatchStatusEnum.COMPLETED.getCode()).collect(Collectors.toList());
+            return new RfidInfoEntity(inOutBatchEntities.get(0)).toString();
         }
-        //return limitTaskTime(new ReadRfidThread(port));
     }
 
     public String write(String rfid, String port) {
