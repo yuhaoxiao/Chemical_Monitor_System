@@ -20,8 +20,8 @@ public interface ExpressDao extends JpaRepository<ExpressEntity, Serializable> {
 
     List<ExpressEntity> findByInputTimeBetween(Date start, Date end);
 
-    List<ExpressEntity> findByOutputTimeBetweenAndAndOutputStoreId(Date start, Date end,int outputStoreId);
+    List<ExpressEntity> findByOutputTimeBetweenAndAndOutputStoreId(Date start, Date end, int outputStoreId);
 
-    List<ExpressEntity> findByInputTimeBetweenAndAndInputStoreId(Date start, Date end,int inputStoreId);
+    List<ExpressEntity> findByInputTimeBetweenAndAndInputStoreId(Date start, Date end, int inputStoreId);
 
 }

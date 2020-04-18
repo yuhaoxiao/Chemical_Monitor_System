@@ -19,8 +19,8 @@ public class UserUtil {
     public UserVO getUser() {
         String token = SecurityUtils.getSubject().getPrincipal().toString();
         String username = JWTUtil.getClaim(token, ConstantVariables.USERNAME);
-        UserEntity userEntity=userDao.findFirstByName(username);
-        if(userEntity==null){
+        UserEntity userEntity = userDao.findFirstByName(username);
+        if (userEntity == null) {
             throw new UserException("该帐号不存在");
         }
         return new UserVO(userEntity);

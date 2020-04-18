@@ -93,8 +93,6 @@ public class ExpressServiceImpl implements ExpressService {
             result.setMessage(s.toString());
             return result;
         }
-
-
         expressEntity.setInputStoreId(inputStoreId);
         expressEntity.setOutputStoreId(outputStoreId);
         expressEntity.setStatus(ExpressStatusEnum.NOT_START.getCode());

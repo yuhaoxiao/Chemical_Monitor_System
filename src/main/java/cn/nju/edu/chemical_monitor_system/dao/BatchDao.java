@@ -8,7 +8,7 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
-public interface BatchDao extends JpaRepository<BatchEntity, Serializable>  {
+public interface BatchDao extends JpaRepository<BatchEntity, Serializable> {
 
     List<BatchEntity> findByProductionLineId(int plId);
 
@@ -18,7 +18,7 @@ public interface BatchDao extends JpaRepository<BatchEntity, Serializable>  {
 
     List<BatchEntity> findByTimeBetween(Date start, Date end);
 
-    List<BatchEntity> findByTimeBetweenAndProductionLineId(Date start, Date end,int productionLineId);
+    List<BatchEntity> findByTimeBetweenAndProductionLineId(Date start, Date end, int productionLineId);
 
-    List<BatchEntity> findByTimeBetweenAndProductionLineIdIn(Date start, Date end,List<Integer> ids);
+    List<BatchEntity> findByTimeBetweenAndProductionLineIdIn(Date start, Date end, List<Integer> ids);
 }

@@ -17,10 +17,10 @@ public class InOutBatchEntity {
     private Double finishedNumber;
     private int status;
 
-    public InOutBatchEntity(){
+    public InOutBatchEntity() {
     }
 
-    public InOutBatchEntity(InOutBatchVO inOutBatchVO){
+    public InOutBatchEntity(InOutBatchVO inOutBatchVO) {
         this.productId = inOutBatchVO.getProductId();
         this.storeId = inOutBatchVO.getStoreId();
         this.batchId = inOutBatchVO.getBatchId();

@@ -15,7 +15,7 @@ import java.util.Observer;
 public class RfidDeviceUtil {
     private static ReaderConnector mConnector;
     private static ReaderHelper mReaderHelper;
-    private static byte insertLocation = (byte)0x02;
+    private static byte insertLocation = (byte) 0x02;
 
     static Observer mObserver = new RXObserver() {
         @Override
@@ -26,13 +26,13 @@ public class RfidDeviceUtil {
         @Override
         protected void onInventoryTagEnd(RXInventoryTag.RXInventoryTagEnd endTag) {
             System.out.println("inventory end:" + endTag.mTotalRead);
-            ((RFIDReaderHelper) mReaderHelper).realTimeInventory((byte) 0xff,(byte)0x01);
+            ((RFIDReaderHelper) mReaderHelper).realTimeInventory((byte) 0xff, (byte) 0x01);
         }
 
         @Override
-        protected void onExeCMDStatus(byte cmd,byte status) {
+        protected void onExeCMDStatus(byte cmd, byte status) {
             System.out.format("CDM:%s  Execute status:%S",
-                    String.format("%02X",cmd),String.format("%02x", status));
+                    String.format("%02X", cmd), String.format("%02x", status));
         }
 
     };
@@ -46,13 +46,13 @@ public class RfidDeviceUtil {
         @Override
         protected void onInventoryTagEnd(RXInventoryTag.RXInventoryTagEnd endTag) {
             System.out.println("inventory end:" + endTag.mTotalRead);
-            ((RFIDReaderHelper) mReaderHelper).realTimeInventory((byte) 0xff,(byte)0x01);
+            ((RFIDReaderHelper) mReaderHelper).realTimeInventory((byte) 0xff, (byte) 0x01);
         }
 
         @Override
-        protected void onExeCMDStatus(byte cmd,byte status) {
+        protected void onExeCMDStatus(byte cmd, byte status) {
             System.out.format("CDM:%s  Execute status:%S",
-                    String.format("%02X",cmd),String.format("%0sendData2x", status));
+                    String.format("%02X", cmd), String.format("%0sendData2x", status));
         }
     };
 
@@ -76,17 +76,17 @@ public class RfidDeviceUtil {
 
     };
 
-    public static void setConnector(String port, int buad){
-        if (mConnector == null){
+    public static void setConnector(String port, int buad) {
+        if (mConnector == null) {
             mConnector = new ReaderConnector();
             mReaderHelper = mConnector.connectCom(port, buad);
             System.out.println("RFID Device connect by port " + port);
         }
     }
 
-    public static String readEPC(){
+    public static String readEPC() {
         String data = "";
-        if(mReaderHelper != null) {
+        if (mReaderHelper != null) {
             System.out.println("Read Connect success!");
             try {
                 RXTXListenerImpl rxtxListener = new RXTXListenerImpl();
@@ -99,10 +99,10 @@ public class RfidDeviceUtil {
                 //btWordAdd - 读取数据首地址,取值范围参考标签规格。
                 //btWordCnt - 字长，WORD(16 bits)长度。取值范围请参考标签规格书
                 //Succeeded :0, Failed:-1
-                System.out.println("isReadSuccess:"+((RFIDReaderHelper) mReaderHelper).readTag((byte)0xff,(byte)0x01,(byte)0x02,(byte)0x00,null));
+                System.out.println("isReadSuccess:" + ((RFIDReaderHelper) mReaderHelper).readTag((byte) 0xff, (byte) 0x01, (byte) 0x02, (byte) 0x00, null));
                 Thread.currentThread().sleep(2000);
                 data = RXTXListenerImpl.str;
-                while (data.length() <50 ){
+                while (data.length() < 50) {
                     Thread.currentThread().sleep(2000);
                     data = RXTXListenerImpl.str;
                 }
@@ -122,9 +122,9 @@ public class RfidDeviceUtil {
         return result;
     }
 
-    public static String readUSER(){
+    public static String readUSER() {
         String data = "";
-        if(mReaderHelper != null) {
+        if (mReaderHelper != null) {
             System.out.println("Read Connect success!");
             try {
                 RXTXListenerImpl rxtxListener = new RXTXListenerImpl();
@@ -137,10 +137,10 @@ public class RfidDeviceUtil {
                 //btWordAdd - 读取数据首地址,取值范围参考标签规格。
                 //btWordCnt - 字长，WORD(16 bits)长度。取值范围请参考标签规格书
                 //Succeeded :0, Failed:-1
-                System.out.println("isReadSuccess:"+((RFIDReaderHelper) mReaderHelper).readTag((byte)0xff,(byte)0x03,(byte)0x00,(byte)0x00,null));
+                System.out.println("isReadSuccess:" + ((RFIDReaderHelper) mReaderHelper).readTag((byte) 0xff, (byte) 0x03, (byte) 0x00, (byte) 0x00, null));
                 Thread.currentThread().sleep(2000);
                 data = RXTXListenerImpl.str;
-                while (data.length() <50 ){
+                while (data.length() < 50) {
                     Thread.currentThread().sleep(2000);
                     data = RXTXListenerImpl.str;
                 }
@@ -154,17 +154,17 @@ public class RfidDeviceUtil {
             mConnector.disConnect();
         }
 
-        System.out.println(data.substring(66,113));
-        String result = hex2String(data.substring(66,113));
+        System.out.println(data.substring(66, 113));
+        String result = hex2String(data.substring(66, 113));
         return result;
     }
 
-    public static boolean  writeEPC(String rfid_str, int size){
+    public static boolean writeEPC(String rfid_str, int size) {
 
-        if(mReaderHelper != null) {
+        if (mReaderHelper != null) {
             System.out.println("Write Connect success!");
             try {
-                byte[] psw = {(byte)0x00,(byte)0x00,(byte)0x00,(byte)0x00};
+                byte[] psw = {(byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00};
                 byte[] data = new byte[size];
                 data = rfid_str.getBytes();
 
@@ -177,8 +177,8 @@ public class RfidDeviceUtil {
                 //btWordCnt - 写入的字长度WORD(16 bits), WORD(16 bits)长度，数值请参考标签规格。
                 //btAryData - Write data, btWordCnt*2 bytes.
                 //Succeeded :0, Failed:-1
-                boolean success=((RFIDReaderHelper) mReaderHelper).writeTag((byte)0xff,psw,(byte)0x01,(byte)0x02,int2ByteArray(size),data)==0;
-                System.out.println("isWriteSuccess:"+success);
+                boolean success = ((RFIDReaderHelper) mReaderHelper).writeTag((byte) 0xff, psw, (byte) 0x01, (byte) 0x02, int2ByteArray(size), data) == 0;
+                System.out.println("isWriteSuccess:" + success);
                 return success;
 
             } catch (Exception e) {
@@ -193,12 +193,12 @@ public class RfidDeviceUtil {
     }
 
 
-    public static boolean writeUSER(String rfid_str, int size){
+    public static boolean writeUSER(String rfid_str, int size) {
 
-        if(mReaderHelper != null) {
+        if (mReaderHelper != null) {
             System.out.println("Write Connect success!");
             try {
-                byte[] psw = {(byte)0x00,(byte)0x00,(byte)0x00,(byte)0x00};
+                byte[] psw = {(byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00};
                 byte[] data = new byte[size];
                 data = rfid_str.getBytes();
 
@@ -211,8 +211,8 @@ public class RfidDeviceUtil {
                 //btWordCnt - 写入的字长度WORD(16 bits), WORD(16 bits)长度，数值请参考标签规格。
                 //btAryData - Write data, btWordCnt*2 bytes.
                 //Succeeded :0, Failed:-1
-                boolean result= ((RFIDReaderHelper) mReaderHelper).writeTag((byte) 0xff, psw, (byte) 0x03, (byte) 0x00, int2ByteArray(size), data) == 0;
-                System.out.println("isWriteSuccess:"+result);
+                boolean result = ((RFIDReaderHelper) mReaderHelper).writeTag((byte) 0xff, psw, (byte) 0x03, (byte) 0x00, int2ByteArray(size), data) == 0;
+                System.out.println("isWriteSuccess:" + result);
                 return result;
 
             } catch (Exception e) {
@@ -226,14 +226,14 @@ public class RfidDeviceUtil {
         }
     }
 
-    public static int reset(){
+    public static int reset() {
         int result = 0;
-        if(mReaderHelper != null) {
+        if (mReaderHelper != null) {
             System.out.println("Reset Connect success!");
             try {
-                byte[] psw = {(byte)0x00,(byte)0x00,(byte)0x00,(byte)0x00};
-                byte[] data = {(byte)0x00,(byte)0x00,(byte)0x00,(byte)0x00,(byte)0x00,(byte)0x00,(byte)0x00,(byte)0x00,(byte)0x00,(byte)0x00,(byte)0x00,(byte)0x00};
-                result =  ((RFIDReaderHelper) mReaderHelper).writeTag((byte)0xff,psw,(byte)0x01,(byte)0x02,(byte)0x06,data);
+                byte[] psw = {(byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00};
+                byte[] data = {(byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00};
+                result = ((RFIDReaderHelper) mReaderHelper).writeTag((byte) 0xff, psw, (byte) 0x01, (byte) 0x02, (byte) 0x06, data);
 
             } catch (Exception e) {
                 // TODO Auto-generated catch block
@@ -247,12 +247,12 @@ public class RfidDeviceUtil {
     }
 
 
-    public static byte int2ByteArray(int i){
-        byte[] result=new byte[4];
-        result[0]=(byte)((i >> 24)& 0xFF);
-        result[1]=(byte)((i >> 16)& 0xFF);
-        result[2]=(byte)((i >> 8)& 0xFF);
-        result[3]=(byte)(i & 0xFF);
+    public static byte int2ByteArray(int i) {
+        byte[] result = new byte[4];
+        result[0] = (byte) ((i >> 24) & 0xFF);
+        result[1] = (byte) ((i >> 16) & 0xFF);
+        result[2] = (byte) ((i >> 8) & 0xFF);
+        result[3] = (byte) (i & 0xFF);
         return result[3];
     }
 

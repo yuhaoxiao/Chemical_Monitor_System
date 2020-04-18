@@ -18,17 +18,17 @@ public class RfidServiceImpl implements RfidService {
     public String writeRfid(String rfid, String port) {
         RfidDeviceUtil.setConnector("COM3", 115200);
 
-        String testUSER = rfid.substring(0,16);
+        String testUSER = rfid.substring(0, 16);
 
-        String testEPC = rfid.substring(16,28);
+        String testEPC = rfid.substring(16, 28);
 
-        boolean success1=RfidDeviceUtil.writeUSER(testUSER, 16);
+        boolean success1 = RfidDeviceUtil.writeUSER(testUSER, 16);
 
-        boolean success2=RfidDeviceUtil.writeEPC(testEPC, 12);
+        boolean success2 = RfidDeviceUtil.writeEPC(testEPC, 12);
 
-        if(success1&&success2){
+        if (success1 && success2) {
             return rfid;
         }
-        return"-1";
+        return "-1";
     }
 }

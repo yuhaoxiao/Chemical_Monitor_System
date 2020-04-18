@@ -16,10 +16,11 @@ import java.util.Map;
 public class HistoryController {
     @Autowired
     private HistoryService historyService;
+
     @GetMapping("/batch_{batchId}")
-    @RequiresRoles(value={"monitor"})
+    @RequiresRoles(value = {"monitor"})
     public BaseResponse getCompositionInfo(@PathVariable int batchId) {
-        Map<String, Map> result=historyService.getHistory(batchId);
+        Map<String, Map> result = historyService.getHistory(batchId);
         return new BaseResponse(200, "success", result);
     }
 }

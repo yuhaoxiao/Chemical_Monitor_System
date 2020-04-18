@@ -1,8 +1,8 @@
 package cn.nju.edu.chemical_monitor_system.constant;
 
 public enum HistoryEnum {
-    PRODUCT(1,"产品"),
-    BATCH(2,"批次");
+    PRODUCT(1, "产品"),
+    BATCH(2, "批次");
 
     private int code;
 

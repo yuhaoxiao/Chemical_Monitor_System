@@ -21,7 +21,7 @@ public class NodeVO {
             return false;
         }
         NodeVO nodeVO = (NodeVO) o;
-        if(nodeVO.getType()==1){
+        if (nodeVO.getType() == 1) {
             return false;
         }
         return batchId == nodeVO.batchId &&

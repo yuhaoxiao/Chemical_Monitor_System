@@ -42,7 +42,7 @@ public class CasEntity {
     }
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "casEntity", fetch = FetchType.LAZY)
-    @JsonBackReference(value="ProductEntities")
+    @JsonBackReference(value = "ProductEntities")
     public List<ProductEntity> getProductEntities() {
         return productEntities;
     }

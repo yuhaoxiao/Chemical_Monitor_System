@@ -47,6 +47,7 @@ public class ShiroConfig {
         factoryBean.setFilterChainDefinitionMap(filterRuleMap);
         return factoryBean;
     }
+
     @Bean
     public LifecycleBeanPostProcessor lifecycleBeanPostProcessor() {
         return new LifecycleBeanPostProcessor();

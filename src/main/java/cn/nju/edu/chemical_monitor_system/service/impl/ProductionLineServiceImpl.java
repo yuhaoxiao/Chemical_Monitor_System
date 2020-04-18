@@ -1,5 +1,6 @@
 package cn.nju.edu.chemical_monitor_system.service.impl;
 
+import cn.nju.edu.chemical_monitor_system.constant.BatchTypeEnum;
 import cn.nju.edu.chemical_monitor_system.dao.BatchDao;
 import cn.nju.edu.chemical_monitor_system.dao.EnterpriseDao;
 import cn.nju.edu.chemical_monitor_system.dao.ProductionLineDao;
@@ -40,6 +41,7 @@ public class ProductionLineServiceImpl implements ProductionLineService {
         ProductionLineEntity productionLineEntity = new ProductionLineEntity();
         productionLineEntity.setEnable(1);
         productionLineEntity.setEnterpriseEntity(enterpriseOpt.get());
+        productionLineEntity.setType(BatchTypeEnum.PRODUCE.getCode());
         productionLineDao.saveAndFlush(productionLineEntity);
         return new ProductionLineVO(productionLineEntity);
     }

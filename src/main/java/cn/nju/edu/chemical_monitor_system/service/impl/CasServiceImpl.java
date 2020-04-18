@@ -35,7 +35,8 @@ public class CasServiceImpl implements CasService {
             int id = Integer.parseInt(key);
             Optional<CasEntity> cas = casDao.findById(id);
             cas.ifPresent(casEntities::add);
-        } catch (Exception ignored) { }
+        } catch (Exception ignored) {
+        }
 
         return casEntities.stream().map(CasVO::new).collect(Collectors.toList());
     }
@@ -43,10 +44,12 @@ public class CasServiceImpl implements CasService {
     @Override
     public void init() {
         Map<Integer, String> map = new HashMap<>();
-        map.put(7722841, "过氧化氢"); map.put(7647145, "氯化钠");
-        map.put(108883, "甲苯"); map.put(7664393, "氢氟酸");
+        map.put(7722841, "过氧化氢");
+        map.put(7647145, "氯化钠");
+        map.put(108883, "甲苯");
+        map.put(7664393, "氢氟酸");
         List<CasEntity> list = new ArrayList<>();
-        for (Map.Entry<Integer, String> entry: map.entrySet()) {
+        for (Map.Entry<Integer, String> entry : map.entrySet()) {
             CasEntity casEntity = new CasEntity();
             casEntity.setCasId(entry.getKey());
             casEntity.setName(entry.getValue());

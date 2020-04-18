@@ -62,6 +62,7 @@ public class ProductEntity {
     public List<StoreProductEntity> getStoreProductEntities() {
         return storeProductEntities;
     }
+
     public void setStoreProductEntities(List<StoreProductEntity> storeProductEntities) {
         this.storeProductEntities = storeProductEntities;
     }

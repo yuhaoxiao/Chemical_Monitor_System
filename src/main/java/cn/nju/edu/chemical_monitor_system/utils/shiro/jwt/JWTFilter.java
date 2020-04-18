@@ -118,15 +118,15 @@ public class JWTFilter extends BasicHttpAuthenticationFilter {
         String token = req.getHeader("Authorization");
         String username = JWTUtil.getClaim(token, ConstantVariables.USERNAME);
         //这里用分布式锁避免并发请求都更新token
-        while(true){
-            boolean success=redisUtil.getLock(username+"-Lock");
-            if(success){
+        while (true) {
+            boolean success = redisUtil.getLock(username + "-Lock");
+            if (success) {
                 if (redisUtil.get(ConstantVariables.PREFIX_SHIRO_REFRESH_TOKEN + username) != null) {
                     String currentTimeMillisRedis = redisUtil.get(ConstantVariables.PREFIX_SHIRO_REFRESH_TOKEN + username).toString();
                     if (JWTUtil.getClaim(token, ConstantVariables.CURRENT_TIME_MILLIS).equals(currentTimeMillisRedis)) {
                         String currentTimeMillis = String.valueOf(System.currentTimeMillis());
                         int refreshTokenExpireTime = ConstantVariables.REFRESH_TOKEN_EXPIRE_TIME;
-                        int refreshTokenExpireTimeOld=ConstantVariables.REFRESH_TOKEN_EXPIRE_TIME_OLD;
+                        int refreshTokenExpireTimeOld = ConstantVariables.REFRESH_TOKEN_EXPIRE_TIME_OLD;
                         redisUtil.set(ConstantVariables.PREFIX_SHIRO_REFRESH_TOKEN + username, currentTimeMillis, refreshTokenExpireTime);
                         redisUtil.set(ConstantVariables.PREFIX_SHIRO_REFRESH_TOKEN_OLD + username, currentTimeMillisRedis, refreshTokenExpireTimeOld);
                         token = JWTUtil.sign(username, currentTimeMillis);
@@ -136,13 +136,13 @@ public class JWTFilter extends BasicHttpAuthenticationFilter {
                         httpServletResponse.setHeader("Authorization", token);
                         httpServletResponse.setHeader("Access-Control-Expose-Headers", "Authorization");
                         return true;
-                    }else if(JWTUtil.getClaim(token, ConstantVariables.CURRENT_TIME_MILLIS).equals(redisUtil.get(ConstantVariables.PREFIX_SHIRO_REFRESH_TOKEN_OLD + username).toString())){
-                        JWTToken jwtToken=new JWTToken(token);
-                        this.getSubject(request,response).login(jwtToken);
+                    } else if (JWTUtil.getClaim(token, ConstantVariables.CURRENT_TIME_MILLIS).equals(redisUtil.get(ConstantVariables.PREFIX_SHIRO_REFRESH_TOKEN_OLD + username).toString())) {
+                        JWTToken jwtToken = new JWTToken(token);
+                        this.getSubject(request, response).login(jwtToken);
                         return true;
                     }
                 }
-                redisUtil.releaseLock(username+"-Lock");
+                redisUtil.releaseLock(username + "-Lock");
                 break;
             }
         }

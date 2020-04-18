@@ -171,7 +171,7 @@ public class BatchServiceImpl implements BatchService {
         List<StoreVO> storeVOS = new ArrayList<>();
         for (Integer storeId : storeIds) {
             Optional<StoreEntity> storeOpt = storeDao.findById(storeId);
-            if(storeOpt.isPresent()){
+            if (storeOpt.isPresent()) {
                 storeVOS.add(new StoreVO(storeOpt.get()));
             }
         }

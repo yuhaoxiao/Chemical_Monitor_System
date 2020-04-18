@@ -56,6 +56,7 @@ public class UserServiceImpl implements UserService {
             throw new UnauthorizedException("密码错误");
         }
     }
+
     @Override
     public UserVO register(String name, String password, int type) {
         UserEntity u = userDao.findFirstByName(name);
@@ -72,6 +73,7 @@ public class UserServiceImpl implements UserService {
         userDao.saveAndFlush(user);
         return new UserVO(user);
     }
+
     @Override
     public UserVO getUser(int uid) {
         Optional<UserEntity> user = userDao.findById(uid);
@@ -135,13 +137,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserVO updateUser(UserVO userVO) {
-       Optional<UserEntity> user = userDao.findById(userVO.getUserId());
+        Optional<UserEntity> user = userDao.findById(userVO.getUserId());
 
         if (!user.isPresent()) {
             throw new UnauthorizedException("用户不存在");
         }
 
-        UserEntity userEntity =user.get();
+        UserEntity userEntity = user.get();
         userEntity.setPassword(userVO.getPassword());
         userEntity.setType(userVO.getType());
         //userEntity.setUserId(userVO.getUserId());
@@ -153,14 +155,14 @@ public class UserServiceImpl implements UserService {
     @Override
     public void logout(HttpServletRequest request) {
         String authorization = request.getHeader("Authorization");
-        String username=JWTUtil.getClaim(authorization,ConstantVariables.USERNAME);
+        String username = JWTUtil.getClaim(authorization, ConstantVariables.USERNAME);
         if (redisUtil.get(ConstantVariables.PREFIX_SHIRO_CACHE + username) != null) {
             redisUtil.del(ConstantVariables.PREFIX_SHIRO_CACHE + username);
         }
-        if(redisUtil.get(ConstantVariables.PREFIX_SHIRO_REFRESH_TOKEN + username)!=null){
+        if (redisUtil.get(ConstantVariables.PREFIX_SHIRO_REFRESH_TOKEN + username) != null) {
             redisUtil.del(ConstantVariables.PREFIX_SHIRO_REFRESH_TOKEN + username);
         }
-        if(redisUtil.get(ConstantVariables.PREFIX_SHIRO_REFRESH_TOKEN_OLD + username)!=null){
+        if (redisUtil.get(ConstantVariables.PREFIX_SHIRO_REFRESH_TOKEN_OLD + username) != null) {
             redisUtil.del(ConstantVariables.PREFIX_SHIRO_REFRESH_TOKEN_OLD + username);
         }
     }

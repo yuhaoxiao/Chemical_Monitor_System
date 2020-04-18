@@ -13,7 +13,7 @@ public class AddProductRequest {
 
     private int batchId;
 
-    private Map<Integer,Double> casNumberMap;
+    private Map<Integer, Double> casNumberMap;
 
     private int storeId;
 }

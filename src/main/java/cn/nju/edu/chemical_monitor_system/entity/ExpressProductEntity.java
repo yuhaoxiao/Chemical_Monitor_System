@@ -99,7 +99,7 @@ public class ExpressProductEntity {
                 Status == that.Status &&
                 Double.compare(that.inputNumber, inputNumber) == 0 &&
                 Double.compare(that.outputNumber, outputNumber) == 0 &&
-                productId==that.getProductId() &&
+                productId == that.getProductId() &&
                 Objects.equals(expressEntity, that.expressEntity);
     }
 

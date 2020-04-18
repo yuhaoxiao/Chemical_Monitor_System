@@ -20,12 +20,13 @@ public class Product {
     Product() {
     }
 
-    Product(int productId){
+    Product(int productId) {
         this.productId = productId;
         this.isAllocated = false;
         this.nums = new double[featureNums];
-        this.name="center";
+        this.name = "center";
     }
+
     Product(ProductEntity productEntity) {
         this.nums = new double[featureNums];
         CasEntity cas = productEntity.getCasEntity();
