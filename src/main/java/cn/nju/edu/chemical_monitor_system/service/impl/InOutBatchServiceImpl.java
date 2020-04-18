@@ -89,7 +89,7 @@ public class InOutBatchServiceImpl implements InOutBatchService {
                     iob.setFinishedNumber(finishedNumber);
                     iob.setFinishedNumber(finishedNumber);
 
-                    if (finishedNumber == iob.getNumber()) {
+                    if (finishedNumber.equals(iob.getNumber())) {
                         iob.setStatus(InOutBatchStatusEnum.COMPLETED.getCode());
                     }
                 }
@@ -198,7 +198,7 @@ public class InOutBatchServiceImpl implements InOutBatchService {
 //                    if (writeRfid.equals("-1")) {
 //                        return new InOutBatchVO("写入失败");
 //                    }
-                    if (finishedNumber == inOutBatchEntity.getNumber()) {
+                    if (finishedNumber.equals(inOutBatchEntity.getNumber())) {
                         iob.setStatus(InOutBatchStatusEnum.COMPLETED.getCode());
                     }
                 }
