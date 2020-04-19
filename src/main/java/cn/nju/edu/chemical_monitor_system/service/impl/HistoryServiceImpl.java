@@ -244,5 +244,6 @@ public class HistoryServiceImpl implements HistoryService {
         links.clear();
         expressIds.clear();
         index.clear();
+        nodeVOS.clear();
     }
 }
