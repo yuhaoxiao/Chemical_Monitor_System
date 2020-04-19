@@ -127,6 +127,7 @@ public class HistoryServiceImpl implements HistoryService {
         historyNode.setHistoryNodes(historyNodes);
         historyNode.setNums(nums);
         goBeforeHistory(historyNode);
+        nodeVOS.addAll(historyNodes);
         return historyNode;
     }
 
