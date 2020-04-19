@@ -134,19 +134,34 @@ public class HistoryServiceImpl implements HistoryService {
             return;
         }
         for (HistoryNode temp : historyNode.getHistoryNodes()) {
+            if(temp.getType()==HistoryEnum.BATCH.getCode()){
+                goBeforeHistory(temp);
+                continue;
+            }
+            List<HistoryNode> beforeList = new ArrayList<>();
+            List<Double> l = new ArrayList<>();
+            temp.setHistoryNodes(beforeList);
+            temp.setNums(l);
             List<Double> nums = new ArrayList<>();
+            List<InOutBatchEntity> inOutBatchEntities ;
             //先查一下有没有生产信息,一定要加上storeId的判断，防止跳过所有的物流操作
-            List<InOutBatchEntity> inOutBatchEntities = inoutBatchDao.findByBatchIdAndProductIdAndStoreIdAndInout(
-                    temp.getBatchId(), temp.getProductId(), temp.getStoreId(), struct);
+            if(struct==0) {
+                inOutBatchEntities = inoutBatchDao.findByBatchIdAndProductIdAndStoreIdAndInout(
+                        temp.getBatchId(), temp.getProductId(), temp.getStoreId(), struct);
+            }else{
+                inOutBatchEntities = inoutBatchDao.findByProductIdAndStoreIdAndInout(
+                         temp.getProductId(), temp.getStoreId(), struct);
+            }
             //确认是生产出来的,构建原材料list
             if (inOutBatchEntities.size() != 0) {
                 HistoryNode batch;//前/后继批次节点
                 //如果之前已经生成批次节点
-                if (hashMap.containsKey(temp.getBatchId())) {
-                    batch = hashMap.get(temp.getBatchId());
+                int batchId=inOutBatchEntities.get(0).getBatchId();
+                if (hashMap.containsKey(batchId)) {
+                    batch = hashMap.get(batchId);
                 } else {
                     //如果没有生成批次节点，则加上前继批次节点，并在批次节点加上前继产品
-                    List<HistoryNode> historyNodes = inoutBatchDao.findByBatchIdAndInout(temp.getBatchId(), 1 - struct).stream().map(e -> {
+                    List<HistoryNode> historyNodes = inoutBatchDao.findByBatchIdAndInout(batchId, 1 - struct).stream().map(e -> {
                         HistoryNode node = toHistoryNode(e);
                         node.setBatchId(productDao.findByProductId(e.getProductId()).getBatchId());
                         nums.add(e.getNumber());
@@ -158,52 +173,41 @@ public class HistoryServiceImpl implements HistoryService {
                     batch.setNums(nums);
                     hashMap.put(temp.getBatchId(), batch);//加入map防止批次节点重复
                 }
-                List<Double> l = new ArrayList<>();
                 l.add(inOutBatchEntities.get(0).getNumber());
-                List<HistoryNode> beforeList = new ArrayList<>();
                 beforeList.add(batch);
-                temp.setHistoryNodes(beforeList);
-                temp.setNums(l);
-                temp.setVisit(1);
-                goBeforeHistory(batch);
+            }
+            List<ExpressProductEntity> expressProductEntities;
+            //过滤，剩下那些仓库信息符合的物流
+            if (struct == 0) {
+                expressProductEntities = expressProductDao.findByProductId(temp.getProductId()).stream()
+                        .filter(e -> e.getExpressEntity().getInputStoreId() == temp.getStoreId()
+                                && (!expressIds.contains(e.getExpressEntity().getExpressId())))
+                        .collect(Collectors.toList());
             } else {
-                List<ExpressProductEntity> expressProductEntities;
-                //过滤，剩下那些仓库信息符合的物流
-                if (struct == 0) {
-                    expressProductEntities = expressProductDao.findByProductId(temp.getProductId()).stream()
-                            .filter(e -> e.getExpressEntity().getInputStoreId() == temp.getStoreId()
-                                    && (!expressIds.contains(e.getExpressEntity().getExpressId())))
-                            .collect(Collectors.toList());
-                } else {
-                    expressProductEntities = expressProductDao.findByProductId(temp.getProductId()).stream()
-                            .filter(e -> e.getExpressEntity().getOutputStoreId() == temp.getStoreId()
-                                    && (!expressIds.contains(e.getExpressEntity().getExpressId())))
-                            .collect(Collectors.toList());
-                }
-                if (expressProductEntities.size() != 0) {
-                    List<HistoryNode> historyNodes = new ArrayList<>();
-                    List<Double> l = new ArrayList<>();
-                    for (ExpressProductEntity expressProductEntity : expressProductEntities) {
-                        HistoryNode h = new HistoryNode();
-                        //更新storeId、batchId才能进一步递归查出新数据
-                        h.setNumber(expressProductEntity.getNumber());
-                        if (struct == 0) {
-                            h.setStoreId(expressProductEntity.getExpressEntity().getOutputStoreId());
-                        } else {
-                            h.setStoreId(expressProductEntity.getExpressEntity().getInputStoreId());
-                        }
-                        h.setBatchId(temp.getBatchId());
-                        h.setProductId(temp.getProductId());
-                        h.setType(HistoryEnum.PRODUCT.getCode());
-                        historyNodes.add(h);
-                        l.add(expressProductEntity.getNumber());
-                        expressIds.add(expressProductEntity.getExpressEntity().getExpressId());
+                expressProductEntities = expressProductDao.findByProductId(temp.getProductId()).stream()
+                        .filter(e -> e.getExpressEntity().getOutputStoreId() == temp.getStoreId()
+                                && (!expressIds.contains(e.getExpressEntity().getExpressId())))
+                        .collect(Collectors.toList());
+            }
+            if (expressProductEntities.size() != 0) {
+                for (ExpressProductEntity expressProductEntity : expressProductEntities) {
+                    HistoryNode h = new HistoryNode();
+                    //更新storeId、batchId才能进一步递归查出新数据
+                    h.setNumber(expressProductEntity.getNumber());
+                    if (struct == 0) {
+                        h.setStoreId(expressProductEntity.getExpressEntity().getOutputStoreId());
+                    } else {
+                        h.setStoreId(expressProductEntity.getExpressEntity().getInputStoreId());
                     }
-                    temp.setHistoryNodes(historyNodes);
-                    temp.setNums(l);
-                    goBeforeHistory(temp);
+                    h.setBatchId(temp.getBatchId());
+                    h.setProductId(temp.getProductId());
+                    h.setType(HistoryEnum.PRODUCT.getCode());
+                    beforeList.add(h);
+                    l.add(expressProductEntity.getNumber());
+                    expressIds.add(expressProductEntity.getExpressEntity().getExpressId());
                 }
             }
+            goBeforeHistory(temp);
         }
         historyNode.setVisit(1);
     }
