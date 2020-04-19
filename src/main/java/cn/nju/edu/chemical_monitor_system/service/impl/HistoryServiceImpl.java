@@ -33,12 +33,14 @@ public class HistoryServiceImpl implements HistoryService {
     private HashMap<Integer, HistoryNode> hashMap = new HashMap<>();
     //NodeVO->nodeVO在list中index
     private static HashMap<NodeVO, Integer> index = new HashMap<>();
-    private static List<NodeVO> nodes = new ArrayList<>();
+    private static List<NodeVO> nodes = new ArrayList<>();//给批次用
     private static List<LinkVO> links = new ArrayList<>();
     //struct为0表示原料历史，为1表示产品用途
     private int struct;
 
     private static HashSet<Integer> expressIds = new HashSet<>();
+    private static HashSet<HistoryNode> nodeVOS = new HashSet<>();//实现重复的产品节点不往后面连接功能
+
 
     @Override
     public Map<String, Map> getHistory(int batchId) {
@@ -134,10 +136,14 @@ public class HistoryServiceImpl implements HistoryService {
             return;
         }
         for (HistoryNode temp : historyNode.getHistoryNodes()) {
+            if(nodeVOS.contains(temp)){
+                continue;
+            }
             if(temp.getType()==HistoryEnum.BATCH.getCode()){
                 goBeforeHistory(temp);
                 continue;
             }
+            nodeVOS.add(temp);
             List<HistoryNode> beforeList = new ArrayList<>();
             List<Double> l = new ArrayList<>();
             temp.setHistoryNodes(beforeList);
