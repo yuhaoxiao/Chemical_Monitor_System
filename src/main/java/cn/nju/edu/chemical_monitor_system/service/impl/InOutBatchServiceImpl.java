@@ -61,7 +61,11 @@ public class InOutBatchServiceImpl implements InOutBatchService {
 
         StoreEntity storeEntity = storeOpt.get();
         String port = storeEntity.getPort();
-        String rfidInfo = rfidUtil.read(port);
+        String rfidInfo = rfidUtil.read(batchId + "");
+//        String rfidInfo = rfidUtil.read(port);
+        if(rfidInfo.equals("-1")){
+            return new InOutBatchVO("RFID未读取到标签内容");
+        }
         RfidInfoEntity rfidInfoEntity = new RfidInfoEntity(rfidInfo);
         int productId = rfidInfoEntity.getProductId();
 
@@ -85,7 +89,7 @@ public class InOutBatchServiceImpl implements InOutBatchService {
                     iob.setFinishedNumber(finishedNumber);
                     iob.setFinishedNumber(finishedNumber);
 
-                    if (finishedNumber == iob.getNumber()) {
+                    if (finishedNumber.equals(iob.getNumber())) {
                         iob.setStatus(InOutBatchStatusEnum.COMPLETED.getCode());
                     }
                 }
@@ -190,11 +194,11 @@ public class InOutBatchServiceImpl implements InOutBatchService {
                             "的产品，超出了所需的" + (inOutBatchEntity.getNumber() - finishedNumber) + "的数量");
                 } else {
                     iob.setFinishedNumber(finishedNumber);
-                    String writeRfid = rfidUtil.write(rfidInfoEntity.toString(), port);
-                    if (writeRfid.equals("-1")) {
-                        return new InOutBatchVO("写入失败");
-                    }
-                    if (finishedNumber == inOutBatchEntity.getNumber()) {
+//                    String writeRfid = rfidUtil.write(rfidInfoEntity.toString(), port);
+//                    if (writeRfid.equals("-1")) {
+//                        return new InOutBatchVO("写入失败");
+//                    }
+                    if (finishedNumber.equals(inOutBatchEntity.getNumber())) {
                         iob.setStatus(InOutBatchStatusEnum.COMPLETED.getCode());
                     }
                 }

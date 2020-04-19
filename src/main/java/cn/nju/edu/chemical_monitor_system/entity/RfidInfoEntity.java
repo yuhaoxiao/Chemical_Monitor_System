@@ -45,6 +45,13 @@ public class RfidInfoEntity {
         this.casId = 0;
     }
 
+    public RfidInfoEntity(InOutBatchEntity inOutBatchEntity) {
+        this.productId = inOutBatchEntity.getProductId();
+        this.expressId = 1;
+        this.batchId = inOutBatchEntity.getBatchId();
+        this.number = inOutBatchEntity.getNumber();
+        this.casId = 1;
+    }
 }
 
 

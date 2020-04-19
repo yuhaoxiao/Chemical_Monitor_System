@@ -141,7 +141,7 @@ public class StoreServiceImpl implements StoreService {
         }
 
         List<InOutBatchEntity> inOutBatchEntities = inoutBatchDao.findByStoreId(storeId).stream()
-                .filter(e -> e.getInout() == 0 && (e.getStatus() == InOutBatchStatusEnum.NOT_START.getCode() ||
+                .filter(e -> e.getInout() == 1 && (e.getStatus() == InOutBatchStatusEnum.NOT_START.getCode() ||
                         e.getStatus() == InOutBatchStatusEnum.ING.getCode())).collect(Collectors.toList());
         for (InOutBatchEntity inOutBatchEntity : inOutBatchEntities) {
             double notFinished = inOutBatchEntity.getNumber() - inOutBatchEntity.getFinishedNumber();
