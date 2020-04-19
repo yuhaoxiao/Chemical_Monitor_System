@@ -169,6 +169,7 @@ public class HistoryServiceImpl implements HistoryService {
                     }).collect(Collectors.toList());
                     //创建中继批次节点
                     batch = copy(temp);
+                    batch.setBatchId(batchId);
                     batch.setHistoryNodes(historyNodes);
                     batch.setNums(nums);
                     hashMap.put(temp.getBatchId(), batch);//加入map防止批次节点重复
