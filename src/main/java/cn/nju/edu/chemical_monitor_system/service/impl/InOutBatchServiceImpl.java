@@ -76,11 +76,11 @@ public class InOutBatchServiceImpl implements InOutBatchService {
             if (inOutBatchEntity.getProductId() == productId) {
                 iob = inOutBatchEntity;
                 Double thisNumber = rfidInfoEntity.getNumber();
-                Double finishedNumber = inOutBatchEntity.getFinishedNumber() + thisNumber;
+                Double finishedNumber = iob.getFinishedNumber() + thisNumber;
 
-                if (finishedNumber > inOutBatchEntity.getNumber()) {
+                if (finishedNumber > iob.getNumber()) {
                     return new InOutBatchVO("上线了数量为" + rfidInfoEntity.getNumber() + "的产品id为" + productId +
-                            "的产品，超出了所需的" + (inOutBatchEntity.getNumber() - finishedNumber) + "的数量");
+                            "的产品，超出了所需的" + (iob.getNumber() - finishedNumber) + "的数量");
                 } else {
                     if (iob.getStatus() == InOutBatchStatusEnum.NOT_START.getCode()) {
                         iob.setStatus(InOutBatchStatusEnum.ING.getCode());
@@ -95,7 +95,8 @@ public class InOutBatchServiceImpl implements InOutBatchService {
                 }
             }
 
-            if (iob.getStatus() == InOutBatchStatusEnum.COMPLETED.getCode()) {
+            if (inOutBatchEntity.getStoreId() == storeId &&
+                    inOutBatchEntity.getStatus() == InOutBatchStatusEnum.COMPLETED.getCode()) {
                 finishCount++;
             }
         }
@@ -183,28 +184,29 @@ public class InOutBatchServiceImpl implements InOutBatchService {
             if (inOutBatchEntity.getProductId() == productId) {
                 iob = inOutBatchEntity;
                 Double thisNumber = rfidInfoEntity.getNumber();
-                Double finishedNumber = inOutBatchEntity.getFinishedNumber() + thisNumber;
+                Double finishedNumber = iob.getFinishedNumber() + thisNumber;
 
                 if (iob.getStatus() == InOutBatchStatusEnum.NOT_START.getCode()) {
                     iob.setStatus(InOutBatchStatusEnum.ING.getCode());
                 }
 
-                if (finishedNumber > inOutBatchEntity.getNumber()) {
+                if (finishedNumber > iob.getNumber()) {
                     return new InOutBatchVO("下线了数量为" + rfidInfoEntity.getNumber() + "的产品id为" + productId +
-                            "的产品，超出了所需的" + (inOutBatchEntity.getNumber() - finishedNumber) + "的数量");
+                            "的产品，超出了所需的" + (iob.getNumber() - finishedNumber) + "的数量");
                 } else {
                     iob.setFinishedNumber(finishedNumber);
 //                    String writeRfid = rfidUtil.write(rfidInfoEntity.toString(), port);
 //                    if (writeRfid.equals("-1")) {
 //                        return new InOutBatchVO("写入失败");
 //                    }
-                    if (finishedNumber.equals(inOutBatchEntity.getNumber())) {
+                    if (finishedNumber.equals(iob.getNumber())) {
                         iob.setStatus(InOutBatchStatusEnum.COMPLETED.getCode());
                     }
                 }
             }
 
-            if (inOutBatchEntity.getStatus() == InOutBatchStatusEnum.COMPLETED.getCode()) {
+            if (inOutBatchEntity.getStoreId() == storeId &&
+                    inOutBatchEntity.getStatus() == InOutBatchStatusEnum.COMPLETED.getCode()) {
                 finishCount++;
             }
         }
