@@ -109,7 +109,15 @@ public class ProductionLineServiceImpl implements ProductionLineService {
     public ProductionLineVO getProductionLine(int plId) {
         Optional<ProductionLineEntity> productionLineOpt = productionLineDao.findById(plId);
 
-        return productionLineOpt.map(ProductionLineVO::new).orElseGet(() -> new ProductionLineVO("生产线不存在"));
+        ProductionLineVO nonExist = new ProductionLineVO("生产线不存在");
+        if (!productionLineOpt.isPresent()) {
+            return nonExist;
+        }
+        ProductionLineEntity productionLineEntity = productionLineOpt.get();
+        if (productionLineEntity.getEnable() == 0 || productionLineEntity.getType() != BatchTypeEnum.PRODUCE.getCode()) {
+            return nonExist;
+        }
+        return new ProductionLineVO(productionLineEntity);
     }
 
     @Override
