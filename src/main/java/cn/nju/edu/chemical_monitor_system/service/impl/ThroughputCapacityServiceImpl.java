@@ -132,6 +132,7 @@ public class ThroughputCapacityServiceImpl implements ThroughputCapacityService 
                     inOutBatchEntity.setProductId(expressProductEntity.getProductId());
                     inOutBatchEntity.setNumber(expressProductEntity.getNumber());
                     inOutBatchEntity.setStatus(100);//特殊标记为expressProductEntity转换过来的
+                    inOutBatchEntity.setBatchId(expressProductEntity.getExpressProductId());
                     inOutBatchEntities.add(inOutBatchEntity);
                 }
                 return inOutBatchEntities;
@@ -148,6 +149,7 @@ public class ThroughputCapacityServiceImpl implements ThroughputCapacityService 
                     inOutBatchEntity.setProductId(expressProductEntity.getProductId());
                     inOutBatchEntity.setNumber(expressProductEntity.getNumber());
                     inOutBatchEntity.setStatus(100);//特殊标记为expressProductEntity转换过来的
+                    inOutBatchEntity.setBatchId(expressProductEntity.getExpressProductId());
                     inOutBatchEntities.add(inOutBatchEntity);
                 }
                 return inOutBatchEntities;
