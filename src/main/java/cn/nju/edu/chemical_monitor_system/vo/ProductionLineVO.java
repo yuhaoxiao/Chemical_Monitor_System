@@ -1,5 +1,6 @@
 package cn.nju.edu.chemical_monitor_system.vo;
 
+import cn.nju.edu.chemical_monitor_system.constant.BatchTypeEnum;
 import cn.nju.edu.chemical_monitor_system.entity.ProductionLineEntity;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,6 +19,10 @@ public class ProductionLineVO {
     private String message;
 
     public ProductionLineVO(ProductionLineEntity pl) {
+        this(pl, true);
+    }
+
+    public ProductionLineVO(ProductionLineEntity pl, boolean filterNonProduce) {
         if (pl == null) {
             this.code = 0;
             return;
@@ -27,6 +32,8 @@ public class ProductionLineVO {
         this.enterpriseId = pl.getEnterpriseEntity().getEnterpriseId();
         this.enable = pl.getEnable();
         this.code = 1;
+        if (filterNonProduce && pl.getType() != BatchTypeEnum.PRODUCE.getCode())
+            this.enable = 0;
     }
 
     public ProductionLineVO(String message) {

@@ -132,6 +132,6 @@ public class ProductionLineServiceImpl implements ProductionLineService {
         if (productionLineEntity == null) {
             return new ProductionLineVO("该企业没有这种生产线");
         }
-        return new ProductionLineVO(productionLineEntity);
+        return new ProductionLineVO(productionLineEntity, false);
     }
 }
