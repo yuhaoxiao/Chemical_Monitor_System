@@ -5,8 +5,8 @@ import cn.nju.edu.chemical_monitor_system.constant.BatchTypeEnum;
 import cn.nju.edu.chemical_monitor_system.constant.InOutBatchStatusEnum;
 import cn.nju.edu.chemical_monitor_system.dao.*;
 import cn.nju.edu.chemical_monitor_system.entity.*;
-import cn.nju.edu.chemical_monitor_system.request.BatchOutRequest;
-import cn.nju.edu.chemical_monitor_system.request.CreateBatchRequest;
+import cn.nju.edu.chemical_monitor_system.request.ProductRequest;
+import cn.nju.edu.chemical_monitor_system.request.RawRequest;
 import cn.nju.edu.chemical_monitor_system.service.BatchService;
 import cn.nju.edu.chemical_monitor_system.vo.BatchVO;
 import cn.nju.edu.chemical_monitor_system.vo.InOutBatchVO;
@@ -49,7 +49,7 @@ public class BatchServiceImpl implements BatchService {
     private String[] batchTypes = {BatchTypeEnum.PRODUCE.getName(), BatchTypeEnum.IN_PARK.getName(), BatchTypeEnum.OUT_PARK.getName(), BatchTypeEnum.DESTROY.getName()};
 
     @Override
-    public BatchVO createBatch(int productlineId, int type, List<CreateBatchRequest.RawRequest> raws, int userId) {
+    public BatchVO createBatch(int productlineId, int type, List<RawRequest> raws, int userId) {
         Optional<ProductionLineEntity> productionLineOpt = productionLineDao.findById(productlineId);
 
         if (!productionLineOpt.isPresent()) {
@@ -75,7 +75,7 @@ public class BatchServiceImpl implements BatchService {
 
         List<InOutBatchEntity> inOutBatchEntities = new ArrayList<>();
 
-        for (CreateBatchRequest.RawRequest request : raws) {
+        for (RawRequest request : raws) {
             InOutBatchEntity inOutBatchEntity = new InOutBatchEntity();
             inOutBatchEntity.setBatchId(batchEntity.getBatchId());
             inOutBatchEntity.setProductId(request.getProductId());
@@ -95,7 +95,7 @@ public class BatchServiceImpl implements BatchService {
     }
 
     @Override
-    public BatchVO batchOut(int batchId, List<BatchOutRequest.ProductRequest> products) {
+    public BatchVO batchOut(int batchId, List<ProductRequest> products) {
         Optional<BatchEntity> batchOpt = batchDao.findById(batchId);
 
         if (!batchOpt.isPresent()) {
@@ -104,7 +104,7 @@ public class BatchServiceImpl implements BatchService {
 
         List<ProductEntity> productEntities = new ArrayList<>();
         HashMap<Integer, Integer> casStoreMap = new HashMap<>();
-        for (BatchOutRequest.ProductRequest request : products) {
+        for (ProductRequest request : products) {
             int casId = request.getCasId();
             int storeId = request.getStoreId();
             double number = request.getNumber();
